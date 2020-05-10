@@ -5,13 +5,13 @@
                 <router-link :to="item.path" class="tags-li-title">
                     {{item.title}}
                 </router-link>
-                <span @click="closeTags(index)" class="tags-li-icon"><i class="el-icon-close"></i></span>
+                <span @click="closeTags(index)" class="tags-li-icon"><i class="el-icon-close"/></span>
             </li>
         </ul>
         <div class="tags-close-box">
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary">
-                    标签选项<i class="el-icon-arrow-down el-icon--right"></i>
+                    标签选项<i class="el-icon-arrow-down el-icon--right"/>
                 </el-button>
                 <el-dropdown-menu size="small" slot="dropdown">
                     <el-dropdown-item command="other">关闭其他</el-dropdown-item>
@@ -53,10 +53,9 @@
             },
             // 关闭其他标签
             closeOther() {
-                const curItem = this.tagsList.filter(item => {
+                this.tagsList = this.tagsList.filter(item => {
                     return item.path === this.$route.fullPath;
                 });
-                this.tagsList = curItem;
             },
             // 设置标签
             setTags(route) {
@@ -110,11 +109,9 @@
             })
         }
     }
-
 </script>
 
-
-<style>
+<style scoped>
     .tags {
         position: relative;
         height: 30px;

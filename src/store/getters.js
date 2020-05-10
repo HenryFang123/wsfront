@@ -14,6 +14,9 @@ export default {
     AdminInfo_adminName: state => state.adminInfo.adminName,
     AdminInfo_businessId: state => state.adminInfo.businessId,
 
+    businessInfo_businessId: state => state.businessInfo.businessId,
+    businessInfo_businessDetail: state => state.businessInfo.businessDetail,
+
     searchInfo_searchWord: state => state.searchInfo.searchWord,
 
     resultInfo_homeInfo_topInfo_bookList: state => state.resultInfo.homeInfo.topInfo.bookList,

@@ -28,6 +28,11 @@ export default {
         state.adminInfo.businessId = param;
     },
 
+    // 保存进入店铺获取的店铺信息
+    saveBusinessInfoBusinessDetail: (state, param) => {
+        state.businessInfo.businessDetail = param;
+    },
+
     // 保存查询表单提交内容
     saveSearchInfoSearchWord: (state, param) => {
         state.searchInfo.searchWord = param;

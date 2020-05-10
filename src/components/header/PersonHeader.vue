@@ -2,8 +2,8 @@
     <div class="header">
         <!-- 折叠按钮 -->
         <div @click="collapseChage" class="collapse-btn">
-            <i class="el-icon-s-fold" v-if="!collapse"></i>
-            <i class="el-icon-s-unfold" v-else></i>
+            <i class="el-icon-s-fold" v-if="!collapse"/>
+            <i class="el-icon-s-unfold" v-else/>
         </div>
         <div class="logo">我的网书</div>
         <div class="header-right">
@@ -11,7 +11,7 @@
                 <!-- 全屏显示 -->
                 <div @click="handleFullScreen" class="btn-fullscreen">
                     <el-tooltip :content="fullscreen?`取消全屏`:`全屏`" effect="dark" placement="bottom">
-                        <i class="el-icon-rank"></i>
+                        <i class="el-icon-rank"/>
                     </el-tooltip>
                 </div>
 
@@ -21,11 +21,7 @@
                 </div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown @command="handleCommand" class="user-name" trigger="click">
-                    <span class="el-dropdown-link">
-                       {{this.$store.getters.userInfo_userSelf}}
-
-                        <i class="el-icon-caret-bottom"></i>
-                    </span>
+                    <span class="el-dropdown-link">{{this.$store.getters.userInfo_userSelf}}<i class="el-icon-caret-bottom"/></span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="loginout" divided>退出登录</el-dropdown-item>
                     </el-dropdown-menu>
@@ -34,6 +30,7 @@
         </div>
     </div>
 </template>
+
 <script>
     import bus from '../common/bus';
 
@@ -100,6 +97,7 @@
         }
     };
 </script>
+
 <style scoped>
     .header {
         position: relative;

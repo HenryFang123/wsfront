@@ -3,11 +3,11 @@ export default {
     saveUserInfoUserId: ({commit}, payload) => {
         commit('saveUserInfoUserId', payload);
     },
-// 触发保存 保存登录成功的 userSelf
+    // 触发保存 保存登录成功的 userSelf
     saveUserInfoUserSelf: ({commit}, payload) => {
         commit('saveUserInfoUserSelf', payload);
     },
-// 触发保存 用户验证手机号的验证码
+    // 触发保存 用户验证手机号的验证码
     saveUserInfoPhoneCode: ({commit}, payload) => {
         commit('saveUserInfoPhoneCode', payload);
     },
@@ -28,7 +28,12 @@ export default {
         commit('saveAdminInfoBusinessId', payload);
     },
 
-// 触发保存 查询表单提交内容
+    // 触发保存 进入店铺获取的店铺信息
+    saveBusinessInfoBusinessDetail: ({commit}, payload) => {
+        commit('BusinessInfoBusinessDetail', payload);
+    },
+
+    // 触发保存 查询表单提交内容
     saveSearchInfoSearchWord: ({commit}, payload) => {
         commit('saveSearchInfoSearchWord', payload);
     },

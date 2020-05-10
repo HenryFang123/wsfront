@@ -3,46 +3,36 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-s-grid"></i> 订单列表
+                    <i class="el-icon-s-grid"/> 订单列表
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container" style="margin-top: 15px">
             <div class="handle-box">
                 <el-form :model="formQuery" label-width="70px" ref="form">
-                    <el-input class="handle-input mr10" placeholder="订单ID" v-model="formQuery.orderId"></el-input>
+                    <el-input class="handle-input mr10" placeholder="订单ID" v-model="formQuery.orderId"/>
                     <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
                 </el-form>
             </div>
-            <el-table
-                :data="List"
-                border
-                class="table"
-                header-cell-class-name="table-header"
-                ref="multipleTable"
-            >
-
+            <el-table v-bind:data="List"
+                      border
+                      class="table"
+                      header-cell-class-name="table-header"
+                      ref="multipleTable">
                 <el-table-column align="center" label="ID" prop="id" width="55">
                     <template slot-scope="scope">{{scope.$index+1}}</template>
                 </el-table-column>
-                <el-table-column label="订单ID" prop="orderId" v-model="query.orderId"></el-table-column>
-                <el-table-column label="用户ID" prop="userId"></el-table-column>
-                <el-table-column label="图书ID" property="bookId"></el-table-column>
-                <el-table-column label="图书名称" property="bookName"></el-table-column>
-                <el-table-column label="商品数量(件)" property="bookNumber"></el-table-column>
-                <el-table-column label="商品价格(元)" prop="totalPrice"></el-table-column>
-                <el-table-column label="地址" prop="userAddress"></el-table-column>
-                <el-table-column label="用户号码" prop="userPhone" v-model="query.userPhone"></el-table-column>
-
-
+                <el-table-column label="订单ID" prop="orderId" v-model="query.orderId"/>
+                <el-table-column label="用户ID" prop="userId"/>
+                <el-table-column label="图书ID" property="bookId"/>
+                <el-table-column label="图书名称" property="bookName"/>
+                <el-table-column label="商品数量(件)" property="bookNumber"/>
+                <el-table-column label="商品价格(元)" prop="totalPrice"/>
+                <el-table-column label="地址" prop="userAddress"/>
+                <el-table-column label="用户号码" prop="userPhone" v-model="query.userPhone"/>
                 <el-table-column align="center" label="操作" width="180">
                     <template slot-scope="scope">
-                        <el-button
-                            @click.native.prevent="handleEdit(scope.$index, scope.row)"
-                            icon="el-icon-edit"
-                            type="text"
-                        >编辑
-                        </el-button>
+                        <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -54,49 +44,42 @@
                 background
                 layout="prev, pager, next">
             </el-pagination>
+
             <!-- 编辑弹出框 -->
             <el-dialog :visible.sync="editVisible" title="编辑" width="30%">
                 <el-form :model="form" label-width="70px" ref="form">
                     <el-form-item label="订单号">
-                        <el-input disabled="true" v-model="form.orderId"></el-input>
+                        <el-input disabled="true" v-model="form.orderId"/>
                     </el-form-item>
                     <el-form-item label="地址">
-                        <el-input v-model="form.userAddress"></el-input>
+                        <el-input v-model="form.userAddress"/>
                     </el-form-item>
                     <el-form-item label="用户号码">
-                        <el-input v-model="form.userPhone"></el-input>
+                        <el-input v-model="form.userPhone"/>
                     </el-form-item>
                 </el-form>
                 <span class="dialog-footer" slot="footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button @click="saveEdit" type="primary">确 定</el-button>
-            </span>
+                    <el-button @click="editVisible = false">取 消</el-button>
+                    <el-button @click="saveEdit" type="primary">确 定</el-button>
+                </span>
             </el-dialog>
-
             <el-dialog :visible.sync="queryVisible" title="编辑" width="100%">
-                <el-table :data="QueryList">
-                    <el-table-column label="订单ID" property="orderId" width="150"></el-table-column>
-                    <el-table-column label="用户ID" property="userId" width="200"></el-table-column>
-                    <el-table-column label="图书ID" property="bookId"></el-table-column>
-                    <el-table-column label="图书名称" property="bookName"></el-table-column>
-                    <el-table-column label="商品数量(件)" property="bookNumber"></el-table-column>
-                    <el-table-column label="商品价格(元)" property="totalPrice"></el-table-column>
-                    <el-table-column label="地址" property="userAddress"></el-table-column>
-                    <el-table-column label="用户号码" prop="userPhone"></el-table-column>
+                <el-table v-bind:data="QueryList">
+                    <el-table-column label="订单ID" property="orderId" width="150"/>
+                    <el-table-column label="用户ID" property="userId" width="200"/>
+                    <el-table-column label="图书ID" property="bookId"/>
+                    <el-table-column label="图书名称" property="bookName"/>
+                    <el-table-column label="商品数量(件)" property="bookNumber"/>
+                    <el-table-column label="商品价格(元)" property="totalPrice"/>
+                    <el-table-column label="地址" property="userAddress"/>
+                    <el-table-column label="用户号码" prop="userPhone"/>
                     <el-table-column align="center" label="操作" width="180">
                         <template slot-scope="scope">
-                            <el-button
-                                @click.native.prevent="handleEdit(scope.$index, scope.row)"
-                                icon="el-icon-edit"
-                                type="text"
-                            >编辑
-                            </el-button>
+                            <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-dialog>
-
-
         </div>
     </div>
 </template>
@@ -113,8 +96,8 @@
                 pageSize: 5,//每页的数据条数
                 currentPage: 1,//默认开始页面
                 itemTotal: 0,
-                List: {},
-                QueryList: {},
+                List: [],
+                QueryList: [],
                 query: {},
                 editVisible: false,
                 queryVisible: false,
@@ -122,7 +105,6 @@
                 formQuery: {},
                 idx: -1,
                 id: -1,
-
             };
         },
         created() {
@@ -133,7 +115,6 @@
             current_change: function (currentPage) {
                 this.currentPage = currentPage;
                 this.getData();
-                console.log(currentPage)
             },
             getCount() {
                 let params = {
@@ -141,10 +122,8 @@
                 };
                 ws_axios.fetchPost1('/order/getOrderCount', params).then((back) => {
                     this.itemTotal = back.data;
-                    console.log(this.itemTotal)
                 });
             },
-
             getData() {
                 let params = {
                     businessId: this.$store.getters.AdminInfo_businessId,
@@ -152,12 +131,8 @@
                     pageSize: this.pageSize
                 };
                 ws_axios.fetchPost1('/order/getOrder', params).then((back) => {
-
                     this.List = back.data;
-
-                    console.log(this.List);
                     this.reload();
-
                 })
             },
             handleSearch() {
@@ -166,9 +141,7 @@
                 };
                 ws_axios.fetchPost1('/order/getOneOrder', params).then((back) => {
                     this.QueryList = back.data;
-                    console.log(back.data);
                     this.queryVisible = true
-
                 })
 
             },
@@ -185,14 +158,11 @@
                     'userPhone': this.form.userPhone
                 };
                 ws_axios.fetchPost1('/order/updateOrder', params).then((back) => {
-
                     this.editVisible = false;
                     location.reload();
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                     this.$set(this.tableData, this.idx, this.form);
-
                 })
-
             },
         }
     };

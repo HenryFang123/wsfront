@@ -29,11 +29,18 @@ export default new Vuex.Store({
           phoneCode: ''
       },
 
+      // 存管理员信息
       adminInfo: {
           adminId: '',
           adminPassword: '',
           adminName: '',
           businessId: ''
+      },
+
+      // 存储店铺信息
+      businessInfo: {
+          businessId: '',
+          businessDetail: {}
       },
 
       // 查询存储

@@ -3,44 +3,34 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-s-grid"></i> 订单列表
+                    <i class="el-icon-s-grid"/> 订单列表
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container" style="margin-top: 15px">
             <div class="handle-box">
                 <el-form :model="formQuery" label-width="70px" ref="form">
-                    <el-input class="handle-input mr10" placeholder="书名" v-model="formQuery.bookName"></el-input>
+                    <el-input class="handle-input mr10" placeholder="书名" v-model="formQuery.bookName"/>
                     <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
                 </el-form>
             </div>
-            <el-table
-                :data="List"
-                border
-                class="table"
-                header-cell-class-name="table-header"
-                ref="multipleTable"
-            >
-
-                <el-table-column align="center" label="图书ID" prop="bookId" width="55"></el-table-column>
-                <el-table-column label="书名" property="bookName" v-model="query.bookName" width="150"></el-table-column>
-                <el-table-column label="图片" property="bookImagePath" v-model="query.bookImagePath"></el-table-column>
-                <el-table-column label="作者" property="bookAuthor" width="200"></el-table-column>
-                <el-table-column label="出版社" property="bookPub"></el-table-column>
-                <el-table-column label="出版年" property="bookYear"></el-table-column>
-                <el-table-column label="ISBN" prop="bookIsbn"></el-table-column>
-                <el-table-column label="价格(元)" prop="bookPrice" v-model="query.bookPrice"></el-table-column>
-                <el-table-column label="简介" prop="bookDescription" v-model="query.bookDescription"></el-table-column>
-
-
+            <el-table v-bind:data="List"
+                      border
+                      class="table"
+                      header-cell-class-name="table-header"
+                      ref="multipleTable">
+                <el-table-column align="center" label="图书ID" prop="bookId" width="55"/>
+                <el-table-column label="书名" property="bookName" v-model="query.bookName" width="150"/>
+                <el-table-column label="图片" property="bookImagePath" v-model="query.bookImagePath"/>
+                <el-table-column label="作者" property="bookAuthor" width="200"/>
+                <el-table-column label="出版社" property="bookPub"/>
+                <el-table-column label="出版年" property="bookYear"/>
+                <el-table-column label="ISBN" prop="bookIsbn"/>
+                <el-table-column label="价格(元)" prop="bookPrice" v-model="query.bookPrice"/>
+                <el-table-column label="简介" prop="bookDescription" v-model="query.bookDescription"/>
                 <el-table-column align="center" label="操作" width="180">
                     <template slot-scope="scope">
-                        <el-button
-                            @click.native.prevent="handleEdit(scope.$index, scope.row)"
-                            icon="el-icon-edit"
-                            type="text"
-                        >编辑
-                        </el-button>
+                        <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -57,16 +47,16 @@
             <el-dialog :visible.sync="editVisible" title="编辑" width="30%">
                 <el-form :model="form" label-width="70px" ref="form">
                     <el-form-item label="书名">
-                        <el-input disabled="true" v-model="form.bookName"></el-input>
+                        <el-input disabled="true" v-model="form.bookName"/>
                     </el-form-item>
                     <el-form-item label="图片">
-                        <el-input v-model="form.bookImagePath"></el-input>
+                        <el-input v-model="form.bookImagePath"/>
                     </el-form-item>
                     <el-form-item label="价格(元)">
-                        <el-input v-model="form.bookPrice"></el-input>
+                        <el-input v-model="form.bookPrice"/>
                     </el-form-item>
                     <el-form-item label="简介">
-                        <el-input v-model="form.bookDescription"></el-input>
+                        <el-input v-model="form.bookDescription"/>
                     </el-form-item>
                 </el-form>
                 <span class="dialog-footer" slot="footer">
@@ -76,31 +66,23 @@
             </el-dialog>
 
             <el-dialog :visible.sync="queryVisible" title="编辑" width="100%">
-                <el-table :data="QueryList">
-                    <el-table-column align="center" label="图书ID" prop="bookId" width="55"></el-table-column>
-                    <el-table-column label="书名" property="bookName" width="150"></el-table-column>
-                    <el-table-column label="图片" property="bookImagePath"></el-table-column>
-                    <el-table-column label="作者" property="bookAuthor" width="200"></el-table-column>
-                    <el-table-column label="出版社" property="bookPub"></el-table-column>
-                    <el-table-column label="出版年" property="bookYear"></el-table-column>
-                    <el-table-column label="ISBN" prop="bookIsbn"></el-table-column>
-                    <el-table-column label="价格(元)" prop="bookPrice"></el-table-column>
-                    <el-table-column label="简介" prop="bookDescription"></el-table-column>
-
-
+                <el-table v-bind:data="QueryList">
+                    <el-table-column align="center" label="图书ID" prop="bookId" width="55"/>
+                    <el-table-column label="书名" property="bookName" width="150"/>
+                    <el-table-column label="图片" property="bookImagePath"/>
+                    <el-table-column label="作者" property="bookAuthor" width="200"/>
+                    <el-table-column label="出版社" property="bookPub"/>
+                    <el-table-column label="出版年" property="bookYear"/>
+                    <el-table-column label="ISBN" prop="bookIsbn"/>
+                    <el-table-column label="价格(元)" prop="bookPrice"/>
+                    <el-table-column label="简介" prop="bookDescription"/>
                     <el-table-column align="center" label="操作" width="180">
                         <template slot-scope="scope">
-                            <el-button
-                                @click.native.prevent="handleEdit(scope.$index, scope.row)"
-                                icon="el-icon-edit"
-                                type="text"
-                            >编辑
-                            </el-button>
+                            <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-dialog>
-
         </div>
     </div>
 </template>
@@ -117,8 +99,8 @@
                 pageSize: 5,//每页的数据条数
                 currentPage: 1,//默认开始页面
                 itemTotal: 0,
-                List: {},
-                QueryList: {},
+                List: [],
+                QueryList: [],
                 query: {},
                 editVisible: false,
                 queryVisible: false,
@@ -137,7 +119,6 @@
             current_change: function (currentPage) {
                 this.currentPage = currentPage;
                 this.getData();
-                console.log(currentPage)
             },
 
             getCount() {
@@ -146,7 +127,6 @@
                 };
                 ws_axios.fetchPost1('/book/getBookCount', params).then((back) => {
                     this.itemTotal = back.data;
-                    console.log(this.itemTotal)
                 });
             },
 
@@ -157,14 +137,11 @@
                     pageSize: this.pageSize
                 };
                 ws_axios.fetchPost1('/book/getAllBook', params).then((back) => {
-
                     this.List = back.data;
                     for (let i in this.List) {
-                        this.List[i].id = ++this.count
+                        this.List[i].id = ++this.count;
                     }
-                    console.log(this.List);
                     this.reload();
-
                 })
             },
             handleSearch() {
@@ -173,9 +150,7 @@
                 };
                 ws_axios.fetchPost1('/book/getBookByName', params).then((back) => {
                     this.QueryList = back.data;
-                    console.log(back.data);
-                    this.queryVisible = true
-
+                    this.queryVisible = true;
                 })
 
             },
@@ -194,14 +169,11 @@
                     'bookDescription': this.form.bookDescription
                 };
                 ws_axios.fetchPost1('/book/updateBookInfo', params).then((back) => {
-
                     this.editVisible = false;
                     location.reload();
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                     this.$set(this.tableData, this.idx, this.form);
-
                 })
-
             },
         }
     };

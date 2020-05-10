@@ -50,6 +50,24 @@ export function fetchPost1(url, params){
     })
 }
 
+export function fetchGet1(url, param){
+    const instance = axios.create({
+        baseURL : 'http://localhost:8080/',
+        headers : {'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'}
+    });
+    return new Promise((resolve, reject) => {
+        instance.get(url, {params: param})
+            .then(response => {
+                resolve(response)
+            }, err => {
+                reject(err)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
 export function fetchPost2(url, params){
     const instance = axios.create({
         baseURL : 'http://localhost:8081/',
@@ -61,24 +79,6 @@ export function fetchPost2(url, params){
                 resolve(response);
             }, err => {
                 reject(err);
-            })
-            .catch((error) => {
-                reject(error)
-            })
-    })
-}
-
-export function fetchGet1(url, param){
-    const instance = axios.create({
-        baseURL : 'http://localhost:8081/',
-        headers : {'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'}
-    });
-    return new Promise((resolve, reject) => {
-        instance.get(url, {params: param})
-            .then(response => {
-                resolve(response)
-            }, err => {
-                reject(err)
             })
             .catch((error) => {
                 reject(error)
