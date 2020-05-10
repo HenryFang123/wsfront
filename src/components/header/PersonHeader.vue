@@ -3,11 +3,11 @@
         <!-- 折叠按钮 -->
 
         <div>
-        <div @click="collapseChage" class="collapse-btn">
-            <i class="el-icon-s-fold" v-if="!collapse"></i>
-            <i class="el-icon-s-unfold" v-else></i>
-        </div>
-        <div class="logo">我的网书</div>
+            <div @click="collapseChage" class="collapse-btn">
+                <i class="el-icon-s-fold" v-if="!collapse"></i>
+                <i class="el-icon-s-unfold" v-else></i>
+            </div>
+            <div class="logo">我的网书</div>
             <div class="header-right">
                 <div class="header-user-con">
                     <!-- 全屏显示 -->
@@ -34,12 +34,12 @@
                     </el-dropdown>
                 </div>
             </div>
-        <div class="header-link">
-            <el-link :underline="false" icon="el-icon-message-solid" type="info">我的消息</el-link>&nbsp;&nbsp;&nbsp;
-            <el-link :underline="false" icon="el-icon-s-platform" type="info">网站导航</el-link>&nbsp;&nbsp;&nbsp;
-            <el-link :underline="false" icon="el-icon-edit" type="info">问题反馈</el-link>&nbsp;&nbsp;&nbsp;
-            <el-link :underline="false"  icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
-        </div>
+            <div class="header-link">
+                <el-link :underline="false" icon="el-icon-message-solid" type="info">我的消息</el-link>&nbsp;&nbsp;&nbsp;
+                <el-link :underline="false" icon="el-icon-s-platform" type="info">网站导航</el-link>&nbsp;&nbsp;&nbsp;
+                <el-link :underline="false" icon="el-icon-edit" type="info">问题反馈</el-link>&nbsp;&nbsp;&nbsp;
+                <el-link :underline="false"  icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
+            </div>
         </div>
 
 

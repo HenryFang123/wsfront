@@ -110,7 +110,7 @@
     }
     .info-box {
         padding: 15px;
-        margin: 15px;
+        margin: 0px;
         border-radius: 5px;
         box-shadow: 0px 0px 5px #ccc;
         background-color: #ffffff;
