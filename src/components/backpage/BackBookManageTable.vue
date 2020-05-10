@@ -121,7 +121,7 @@
     import ws_axios from "network/ws_axios";
 
     export default {
-        name: 'BookManageTable',
+        name: 'BackBookManageTable.vue',
         data() {
             return {
                 count: 0,

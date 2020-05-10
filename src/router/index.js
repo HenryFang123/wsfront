@@ -14,7 +14,7 @@ const shop_car = () => import('components/page/ShopCar');
 const settlement_page = () => import('components/page/SettlementPage');
 const pay_done = () => import('components/page/PayDone');
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 const routes = [
     {
         path: '/',
@@ -62,11 +62,11 @@ const routes = [
     },
     {
         path: '/BackHome',
-        redirect: '/dashboard',
+        redirect: '/BackDashBoard',
     },
     {
         path: '/BackLogin',
-        component: () => import('components/BackPages/BackLogin.vue'),
+        component: () => import('components/backpage/BackLogin'),
         meta: {title: '登录'}
     },
     {
@@ -75,33 +75,33 @@ const routes = [
         meta: {title: '自述文件'},
         children: [
             {
-                path: '/dashboard',
-                component: () => import('components/BackPages/Dashboard'),
+                path: '/BackDashBoard',
+                component: () => import('components/backpage/BackDashboard'),
                 meta: {title: '系统首页'}
             },
             {
-                path: '/OrderTable',
-                component: () => import( 'components/BackPages/OrderTable'),
+                path: '/BackOrderTable',
+                component: () => import( 'components/backpage/BackOrderTable'),
                 meta: {title: '订单列表'}
             },
             {
-                path: '/BookManageTable',
-                component: () => import( 'components/BackPages/BookManageTable'),
+                path: '/BackBookManageTable',
+                component: () => import( 'components/backpage/BackBookManageTable'),
                 meta: {title: '图书操作'}
             },
             {
-                path: '/ReturnTable',
-                component: () => import('components/BackPages/ReturnTable'),
+                path: '/BackReturnTable',
+                component: () => import('components/backpage/BackReturnTable'),
                 meta: {title: '退货管理'}
             },
             {
-                path: '/booklist',
-                component: () => import( 'components/BackPages/BackBookList'),
+                path: '/BackBookList',
+                component: () => import( 'components/backpage/BackBookList'),
                 meta: {title: '图书列表'}
             },
             {
-                path: '/classification',
-                component: () => import( 'components/BackPages/Classification'),
+                path: '/BackClassification',
+                component: () => import( 'components/backpage/BackClassification'),
                 meta: {title: '图书分类'}
             }
         ]
@@ -113,6 +113,6 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
 
 export default router

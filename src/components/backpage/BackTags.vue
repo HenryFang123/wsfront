@@ -26,6 +26,7 @@
     import bus from '../common/bus';
 
     export default {
+        name: 'BackTags.vue',
         data() {
             return {
                 tagsList: []
@@ -42,26 +43,26 @@
                 if (item) {
                     delItem.path === this.$route.fullPath && this.$router.push(item.path);
                 } else {
-                    this.$router.push('/dashboard');
+                    this.$router.push('/BackDashBoard');
                 }
             },
             // 关闭全部标签
             closeAll() {
                 this.tagsList = [];
-                this.$router.push('/dashboard');
+                this.$router.push('/BackDashBoard');
             },
             // 关闭其他标签
             closeOther() {
                 const curItem = this.tagsList.filter(item => {
                     return item.path === this.$route.fullPath;
-                })
+                });
                 this.tagsList = curItem;
             },
             // 设置标签
             setTags(route) {
                 const isExist = this.tagsList.some(item => {
                     return item.path === route.fullPath;
-                })
+                });
                 if (!isExist) {
                     if (this.tagsList.length >= 8) {
                         this.tagsList.shift();
@@ -100,7 +101,7 @@
                         } else if (i > 0) {
                             this.$router.push(this.tagsList[i - 1].path);
                         } else {
-                            this.$router.push('/dashboard');
+                            this.$router.push('/BackDashBoard');
                         }
                         this.tagsList.splice(i, 1);
                         break;
@@ -167,7 +168,8 @@
     }
 
     .tags-li.active .tags-li-title {
-        color: #409EFF;
+        background-color: #409EFF;
+        color: #ffffff;
     }
 
     .tags-close-box {

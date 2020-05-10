@@ -10,7 +10,7 @@
 
 <script>
     export default {
-        name: "dashboard",
+        name: "BackDashboard.vue",
         data() {
             return {
                 value: new Date()

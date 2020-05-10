@@ -1,5 +1,4 @@
 <template>
-
     <div class="login-main" style=" display: block;
     position: absolute;
     left: 600px;
@@ -10,8 +9,6 @@
                  label-width="0px"
                  ref="login"
                  status-icon>
-
-
             <el-form-item prop="adminId">
                 <el-input auto-complete="off" placeholder="请输入账号" prefix-icon="el-icon-ump-yonghu" type="text"
                           v-model="param.adminId">
@@ -31,13 +28,13 @@
             </el-form-item>
         </el-form>
     </div>
-
 </template>
 
 <script>
     import ws_axios from "network/ws_axios";
 
     export default {
+        name: 'BackLogin.vue',
         data: function () {
             return {
                 param: {
@@ -71,7 +68,6 @@
                                 this.$store.dispatch('saveAdminInfoAdminName', back.data.adminName);
                                 // 传入保存登录使用名 UserSelf
                                 this.$store.dispatch('saveAdminInfoBusinessId', back.data.businessId);
-
 
                                 this.$router.push({path: '/BackHome'});
 

@@ -19,8 +19,8 @@
 
 <script>
     import BackHeader from './header/BackHeader'
-    import BackSidebar from './Sidebar/BackSidebar';
-    import VTags from './BackPages/Tags';
+    import BackSidebar from './sidebar/BackSidebar';
+    import VTags from './backpage/BackTags';
     import bus from '../components/common/bus';
 
     export default {
@@ -30,7 +30,7 @@
                 collapse: false
             };
         },
-        name: "BackHome",
+        name: "BackHome.vue",
         components: {
             BackHeader,
             BackSidebar,

@@ -64,7 +64,7 @@
     import ws_axios from "network/ws_axios";
 
     export default {
-        name: 'classification',
+        name: 'BackClassification.vue',
         data() {
             return {
                 count: 0,

@@ -10,7 +10,7 @@
         <div class="container" style="margin-top: 15px">
             <div class="handle-box">
                 <el-form :model="formQuery" label-width="70px" ref="form">
-                    <el-input class="handle-input mr10" placeholder="书名" v-model="formQuery.bookName"></el-input>
+                    <el-input class="handle-input mr10" placeholder="订单ID" v-model="formQuery.orderId"></el-input>
                     <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
                 </el-form>
             </div>
@@ -22,15 +22,17 @@
                 ref="multipleTable"
             >
 
-                <el-table-column align="center" label="图书ID" prop="bookId" width="55"></el-table-column>
-                <el-table-column label="书名" property="bookName" v-model="query.bookName" width="150"></el-table-column>
-                <el-table-column label="图片" property="bookImagePath" v-model="query.bookImagePath"></el-table-column>
-                <el-table-column label="作者" property="bookAuthor" width="200"></el-table-column>
-                <el-table-column label="出版社" property="bookPub"></el-table-column>
-                <el-table-column label="出版年" property="bookYear"></el-table-column>
-                <el-table-column label="ISBN" prop="bookIsbn"></el-table-column>
-                <el-table-column label="价格(元)" prop="bookPrice" v-model="query.bookPrice"></el-table-column>
-                <el-table-column label="简介" prop="bookDescription" v-model="query.bookDescription"></el-table-column>
+                <el-table-column align="center" label="ID" prop="id" width="55">
+                    <template slot-scope="scope">{{scope.$index+1}}</template>
+                </el-table-column>
+                <el-table-column label="订单ID" prop="orderId" v-model="query.orderId"></el-table-column>
+                <el-table-column label="用户ID" prop="userId"></el-table-column>
+                <el-table-column label="图书ID" property="bookId"></el-table-column>
+                <el-table-column label="图书名称" property="bookName"></el-table-column>
+                <el-table-column label="商品数量(件)" property="bookNumber"></el-table-column>
+                <el-table-column label="商品价格(元)" prop="totalPrice"></el-table-column>
+                <el-table-column label="地址" prop="userAddress"></el-table-column>
+                <el-table-column label="用户号码" prop="userPhone" v-model="query.userPhone"></el-table-column>
 
 
                 <el-table-column align="center" label="操作" width="180">
@@ -52,21 +54,17 @@
                 background
                 layout="prev, pager, next">
             </el-pagination>
-
             <!-- 编辑弹出框 -->
             <el-dialog :visible.sync="editVisible" title="编辑" width="30%">
                 <el-form :model="form" label-width="70px" ref="form">
-                    <el-form-item label="书名">
-                        <el-input disabled="true" v-model="form.bookName"></el-input>
+                    <el-form-item label="订单号">
+                        <el-input disabled="true" v-model="form.orderId"></el-input>
                     </el-form-item>
-                    <el-form-item label="图片">
-                        <el-input v-model="form.bookImagePath"></el-input>
+                    <el-form-item label="地址">
+                        <el-input v-model="form.userAddress"></el-input>
                     </el-form-item>
-                    <el-form-item label="价格(元)">
-                        <el-input v-model="form.bookPrice"></el-input>
-                    </el-form-item>
-                    <el-form-item label="简介">
-                        <el-input v-model="form.bookDescription"></el-input>
+                    <el-form-item label="用户号码">
+                        <el-input v-model="form.userPhone"></el-input>
                     </el-form-item>
                 </el-form>
                 <span class="dialog-footer" slot="footer">
@@ -77,17 +75,14 @@
 
             <el-dialog :visible.sync="queryVisible" title="编辑" width="100%">
                 <el-table :data="QueryList">
-                    <el-table-column align="center" label="图书ID" prop="bookId" width="55"></el-table-column>
-                    <el-table-column label="书名" property="bookName" width="150"></el-table-column>
-                    <el-table-column label="图片" property="bookImagePath"></el-table-column>
-                    <el-table-column label="作者" property="bookAuthor" width="200"></el-table-column>
-                    <el-table-column label="出版社" property="bookPub"></el-table-column>
-                    <el-table-column label="出版年" property="bookYear"></el-table-column>
-                    <el-table-column label="ISBN" prop="bookIsbn"></el-table-column>
-                    <el-table-column label="价格(元)" prop="bookPrice"></el-table-column>
-                    <el-table-column label="简介" prop="bookDescription"></el-table-column>
-
-
+                    <el-table-column label="订单ID" property="orderId" width="150"></el-table-column>
+                    <el-table-column label="用户ID" property="userId" width="200"></el-table-column>
+                    <el-table-column label="图书ID" property="bookId"></el-table-column>
+                    <el-table-column label="图书名称" property="bookName"></el-table-column>
+                    <el-table-column label="商品数量(件)" property="bookNumber"></el-table-column>
+                    <el-table-column label="商品价格(元)" property="totalPrice"></el-table-column>
+                    <el-table-column label="地址" property="userAddress"></el-table-column>
+                    <el-table-column label="用户号码" prop="userPhone"></el-table-column>
                     <el-table-column align="center" label="操作" width="180">
                         <template slot-scope="scope">
                             <el-button
@@ -101,6 +96,7 @@
                 </el-table>
             </el-dialog>
 
+
         </div>
     </div>
 </template>
@@ -110,8 +106,7 @@
 
     export default {
         inject: ['reload'],
-
-        name: 'booklist',
+        name: 'BackOrderTable.vue',
         data() {
             return {
                 count: 0,
@@ -140,12 +135,11 @@
                 this.getData();
                 console.log(currentPage)
             },
-
             getCount() {
                 let params = {
                     businessId: this.$store.getters.AdminInfo_businessId,
                 };
-                ws_axios.fetchPost1('/book/getBookCount', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderCount', params).then((back) => {
                     this.itemTotal = back.data;
                     console.log(this.itemTotal)
                 });
@@ -157,12 +151,10 @@
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
-                ws_axios.fetchPost1('/book/getAllBook', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrder', params).then((back) => {
 
                     this.List = back.data;
-                    for (let i in this.List) {
-                        this.List[i].id = ++this.count
-                    }
+
                     console.log(this.List);
                     this.reload();
 
@@ -170,9 +162,9 @@
             },
             handleSearch() {
                 let params = {
-                    'bookName': this.formQuery.bookName
+                    'orderId': this.formQuery.orderId
                 };
-                ws_axios.fetchPost1('/book/getBookByName', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOneOrder', params).then((back) => {
                     this.QueryList = back.data;
                     console.log(back.data);
                     this.queryVisible = true
@@ -188,13 +180,11 @@
             // 保存编辑
             saveEdit() {
                 let params = {
-                    'businessId': this.$store.getters.AdminInfo_businessId,
-                    'bookName': this.form.bookName,
-                    'bookImagePath': this.form.bookImagePath,
-                    'bookPrice': this.form.bookPrice,
-                    'bookDescription': this.form.bookDescription
+                    'orderId': this.form.orderId,
+                    'userAddress': this.form.userAddress,
+                    'userPhone': this.form.userPhone
                 };
-                ws_axios.fetchPost1('/book/updateBookInfo', params).then((back) => {
+                ws_axios.fetchPost1('/order/updateOrder', params).then((back) => {
 
                     this.editVisible = false;
                     location.reload();

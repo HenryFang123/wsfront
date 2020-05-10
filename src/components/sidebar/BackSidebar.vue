@@ -10,7 +10,7 @@
             text-color="#bfcbd9"
             unique-opened>
             <template>
-                <el-menu-item index="dashboard">
+                <el-menu-item index="BackDashBoard">
                     <i class="el-icon-s-home"></i>
                     <span slot="title">系统首页</span>
                 </el-menu-item>
@@ -21,9 +21,9 @@
                     </template>
                     <el-menu-item-group>
 
-                        <el-menu-item index="OrderTable">订单列表</el-menu-item>
+                        <el-menu-item index="BackOrderTable">订单列表</el-menu-item>
 
-                        <el-menu-item index="ReturnTable">退货管理</el-menu-item>
+                        <el-menu-item index="BackReturnTable">退货管理</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="2">
@@ -33,7 +33,7 @@
                     </template>
                     <el-menu-item-group>
                         <el-menu-item index="BackBookList">图书列表</el-menu-item>
-                        <el-menu-item index="BookManageTable">图书操作</el-menu-item>
+                        <el-menu-item index="BackBookManageTable">图书操作</el-menu-item>
                         <!--<el-menu-item index="classification">图书分类</el-menu-item>-->
 
                     </el-menu-item-group>

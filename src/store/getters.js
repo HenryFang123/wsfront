@@ -32,10 +32,10 @@ export default {
     resultInfo_bookDetailInfo_typeBookList: state => state.resultInfo.bookDetailInfo.typeBookList,
     resultInfo_bookDetailInfo_pressBookList: state => state.resultInfo.bookDetailInfo.pressBookList,
 
-  shopCar_getBookPrice(state) {
-      return index => {
-          return  state.resultInfo.shopCarInfo.list[index].book_price * state.resultInfo.shopCarInfo.list[index].book_number
-      }
-  }
+    shopCar_getBookPrice(state) {
+        return index => {
+            return  state.resultInfo.shopCarInfo.list[index].book_price * state.resultInfo.shopCarInfo.list[index].book_number
+        }
+    }
 }
 
