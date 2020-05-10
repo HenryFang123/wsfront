@@ -5,7 +5,7 @@
             <i class="el-icon-s-fold" v-if="!collapse"></i>
             <i class="el-icon-s-unfold" v-else></i>
         </div>
-        <div class="logo">后台管理系统</div>
+        <div class="logo">我的网书</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -22,7 +22,7 @@
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown @command="handleCommand" class="user-name" trigger="click">
                     <span class="el-dropdown-link">
-                        {{this.$store.getters.AdminInfo_adminName}}
+                       {{this.$store.getters.userInfo_userSelf}}
 
                         <i class="el-icon-caret-bottom"></i>
                     </span>
@@ -57,7 +57,7 @@
             handleCommand(command) {
                 if (command === 'loginout') {
                     localStorage.removeItem('adminId');
-                    this.$router.push('/BackLogin');
+                    this.$router.push('/login');
                 }
             },
             // 侧边栏折叠

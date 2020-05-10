@@ -29,10 +29,6 @@ const routes = [
         component: register
     },
     {
-        path: '/person_page',
-        component: person_page
-    },
-    {
         path: '/to_list',
         component: to_list
     },
@@ -56,6 +52,7 @@ const routes = [
         path: '/settlement_page',
         component: settlement_page
     },
+
     {
         path: '/pay_done',
         component: pay_done
@@ -68,6 +65,39 @@ const routes = [
         path: '/BackLogin',
         component: () => import('components/backpage/BackLogin'),
         meta: {title: '登录'}
+    },
+    {
+        path: '/person_page',
+        component: () => import('../components/page/PersonPage'),
+        meta: {title: '自述文件'},
+        children: [
+            {
+                path: '/PersonInfo',
+                component: () => import('../components/personpage/PersonInfo'),
+                meta: {title: '个人信息'}
+            },
+            {
+                path: '/PersonAddress',
+                component: () => import( '../components/personpage/PersonAddress'),
+                meta: {title: '我的收货地址'}
+            },
+            {
+                path: '/AddAddress',
+                component: () => import( '../components/personpage/AddAddress'),
+                meta: {title: '添加收货地址'}
+            },
+            {
+                path: '/PersonOrder',
+                component: () => import('../components/personpage/PersonOrder'),
+                meta: {title: '我的订单'}
+            },
+            {
+                path: '/PersonShopCar',
+                component: () => import('../components/personpage/PersonShopCar'),
+                meta: {title: '我的购物车'}
+            },
+
+        ]
     },
     {
         path: '/BackHome',
