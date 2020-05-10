@@ -1,41 +1,60 @@
 <template>
     <div class="header">
         <!-- 折叠按钮 -->
+
+        <div>
         <div @click="collapseChage" class="collapse-btn">
-            <i class="el-icon-s-fold" v-if="!collapse"/>
-            <i class="el-icon-s-unfold" v-else/>
+            <i class="el-icon-s-fold" v-if="!collapse"></i>
+            <i class="el-icon-s-unfold" v-else></i>
         </div>
         <div class="logo">我的网书</div>
-        <div class="header-right">
-            <div class="header-user-con">
-                <!-- 全屏显示 -->
-                <div @click="handleFullScreen" class="btn-fullscreen">
-                    <el-tooltip :content="fullscreen?`取消全屏`:`全屏`" effect="dark" placement="bottom">
-                        <i class="el-icon-rank"/>
-                    </el-tooltip>
-                </div>
+            <div class="header-right">
+                <div class="header-user-con">
+                    <!-- 全屏显示 -->
+                    <div @click="handleFullScreen" class="btn-fullscreen">
+                        <el-tooltip :content="fullscreen?`取消全屏`:`全屏`" effect="dark" placement="bottom">
+                            <i class="el-icon-rank"></i>
+                        </el-tooltip>
+                    </div>
 
-                <!-- 用户头像 -->
-                <div class="user-avator">
-                    <img src="../../assets/img/header/img.jpg"/>
+                    <!-- 用户头像 -->
+                    <div class="user-avator">
+                        <img src="../../assets/img/header/img.jpg"/>
+                    </div>
+                    <!-- 用户名下拉菜单 -->
+                    <el-dropdown @command="handleCommand" class="user-name" trigger="click">
+                    <span class="el-dropdown-link">
+                       {{this.$store.getters.userInfo_userSelf}}
+
+                        <i class="el-icon-caret-bottom"></i>
+                    </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="loginout" divided>退出登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </div>
-                <!-- 用户名下拉菜单 -->
-                <el-dropdown @command="handleCommand" class="user-name" trigger="click">
-                    <span class="el-dropdown-link">{{this.$store.getters.userInfo_userSelf}}<i class="el-icon-caret-bottom"/></span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="loginout" divided>退出登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
             </div>
+        <div class="header-link">
+            <el-link :underline="false" icon="el-icon-message-solid" type="info">我的消息</el-link>&nbsp;&nbsp;&nbsp;
+            <el-link :underline="false" icon="el-icon-s-platform" type="info">网站导航</el-link>&nbsp;&nbsp;&nbsp;
+            <el-link :underline="false" icon="el-icon-edit" type="info">问题反馈</el-link>&nbsp;&nbsp;&nbsp;
+            <el-link :underline="false"  icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
         </div>
-    </div>
-</template>
+        </div>
 
+
+
+    </div>
+
+</template>
 <script>
     import bus from '../common/bus';
+    import Header from "./Header";
 
     export default {
+
         data() {
+
             return {
                 collapse: false,
                 fullscreen: false,
@@ -97,38 +116,44 @@
         }
     };
 </script>
-
 <style scoped>
     .header {
         position: relative;
         box-sizing: border-box;
         width: 100%;
         height: 70px;
-        font-size: 22px;
-        color: #fff;
+
+        color: #909399;
+        background-color: #f7f7f7;
+    }
+    .header-link{
+        padding-right:20px;
+        line-height: 40px;
+        float: right
     }
 
     .collapse-btn {
         float: left;
         padding: 0 21px;
         cursor: pointer;
-        line-height: 70px;
+        line-height: 40px;
+
     }
 
     .header .logo {
         float: left;
         width: 250px;
-        line-height: 70px;
+        line-height: 40px;
     }
 
     .header-right {
         float: right;
-        padding-right: 50px;
+        padding-right: 20px;
     }
 
     .header-user-con {
         display: flex;
-        height: 70px;
+        height: 40px;
         align-items: center;
     }
 
@@ -173,13 +198,13 @@
 
     .user-avator img {
         display: block;
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
     }
 
     .el-dropdown-link {
-        color: #fff;
+        color: #909399;
         cursor: pointer;
     }
 

@@ -1,13 +1,14 @@
 <template>
     <div class="sidebar">
+
         <el-menu
             :collapse="collapse"
             :default-active="onRoutes"
             active-text-color="#20a0ff"
-            background-color="#324157"
+            background-color="#f7f7f7"
             class="sidebar-el-menu"
             router
-            text-color="#bfcbd9"
+            text-color="#909399"
             unique-opened>
             <template>
                 <el-submenu index="1">
@@ -90,7 +91,7 @@
         display: block;
         position: absolute;
         left: 0;
-        top: 70px;
+        top: 40px;
         bottom: 0;
         overflow-y: scroll;
     }

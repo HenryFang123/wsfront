@@ -1,11 +1,12 @@
 <template>
     <div>
-        <div class="address-box">
-            <div class="address-header">
+        <div class="info-box">
+            <div class="info-header">
                 <span>我的信息</span>
             </div>
         </div>
-
+        <div class="container" style="margin-top: 15px">
+            <div class="handle-box">
         <el-form ref="form" :model="form" label-width="80px "  >
             <el-form-item label="用户名">
                 <el-input v-model="form.userName"  ></el-input>
@@ -39,6 +40,8 @@
                 <el-button>取消</el-button>
             </el-form-item>
         </el-form>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -93,18 +96,32 @@
 </script>
 
 <style scoped>
-    .address-box {
+    .handle-box {
+        margin-bottom: 20px;
+    }
+
+    .handle-select {
+        width: 120px;
+    }
+
+    .handle-input {
+        width: 300px;
+        display: inline-block;
+    }
+    .info-box {
         padding: 15px;
         margin: 15px;
         border-radius: 5px;
         box-shadow: 0px 0px 5px #ccc;
+        background-color: #ffffff;
     }
 
-    .address-header {
+    .info-header {
         height: 35px;
         display: flex;
         justify-content: space-between;
         color: #232323;
         font-size: 18px;
+
     }
 </style>
