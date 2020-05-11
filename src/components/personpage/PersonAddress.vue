@@ -15,7 +15,7 @@
             </div>
             <div class="address-content">
                 <p><span class="address-content-title"> 收 货 人 :</span> {{item.consignee}}</p>
-                <p><span class="address-content-title">收货地区:</span> {{item.province}} {{item.city}}</p>
+                <p><span class="address-content-title">收货地区:</span> {{item.province}}  {{item.city}}  {{item.region}}</p>
                 <p><span class="address-content-title">收货地址:</span> {{item.address}}</p>
                 <p><span class="address-content-title">手机号码:</span> {{item.postPhone}}</p>
             </div>
@@ -23,10 +23,7 @@
         <!-- 编辑弹出框 -->
         <el-dialog :visible.sync="editVisible" title="编辑" width="30%">
             <el-form :model="formData" label-width="70px" ref="form">
-                <!--<el-form-item label="id">
-                    <el-input  v-model="formData.id"/>
-                </el-form-item>-->
-                <el-form-item label="收件人">
+                <el-form-item label="收货人">
                     <el-input  v-model="formData.consignee"/>
                 </el-form-item>
                 <el-form-item label="省">
@@ -34,6 +31,9 @@
                 </el-form-item>
                 <el-form-item label="市">
                     <el-input  v-model="formData.city"/>
+                </el-form-item>
+                <el-form-item label="区">
+                    <el-input  v-model="formData.region"/>
                 </el-form-item>
                 <el-form-item label="详细地址">
                     <el-input  v-model="formData.address"/>
@@ -70,6 +70,7 @@
                     postPhone: '',
                     province: '',
                     city: '',
+                    region:''
                 },
             }
         },
@@ -93,6 +94,7 @@
                 this.formData.province = this.address[index].province;
                 this.formData.city = this.address[index].city;
                 this.formData.address = this.address[index].address;
+                this.formData.region = this.address[index].region;
                 this.formData.postPhone = this.address[index].postPhone;
 
             },
@@ -105,6 +107,7 @@
                     'consignee' : this.formData.consignee,
                     'province' : this.formData.province,
                     'city' : this.formData.city,
+                    'region' : this.formData.region,
                     'address' : this.formData.address,
                     'postPhone' : this.formData.postPhone,
 

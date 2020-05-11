@@ -31,6 +31,9 @@
             <el-form-item label="市">
                 <el-input v-model="form.userCity"></el-input>
             </el-form-item>
+            <el-form-item label="区">
+                <el-input v-model="form.userRegion"></el-input>
+            </el-form-item>
             <el-form-item label="详细地址">
                 <el-input v-model="form.userAddress"></el-input>
             </el-form-item>
@@ -52,9 +55,7 @@
         name: "PersonInfo.vue",
         data() {
             return {
-                form: {
-
-                },
+                form: {},
                 List:{}
             }
         },
