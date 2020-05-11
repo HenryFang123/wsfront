@@ -105,6 +105,7 @@
 
     export default {
         name: 'BackBookManageTable.vue',
+
         data() {
             return {
                 count: 0,
@@ -122,38 +123,42 @@
                 id: -1,
             };
         },
+
         created() {
             this.getCount();
             this.getData();
         },
+
         methods: {
             current_change:function(currentPage){
                 this.currentPage = currentPage;
                 this.getData();
                 console.log(currentPage)
             },
+
             getCount(){
                 let params = {
                     businessId : this.$store.getters.AdminInfo_businessId,
                 };
-                ws_axios.fetchPost1('/book/getBookCount',params).then((back) =>{
+                ws_axios.fetchPost1('/book/getBookInfoCountByBusinessId',params).then((back) =>{
                     this.itemTotal = back.data;
-                    console.log(this.itemTotal)
                 });
             },
+
             getData() {
                 let params = {
                     businessId : this.$store.getters.AdminInfo_businessId,
                     pageIndex:this.currentPage,
                     pageSize:this.pageSize
                 };
-                ws_axios.fetchPost1('/book/getAllBook', params).then((back) => {
+                ws_axios.fetchPost1('/book/getBookInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
                     for (let i in this.List) {
                         this.List[i].id = ++this.count
                     }
                 })
             },
+
             deleteRow(index, rows) {
                 let params = {
                     'bookId': this.List[index].bookId,
@@ -166,11 +171,12 @@
                         type: "warning"
                     }
                 ).then((back) => {
-                    ws_axios.fetchPost1('/book/deleteBook', params).then((back) => {
+                    ws_axios.fetchPost1('/book/deleteBookInfoByBookId', params).then((back) => {
                         rows.splice(index, 1);
                     })
                 })
             },
+
             deleteSearch(){
                 let params = {
                     'bookName': this.formDelete.bookName,
@@ -184,23 +190,26 @@
                         type: "warning"
                     }
                 ).then((back) => {
-                    ws_axios.fetchPost1('/book/deleteBookByName', params).then((back) => {
+                    ws_axios.fetchPost1('/book/deleteBookInfoByBookNameAndBusinessId', params).then((back) => {
                         location.reload();
                     })
                 })
             },
+
             handleSearch() {
                 let params = {
                     'bookName': this.formDelete.bookName
                 };
-                ws_axios.fetchPost1('/book/getBookByName', params).then((back) => {
+                ws_axios.fetchPost1('/book/getBookInfoByBookName', params).then((back) => {
                     this.QueryList = back.data;
                     this.queryVisible = true
                 })
             },
+
             handleUpload(){
                 this.editVisible=true
             },
+
             uploadBook(){
                 let params = {
                     'businessId':this.$store.getters.AdminInfo_businessId,
@@ -214,11 +223,11 @@
                     'bookPrice':this.form.bookPrice,
                     'bookDescription':this.form.bookDescription
                 };
-                ws_axios.fetchPost1('/book/insertBook',params).then((back)=>{
+                ws_axios.fetchPost1('/book/insertBookInfo',params).then((back)=>{
                     location.reload()
                 })
             }
-        }
+        },
     };
 </script>
 

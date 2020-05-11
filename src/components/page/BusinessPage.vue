@@ -14,8 +14,9 @@
     import Footer from "../footer/Footer";
     import BusinessTop from "../page_block/BusinessTop";
     import BusinessBottom from "../page_block/BusinessBottom";
+
     export default {
-        name: "BusinessPage",
+        name: "BusinessPage.vue",
         components: {Header, Footer, BusinessTop, BusinessBottom},
     }
 </script>

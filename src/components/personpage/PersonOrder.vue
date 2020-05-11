@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "PersonOrder"
+        name: "PersonOrder.vue"
     }
 </script>
 

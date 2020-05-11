@@ -1,8 +1,6 @@
-<!--项目前端，展示购物车的页面-->
 <template>
     <div class="shop_car-page">
         <Header/>
-
         <div class="shop_car" v-if="this.$store.state.resultInfo.shopCarInfo.list.length">
             <el-container style="border: 1px solid #eee">
                 <el-header style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); height: 100px;">
@@ -34,7 +32,7 @@
                                     </el-col>
                                     <el-col style="text-align: left" :span="14"><span
                                         style="font-size: 14px;padding-left: 20px;">商品</span></el-col>
-                                    <el-col style="margin-left: 0px;" :span="2" ><span
+                                    <el-col style="margin-left: 0;" :span="2" ><span
                                         style="font-size: 14px;">单价</span></el-col>
                                     <el-col style="margin-left: 4px;" :span="2"><span
                                         style="font-size: 14px;">数量</span></el-col>
@@ -42,7 +40,7 @@
                                         style="font-size: 14px;">小计</span></el-col>
                                     <el-col style="margin-left: 25px;" :span="1"><span
                                         style="font-size: 14px;">操作</span></el-col>
-                                    <el-col :span="1"></el-col>
+                                    <el-col :span="2"/>
                                 </el-row>
                             </div>
                         </el-col>
@@ -50,7 +48,6 @@
                     </el-row>
                 </el-header>
 
-                <!--     具体购物车选项-->
                 <el-main style="margin: 5px auto; padding: 0; width: 100%;">
                     <el-row style="padding: 0; display: flex;">
                         <el-col :span="4"/>
@@ -60,7 +57,7 @@
                                         v-for="(bookItem, index) in this.$store.state.resultInfo.shopCarInfo.list">
                                     <el-col :span="2">
                                         <el-checkbox-group v-model="select" @change="CheckedBookSelect">
-                                            <el-checkbox :label="bookItem.id">&nbsp;</el-checkbox>
+                                            <el-checkbox v-bind:label="bookItem.id"><span/></el-checkbox>
                                         </el-checkbox-group>
                                     </el-col>
                                     <el-col :span="2">
@@ -71,18 +68,18 @@
                                         <span style="font-size: 13px;font-family:Microsoft YaHei ">{{bookItem.book_name}}</span>
                                     </el-col>
                                     <el-col :span="2">
-                    <span style="font-size: 13px;font-family:Microsoft YaHei;">
-                      {{bookItem.book_price | showPrice}}</span></el-col>
+                                        <span style="font-family: Microsoft YaHei; font-size: 13px;">{{bookItem.book_price | showPrice}}</span>
+                                    </el-col>
                                     <el-col :span="2">
                                         <button @click="decrement(index)" :disabled="bookItem.book_number<=1"
-                                                style="background-color:#EBEEF5;outline: none;">--
+                                                style="background-color:#EBEEF5; outline: none; font-size: 22px;">-
                                         </button>
                                         <input type="text" v-model.lazy.number="bookItem.book_number" size="1px;"
                                                style="text-align: center;outline: none;"
                                                onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^1-9]/g,1)}else{this.value=this.value.replace(/\D/g,'')}"
                                                onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
                                         <button @click="increment(index)"
-                                                style="background-color:#EBEEF5;outline: none;">+
+                                                style="background-color:#EBEEF5; outline: none; font-size: 22px;">+
                                         </button>
                                     </el-col>
                                     <el-col style="text-align: center;" :span="2"><b>{{getBookPrice(index) |
@@ -115,7 +112,7 @@
                                     <el-col :span="2">
                                         <div class="go-buy-it" @click="gotoSettlement">
                                             <b>去结算</b><br/>
-                                            <i class="el-icon-thumb"></i>
+                                            <i class="el-icon-thumb"/>
                                         </div>
                                     </el-col>
                                 </el-row>
@@ -127,12 +124,11 @@
                 </el-main>
             </el-container>
         </div>
-        <div v-else style="width: 100%;height: 70%;">
+        <div v-else style="width: 100%;">
             <el-row>
                 <el-col style="text-align: center"><h1>购物车为空</h1></el-col>
             </el-row>
         </div>
-
         <Footer/>
     </div>
 </template>
@@ -159,9 +155,9 @@
             }
         },
         created() {
-            this.init()
-            ws_axios.fetchPost1('/user/findUserPhoneAndAddressByUserId',{'userId': this.$store.state.userInfo.userId}).then((back)=>{
-                this.userPhone = back.data.userPhone
+            this.init();
+            ws_axios.fetchPost1('/user/getUserPhoneAndAddressByUserId',{'userId': this.$store.state.userInfo.userId}).then((back)=>{
+                this.userPhone = back.data.userPhone;
                 this.userAddress = back.data.userAddress
             })
         },
@@ -176,13 +172,13 @@
                                 'shopCarId': this.curList[i].shopcarId,
                                 'bookNumber': this.$store.state.resultInfo.shopCarInfo.list[k].book_number
                         };
-                            ws_axios.fetchPost1('/shopCar/updateBookNumber2', params)
+                            ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberChange', params)
                         }
                          break;
                     }
                 }
                 if (flag === false) {
-                    ws_axios.fetchPost1('/shopCar/deleteBookByShopCarId', {'shopCarId': this.curList[i].shopcarId})
+                    ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.curList[i].shopcarId})
                 }
             }
         },
@@ -194,24 +190,32 @@
                 }
                 return this.$store.getters.shopCar_getBookPrice(index)
             },
+
             decrement(index) {
                 this.$store.commit('decrement', index)
             },
+
             increment(index) {
                 this.$store.commit('increment', index)
             },
+
             remove(index) {
                 this.$store.commit('removeBookByIndex', index)
             },
-            CheckAllSelect(val) {//val有值时是this.selectId否则为空[]
+
+            // val有值时是this.selectId否则为空[]
+            CheckAllSelect(val) {
                 this.select = val ? this.selectId : [];
                 this.isIndeterminate = false;
             },
-            CheckedBookSelect(value) {//value.length是选中的多少项
+
+            // value.length是选中的多少项
+            CheckedBookSelect(value) {
                 let checkedCount = value.length;
                 this.allSelect = checkedCount === this.$store.state.resultInfo.shopCarInfo.list.length;
                 this.isIndeterminate = checkedCount > 0 && checkedCount < this.$store.state.resultInfo.shopCarInfo.list.length;
             },
+
             init() {
                 for (let i = 0; i < this.$store.state.resultInfo.shopCarInfo.list.length; i++) {
                     this.selectId.push(this.$store.state.resultInfo.shopCarInfo.list[i].id);
@@ -222,13 +226,14 @@
                 }
                 this.select = this.selectId;
             },
+
             gotoHome() {
                 this.$router.push("/")
             },
+
             gotoSettlement() {
                 let id = [];
                 this.randomNumber(this.select.length,9,function (arr) {id = arr})
-                // ws_axios.setBaseIrl(1);
                 for(let i in this.select){
                     let params = {
                         'orderId':id[i],
@@ -242,45 +247,43 @@
                         'bookNumber':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_number,
                         'totalPrice':this.$store.getters.shopCar_getBookPrice(this.select[i]-1).toFixed(2)
                     };
-                    ws_axios.fetchPost1('/order/addOrder',params).then((back) => {
-                        if(back.data.resultCode === "1"){
-                            ws_axios.fetchPost1('/shopCar/deleteBookByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
-                        }
+                    ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
+                        ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
                     });
                 }
                 //this.$store.commit('setOrderNum',this.select.length)
-                this.$store.commit('setOrderConfirm',false)
+                this.$store.commit('setOrderConfirm',false);
                 this.$router.push("/settlement_page")
             },
-            //产生不重复的随机数: num(产生数量)  digits(生成位数) callback(回调函数)
+
+            // 产生不重复的随机数: num(产生数量)  digits(生成位数) callback(回调函数)
             randomNumber(num,digits,callback){
                 let RandomArr = [];
                 let RandomTotal= 0;
                 function createRandom(num ,digit){
-                    if(RandomArr.length == 0){
+                    if(RandomArr.length === 0){
                         RandomTotal = num;
                     }
                     let start = "1";
                     let end ="9";
                     let wint = parseInt(digit);
                     for(let i=1;i<wint;i++){
-                        start+="0"
+                        start+="0";
                         end+="0";
                     }
                     for(let i=0;i<parseInt(num);i++){
                         let code =parseInt(Math.random()*parseInt(end)+parseInt(start));
                         let str = ","+RandomArr.toString()+",";
-                        if(str.indexOf(","+code+",")==-1){
+                        if(str.indexOf(","+code+",") === -1){
                             RandomArr.push(code);
                         }
                     }
                     //Remove duplication
                     let cha = RandomTotal-RandomArr.length;
                     if(cha<=0){
-                        callback(RandomArr)
+                        callback(RandomArr);
                         RandomArr=[];
                         RandomTotal=0;
-                        return;
                     }else{
                         createRandom(cha,digit)
                     }
@@ -288,16 +291,18 @@
                 createRandom(num,digits);
             }
         },
+
         filters: {
             showPrice(price) {
                 return '￥' + price.toFixed(2)
             },
         },
+
         computed: {
             totalPrice() {
                 let result = 0;
                 for (let index in this.$store.state.resultInfo.shopCarInfo.list) {
-                    result += this.$store.getters.shopCar_getBookPrice(index)
+                    result += this.$store.getters.shopCar_getBookPrice(index);
                 }
                 return result
             }
@@ -322,7 +327,6 @@
         padding: 0;
         margin: 0 auto;
         width: 100%;
-        height: 70%;
     }
 
     .select-item-show {
@@ -348,16 +352,4 @@
         padding-top: 5px;
         color: #FFFFFF;
     }
-
-    .el-col {
-        min-height: 1px;
-    }
-
-    .el-header{
-        padding: 0;
-    }
-
-    /*.el-checkbox__label{*/
-    /*    display: none;*/
-    /*}*/
 </style>

@@ -45,8 +45,10 @@
 </template>
 
 <script>
+    import ws_axios from "network/ws_axios";
+
     export default {
-        name: "BusinessBottom",
+        name: "BusinessBottom.vue",
         data() {
             return {
                 pageSize: 24,
@@ -59,13 +61,23 @@
             currentChange: function (currentPage) {
                 this.currentPage = currentPage;
             },
+
             // 获取后端查找店铺下分页的总数
             getTotal: function () {
                 let params = {
                     businessId: this.$store.getters.AdminInfo_businessId,
                 };
-                ws_axios.fetchPost1('/book/getBookCount', params).then((back) => {
+                ws_axios.fetchPost1('/book/getBookInfoCountByBusinessIdAndTypeId', params).then((back) => {
                     this.itemTotal = back.data;
+                });
+            },
+
+            // 获取后端查找店铺某一类别下书籍列表
+            getCurrentBusinessTypeBookList: function () {
+                let params = {
+                    businessId: this.$store.getters.AdminInfo_businessId,
+                };
+                ws_axios.fetchPost1('/book/getBookInfoListByBusinessIdAndTypeId', params).then((back) => {
                 });
             },
         }

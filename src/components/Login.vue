@@ -1,11 +1,10 @@
-<!--项目前端，登录页面-->
 <template>
     <div class="login-page">
         <!-- 页面头部块 -->
         <div class="login-header">
             <div class="login-header-block">
                 <div class="login-header-block-img">
-                    <el-image style="height: 80px; width: 80px" v-bind:src="this.$store.getters.webImg_wsLogo"/>
+                    <el-image v-bind:src="this.$store.getters.webImg_wsLogo" style="height: 80px; width: 80px"/>
                 </div>
                 <div class="login-header-block-span">
                     <span>欢迎登录</span>
@@ -16,7 +15,6 @@
             </div>
         </div>
 
-        <!-- 页面主题内容块 -->
         <div class="login-main">
             <el-form :model="login" :rules="rule" class="login-main-form"
                      label-position="left"
@@ -34,7 +32,7 @@
                 <el-form-item prop="pass_word">
                     <el-input auto-complete="off" placeholder="请输入密码" prefix-icon="el-icon-ump-mima" type="password"
                               v-model="login.pass_word">
-                        <template slot="prepend">密&emsp;码：</template>
+                        <template slot="prepend">密&emsp;&emsp;码：</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item>
@@ -63,7 +61,6 @@
             </el-form>
         </div>
 
-        <!-- 页面尾部块 -->
         <div class="login-footer">
             <footer class="login-footer-block">
                 <div class="clearfix"></div>
@@ -103,7 +100,6 @@
                     pass_word: ''
                 },
                 rule: {
-                    // use setting to check input item
                     user_self: [
                         {required: true, message: '☆ 用户名不能为空', trigger: 'blur'}
                     ],
@@ -124,6 +120,7 @@
                 const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
                 return str === '' || str === undefined || str === null;
             },
+
             // 登录表单提交+存储操作
             submitForm(login) {
                 // 提交登录表单
@@ -134,10 +131,9 @@
                             'userSelf': this.login.user_self,
                             'userPassWord': this.login.pass_word
                         };
-                        // ws_axios.setBaseIrl(1);
                         ws_axios.fetchPost1('/user/checkLogin', params).then((back) => {
                             // console.log(back.data);
-                            if (back.data.resultCode === "1") {
+                            if (back.data.resultCode === "0") {
                                 this.$message.error('登录错误，请输入正确的用户名或密码');
                                 this.clearCookie();
                             } else {
@@ -148,10 +144,8 @@
 
                                 // 判断复选框是否被勾选 勾选则调用配置cookie方法
                                 if (this.ws_checked === true && !this.isnull(this.login.user_self) && !this.isnull(this.login.pass_word)) {
-                                    // 传入保存账号名，保存密码，保存天数3个参数
                                     this.setCookie(back.data.userId, this.login.user_self, this.login.pass_word, 7);
                                 } else {
-                                    // 清空Cookie
                                     this.clearCookie();
                                 }
 
@@ -168,6 +162,7 @@
                     }
                 });
             },
+
             // 设置cookie
             setCookie: function (ws_user_id, ws_user_self, ws_pass_word, ws_save_days) {
                 const current_date = new Date(); // 获取时间
@@ -178,6 +173,7 @@
                 window.document.cookie = "WSUserSelf" + "=" + ws_user_self + ";path=/;expires=" + current_date.toUTCString();
                 window.document.cookie = "WSPassWord" + "=" + ws_pass_word + ";path=/;expires=" + current_date.toUTCString();
             },
+
             // 读取cookie
             getCookie: function () {
                 if (document.cookie.length > 0) {
@@ -195,10 +191,12 @@
                     }
                 }
             },
+
             // 清除cookie
             clearCookie: function () {
                 this.setCookie("", "", -1); // 修改2值都为空，天数为负1天就好了
             },
+
             gotoRegister() {
                 this.$router.push("/register")
             }
@@ -215,7 +213,6 @@
     body,
     #app,
     .login-page {
-        /*position: absolute;*/
         top: 0;
         left: 0;
         padding: 0;
@@ -226,7 +223,6 @@
     }
 
     .login-page .login-header {
-        /*border-bottom: 1px solid #DCDFE6;*/
         box-shadow: 0 3px 5px #cac6c6;
         background-color: #FFFFFF;
         color: #000000;

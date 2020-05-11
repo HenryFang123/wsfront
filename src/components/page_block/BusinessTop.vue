@@ -34,7 +34,7 @@
             getBusinessInfo : function () {
                 if (this.$store.getters.businessInfo_businessId.length > 0) {
                     let params = {"businessId": this.$store.getters.businessInfo_businessId};
-                    ws_axios.fetchPost1('/business/getBusinessInfoById', params).then((back) => {
+                    ws_axios.fetchPost1('/business/getBusinessInfoByBusinessId', params).then((back) => {
                         this.$store.dispatch("saveBusinessInfoBusinessDetail", back.data);
                     })
                 }

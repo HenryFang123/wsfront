@@ -103,7 +103,7 @@
                 let params = {
                     businessId: this.$store.getters.AdminInfo_businessId,
                 };
-                ws_axios.fetchPost1('/order/getOrderCount', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
                 });
             },
@@ -114,7 +114,7 @@
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
-                ws_axios.fetchPost1('/order/getOrder', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
                 })
             },
@@ -130,7 +130,7 @@
                         type: "warning"
                     }
                 ).then((back) => {
-                    ws_axios.fetchPost1('order/deleteOrder', params).then((back) => {
+                    ws_axios.fetchPost1('order/deleteOrderInfoByOrderId', params).then((back) => {
                         rows.splice(index, 1);
                     })
                 })
@@ -147,7 +147,7 @@
                         type: "warning"
                     }
                 ).then((back) => {
-                    ws_axios.fetchPost1('order/deleteOrder', params).then((back) => {
+                    ws_axios.fetchPost1('order/deleteOrderInfoByOrderId', params).then((back) => {
                         location.reload();
                     })
                 })
@@ -156,7 +156,7 @@
                 let params = {
                     'orderId': this.formDelete.orderId
                 };
-                ws_axios.fetchPost1('/order/getOneOrder', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderInfoByOrderId', params).then((back) => {
                     this.QueryList = back.data;
                     this.queryVisible = true
                 })

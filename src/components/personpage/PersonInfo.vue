@@ -49,7 +49,7 @@
     import ws_axios from "network/ws_axios";
     export default {
         inject: ['reload'],
-        name: "PersonInfo",
+        name: "PersonInfo.vue",
         data() {
             return {
                 form: {
@@ -110,9 +110,9 @@
     }
     .info-box {
         padding: 15px;
-        margin: 0px;
+        margin: 0;
         border-radius: 5px;
-        box-shadow: 0px 0px 5px #ccc;
+        box-shadow: 0 0 5px #ccc;
         background-color: #ffffff;
     }
 

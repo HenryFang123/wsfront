@@ -41,7 +41,6 @@
             // 获取为当前用户推荐的书籍数据
             getRecommendBookInfoOfCurrentUser: function () {
                 if (this.$store.getters.userInfo_userId.length > 0) {
-                    // ws_axios.setBaseIrl(2);
                     let params = {'userId': this.$store.getters.userInfo_userId};
                     ws_axios.fetchGet2('redis/byUserId', params).then((back) => {
                         if (back.data.resultCode === "0") {

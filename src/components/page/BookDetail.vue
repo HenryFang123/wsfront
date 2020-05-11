@@ -1,8 +1,6 @@
 <template>
     <div class="book_detail_page">
         <Header/>
-
-        <!-- 页面头部主题内容块 -->
         <div class="main">
             <el-row>
                 <el-col :span="4">
@@ -45,9 +43,6 @@
     export default {
         name: "BookDetail.vue",
         components: {Header, Footer, BookSelect, BookShow},
-        methods: {},
-        mounted() {
-        },
     }
 </script>
 

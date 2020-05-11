@@ -145,9 +145,11 @@
             handleClickDetail(tab, event) {
                 console.log(tab, event);
             },
+
             handleClickRecommend(tab, event) {
                 console.log(tab, event);
             },
+
             // 获取相同作者书籍的推荐
             getAuthorBookRecommendInfo: function () {
                 let params = {
@@ -155,16 +157,15 @@
                     'pageNum': 0,
                     'pageSize': 6
                 };
-                // ws_axios.setBaseIrl(2);
                 ws_axios.fetchGet2('/author/byBookNodeName', params).then((back) => {
                     if (back.data.resultCode === "0") {
                         console.log("error");
                     } else {
                         this.$store.dispatch("saveBookDetailInfoAuthorBookList", back.data);
-                        // location.reload();
                     }
                 });
             },
+
             // 获取相同类型书籍的推荐
             getTypeBookRecommendInfo: function () {
                 let params = {
@@ -172,16 +173,15 @@
                     'pageNum': 0,
                     'pageSize': 6
                 };
-                // ws_axios.setBaseIrl(2);
                 ws_axios.fetchGet2('/type/byBookNodeName', params).then((back) => {
                     if (back.data.resultCode === "0") {
                         console.log("error");
                     } else {
                         this.$store.dispatch("saveBookDetailInfoTypeBookList", back.data);
-                        // location.reload();
                     }
                 });
             },
+
             // 获取相同出版社书籍的推荐
             getPressBookRecommendInfo: function () {
                 let params = {
@@ -189,7 +189,6 @@
                     'pageNum': 0,
                     'pageSize': 6
                 };
-                // ws_axios.setBaseIrl(2);
                 ws_axios.fetchGet2('/press/byBookNodeName', params).then((back) => {
                     if (back.data.resultCode === "0") {
                         console.log("error");
@@ -206,12 +205,10 @@
         },
         updated() {
         },
-        components: {}
     }
 </script>
 
 <style scoped>
-    /***************商品详情介绍和推荐侧边栏开始***************/
     .book_show {
         width: 100%;
         margin: 40px auto;
@@ -345,5 +342,4 @@
         padding: 0;
         text-align: left;
     }
-
 </style>

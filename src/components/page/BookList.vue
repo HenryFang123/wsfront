@@ -1,7 +1,5 @@
-<!--项目前端，展示搜索书籍信息后，显示加结果的页面-->
 <template>
     <div class="show_book-page">
-        <!--引入Header-->
         <Header/>
 
         <div class="show_book-main">
@@ -43,7 +41,6 @@
                         </el-header>
                         <el-container style="margin-top: 30px;">
                             <el-aside style="width: 220px;">
-                                <!--el-aside中添加样式的class-->
                                 <div class="show_book-main-aside">
                                     <el-row>
                                         <el-col :span="24" class="show-aside-right">
@@ -51,7 +48,6 @@
                                                 <span>热卖图书</span>
                                                 <span>广告</span>
                                             </el-row>
-                                            <!--aside部分左侧广告-->
                                             <el-row>
                                                 <div :key="index" class="demo-image__placeholder"
                                                      v-for="(bookItem, index) in this.$store.getters.resultInfo_bookListInfo_hotBookInfo ">
@@ -151,8 +147,6 @@
                 </el-col>
             </el-row>
         </div>
-
-        <!--引入Footer-->
         <Footer/>
     </div>
 
@@ -193,47 +187,47 @@
                 this.$store.dispatch("saveBookDetailInfoBusinessId", this.$store.getters.resultInfo_bookListInfo_bookList[index].business_id.toString());
                 this.$router.push("/to_detail");
             },
-            gotoHome() {
-                this.$router.push("/")
-            },
 
             // 收藏书籍
             addCollect: function (index) {
             },
+
             // 改变搜索显示页页大小限制
             handleSizeChange(val) {
                 this.pageSize = val;
             },
+
             // 改变页码选择
             handleCurrentChange(val) {
                 this.currentPage = val;
                 if (this.$store.getters.searchInfo_searchWord.length > 0) {
-                    // 提交到 doSearch 方法
                     let params = {
                         'searchWord': this.$store.getters.searchInfo_searchWord,
                         'pageNum': val,
                         'pageSize': this.pageSize
                     };
-                    // ws_axios.setBaseIrl(2);
                     ws_axios.fetchPost2('/solr/doSearch', params).then((back) => {
                         if (back.data.resultCode === "0") {
                             console.log("error");
                         } else {
                             this.$store.dispatch("saveBookListInfoBookList", back.data.jsonArraySolrDocument);
-                            // location.reload();
                         }
                     })
                 } else {
                     console.log("error");
                 }
             },
+
             // 设置搜索结果总条数
             setResultItemTotal: function () {
                 if (this.$store.getters.resultInfo_bookListInfo_itemTotal > 0) {
                     this.itemTotal = this.$store.getters.resultInfo_bookListInfo_itemTotal;
-                    // console.log(this.$store.getters.resultInfo_bookListInfo_itemTotal)
                 }
-            }
+            },
+
+            gotoHome() {
+                this.$router.push("/")
+            },
         },
         mounted() {
             this.setResultItemTotal();
@@ -364,5 +358,4 @@
     .el-col {
         min-height: 1px;
     }
-
 </style>

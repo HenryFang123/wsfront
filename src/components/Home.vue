@@ -1,10 +1,6 @@
-<!--项目前端，商城首页面-->
 <template>
     <div class="home-page">
-        <!-- 引入 Header.vue， 做页面头部 -->
         <Header/>
-
-        <!-- 页面头部主题内容块 -->
         <div class="home-main">
             <el-row>
                 <el-col :span="4">
@@ -25,8 +21,6 @@
                 </el-col>
             </el-row>
         </div>
-
-        <!-- 引入 Footer.vue， 做页面尾部 -->
         <Footer/>
     </div>
 </template>
@@ -45,19 +39,12 @@
             // 获取当前用户所有的购物车数据
             getShopCarInfoOfCurrentUser: function () {
                 if (this.$store.getters.userInfo_userId.length > 0) {
-                    // ws_axios.setBaseIrl(1);
                     let params = {'userId': this.$store.getters.userInfo_userId};
-                    ws_axios.fetchPost1('/shopCar/getShopCarInfoByUserId', params).then((back) => {
-                        if (back.data.resultCode === "0") {
-                            console.log("get error");
-                        } else {
-                            this.$store.dispatch("saveShopCarInfoList", back.data);
-                        }
+                    ws_axios.fetchPost1('/shopCar/getShopCarListInfoByUserId', params).then((back) => {
+                        this.$store.dispatch("saveShopCarInfoList", back.data);
                     })
-                } else {
-                    console.log("no user id.");
                 }
-            }
+            },
         },
         mounted() {
             this.getShopCarInfoOfCurrentUser();

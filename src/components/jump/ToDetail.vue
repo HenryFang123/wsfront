@@ -15,7 +15,6 @@
                         'bookId': this.$store.getters.resultInfo_bookDetailInfo_bookId,
                         'businessId': this.$store.getters.resultInfo_bookDetailInfo_businessId
                     };
-                    // ws_axios.setBaseIrl(1);
                     ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                         if (back.data.resultCode === "0") {
                             console.log("error");
@@ -30,6 +29,7 @@
                 }
             },
         },
+
         mounted() {
             this.getBookDetailInfo();
         },

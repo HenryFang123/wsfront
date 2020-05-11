@@ -220,7 +220,6 @@
         name: "HomeTop.vue",
         data() {
             return {
-                // 首页图书分类, 弹出框内容数据
                 panel1: false,
                 panel2: false,
                 panel3: false,
@@ -306,17 +305,15 @@
 
             // 获取后端系统排行推荐的信息
             getSystemSortRecommend: function () {
-                // ws_axios.setBaseIrl(2);
                 let params = {};
                 ws_axios.fetchGet2('redis/getSystemSortList', params).then((back) => {
                     this.$store.dispatch("saveHomeInfoTopInfoBookList", back.data);
                 })
             }
         },
-        // 首页图书分类, 弹出框显示高度起始、长度起始设置
         mounted() {
+            // 首页图书分类, 弹出框显示高度起始、长度起始设置
             this.getSystemSortRecommend();
-
             this.$refs.itemPanel1.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
             this.$refs.itemPanel2.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
             this.$refs.itemPanel3.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';

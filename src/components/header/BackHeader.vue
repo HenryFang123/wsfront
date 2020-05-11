@@ -2,8 +2,8 @@
     <div class="header">
         <!-- 折叠按钮 -->
         <div @click="collapseChage" class="collapse-btn">
-            <i class="el-icon-s-fold" v-if="!collapse"></i>
-            <i class="el-icon-s-unfold" v-else></i>
+            <i class="el-icon-s-fold" v-if="!collapse"/>
+            <i class="el-icon-s-unfold" v-else/>
         </div>
         <div class="logo">后台管理系统</div>
         <div class="header-right">
@@ -11,7 +11,7 @@
                 <!-- 全屏显示 -->
                 <div @click="handleFullScreen" class="btn-fullscreen">
                     <el-tooltip :content="fullscreen?`取消全屏`:`全屏`" effect="dark" placement="bottom">
-                        <i class="el-icon-rank"></i>
+                        <i class="el-icon-rank"/>
                     </el-tooltip>
                 </div>
 
@@ -24,7 +24,7 @@
                     <span class="el-dropdown-link">
                         {{this.$store.getters.AdminInfo_adminName}}
 
-                        <i class="el-icon-caret-bottom"></i>
+                        <i class="el-icon-caret-bottom"/>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="loginout" divided>退出登录</el-dropdown-item>
@@ -60,11 +60,13 @@
                     this.$router.push('/BackLogin');
                 }
             },
+
             // 侧边栏折叠
             collapseChage() {
                 this.collapse = !this.collapse;
                 bus.$emit('collapse', this.collapse);
             },
+
             // 全屏事件
             handleFullScreen() {
                 let element = document.documentElement;
@@ -100,6 +102,7 @@
         }
     };
 </script>
+
 <style scoped>
     .header {
         position: relative;

@@ -99,18 +99,11 @@
                             break;
                         }
                     }
-
                     if (flag === 1) {
-                        // ws_axios.setBaseIrl(1);
-                        ws_axios.fetchPost1('/shopCar/updateBookNumber', params).then((back) => {
-                            if (back.data.resultCode === "0") {
-                                console.log("update error");
-                            } else {
-                                console.log("update success");
-                                this.isDisable = true;
-                                this.$router.push("/");
-                            }
-                        })
+                        ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberAdd', params).then((back) => {
+                            this.isDisable = true;
+                            this.$router.push("/");
+                        });
                     } else {
                         params = {
                             'userId': this.$store.getters.userInfo_userId,
@@ -118,21 +111,16 @@
                             'bookId': this.$store.getters.resultInfo_bookDetailInfo_bookId,
                             'bookNumber': this.bookCount
                         };
-                        // ws_axios.setBaseIrl(1);
-                        ws_axios.fetchPost1('/shopCar/addItemToShopCar', params).then((back) => {
-                            if (back.data.resultCode === "0") {
-                                console.log("add error");
-                            } else {
-                                console.log("add success");
-                                this.isDisable = true;
-                                this.$router.push("/");
-                            }
+                        ws_axios.fetchPost1('/shopCar/insertShopCarInfo', params).then((back) => {
+                            this.isDisable = true;
+                            this.$router.push("/");
                         })
                     }
                 } else {
                     console.log("no data in vuex.");
                 }
             },
+
             // 直接购买书籍
             payForBookBtn: function () {
             }
@@ -143,7 +131,6 @@
 </script>
 
 <style scoped>
-    /******************商品图片及购买详情开始******************/
     .book_select {
         width: 100%;
         margin: 15px auto;
@@ -169,7 +156,6 @@
         height: 70%;
     }
 
-    /*商品选购详情*/
     .book_select .book_select_middle {
         margin-right: 30px;
         display: flex;
@@ -309,6 +295,4 @@
         margin: 10px 10px 0;
         padding: 4px;
     }
-
-    /******************商品图片及购买详情结束******************/
 </style>

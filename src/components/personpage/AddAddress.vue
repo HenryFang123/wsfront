@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "AddAddress"
+        name: "AddAddress.vue"
     }
 </script>
 

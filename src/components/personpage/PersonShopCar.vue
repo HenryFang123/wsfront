@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "PersonShopCar"
+        name: "PersonShopCar.vue"
     }
 </script>
 

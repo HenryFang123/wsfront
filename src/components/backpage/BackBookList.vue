@@ -43,7 +43,6 @@
                 layout="prev, pager, next">
             </el-pagination>
 
-            <!-- 编辑弹出框 -->
             <el-dialog :visible.sync="editVisible" title="编辑" width="30%">
                 <el-form :model="form" label-width="70px" ref="form">
                     <el-form-item label="书名">
@@ -93,6 +92,7 @@
     export default {
         inject: ['reload'],
         name: 'BackBookList.vue',
+
         data() {
             return {
                 count: 0,
@@ -108,13 +108,14 @@
                 formQuery: {},
                 idx: -1,
                 id: -1,
-
             };
         },
+
         created() {
             this.getCount();
             this.getData();
         },
+
         methods: {
             current_change: function (currentPage) {
                 this.currentPage = currentPage;
@@ -125,7 +126,7 @@
                 let params = {
                     businessId: this.$store.getters.AdminInfo_businessId,
                 };
-                ws_axios.fetchPost1('/book/getBookCount', params).then((back) => {
+                ws_axios.fetchPost1('/book/getBookInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
                 });
             },
@@ -136,7 +137,7 @@
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
-                ws_axios.fetchPost1('/book/getAllBook', params).then((back) => {
+                ws_axios.fetchPost1('/book/getBookInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
                     for (let i in this.List) {
                         this.List[i].id = ++this.count;
@@ -144,21 +145,24 @@
                     this.reload();
                 })
             },
+
             handleSearch() {
                 let params = {
                     'bookName': this.formQuery.bookName
                 };
-                ws_axios.fetchPost1('/book/getBookByName', params).then((back) => {
+                ws_axios.fetchPost1('/book/getBookInfoByBookName', params).then((back) => {
                     this.QueryList = back.data;
                     this.queryVisible = true;
                 })
 
             },
+
             handleEdit(index, row) {
                 this.idx = index;
                 this.form = row;
                 this.editVisible = true;
             },
+
             // 保存编辑
             saveEdit() {
                 let params = {

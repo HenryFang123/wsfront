@@ -8,7 +8,7 @@
             <img src="assets/img/payImage/pay-qrscan.png">
         </div>
         <div>
-            <el-button @click="gotoHome" type="success" icon="el-icon-check" circle></el-button>
+            <el-button @click="gotoHome" type="success" icon="el-icon-check" circle/>
         </div>
         <Footer/>
     </div>
@@ -25,7 +25,7 @@
         },
         methods:{
             gotoHome(){
-                this.$store.commit('setOrderConfirm',true)
+                this.$store.commit('setOrderConfirm',true);
                 this.$router.push("/")
             }
         }

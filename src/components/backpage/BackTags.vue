@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import bus from '../common/bus';
+    import bus from 'components/common/bus';
 
     export default {
         name: 'BackTags.vue',

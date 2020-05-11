@@ -43,7 +43,7 @@
     import bus from 'components/common/bus';
 
     export default {
-        methods: {},
+        name: "BackSidebar.vue",
         data() {
             return {
                 collapse: false,

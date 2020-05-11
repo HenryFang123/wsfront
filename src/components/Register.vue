@@ -1,7 +1,5 @@
-<!--项目前端，注册页面-->
 <template>
     <div class="register-page">
-        <!-- 页面头部块 -->
         <div class="register-header">
             <div class="register-header-block">
                 <div class="register-header-block-img">
@@ -16,7 +14,6 @@
             </div>
         </div>
 
-        <!-- 页面主题内容块 -->
         <div class="register-main">
             <div class="register-main-block">
                 <el-steps :active="registerActive" align-center finish-status="success">
@@ -84,7 +81,6 @@
             </div>
         </div>
 
-        <!-- 页面尾部块 -->
         <div class="register-footer">
             <footer class="register-footer-block">
                 <div/>
@@ -110,7 +106,6 @@
 </template>
 
 <script>
-    // 导入数据请求配置文件
     import ws_axios from "network/ws_axios";
 
     export default {
@@ -139,7 +134,6 @@
             // 获取当前时间并格式化生成用户 userId
             getCurrentTimeToBeUserId: function () {
                 const date = new Date();
-                // const year = date.getFullYear();
                 const month = date.getMonth() + 1;
                 const day = date.getDate();
                 const hours = date.getHours();
@@ -179,6 +173,7 @@
 
                 this.$store.dispatch('saveUserInfoUserId', parseInt(submitUserId));
             },
+
             // 注册页面轮换页
             registerNext: function () {
                 if (this.isnull(this.register.user_phone) || this.isnull(this.register.inputCode)) {
@@ -193,6 +188,7 @@
                     }
                 }
             },
+
             // 验证手机号
             checkPhone: function () {
                 if (this.register.user_phone !== null) {
@@ -200,19 +196,17 @@
                     ws_axios.fetchPost1('/utils/checkPhone', params).then((back) => {
                         if (back.data.resultCode === "0") {
                             this.$message.error('注册手机号已被占用，请更换');
-                        } else {
-                            console.log("phone can be use.");
                         }
                     });
                 }
             },
+
             // 获取手机验证码
             registerGetCode: function () {
                 if (this.register.user_phone.length !== 11) {
                     this.$message.error('输入错误，请输入正确的手机号');
                 } else {
                     let params = {'userPhone': this.register.user_phone};
-                    // ws_axios.setBaseIrl(1);
                     ws_axios.fetchPost1('/utils/sendSms', params).then((back) => {
                         if (back.data.resultCode === "0") {
                             this.$message.error('未知错误，请重新获取');
@@ -238,6 +232,7 @@
                     });
                 }
             },
+
             // 进入首页，结束注册
             registerOver: function () {
                 this.$router.push({path: '/'});
@@ -247,11 +242,13 @@
                     type: 'success'
                 });
             },
+
             // 判断输入框是否为空
             isnull: function (val) {
                 const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
                 return str === '' || str === undefined || str === null;
             },
+
             // 注册提交表单验证
             submitForm(register) {
                 if (this.isnull(this.register.user_name) || this.isnull(this.register.pass_word) || this.isnull(this.register.pass_word2)) {
@@ -270,7 +267,6 @@
                                 'userPhone': this.register.user_phone,
                                 'userTar': 0
                             };
-                            // ws_axios.setBaseIrl(1);
                             ws_axios.fetchPost1('/user/doRegister', params).then((back) => {
                                 if (back.data.resultCode === "0") {
                                     this.$message.error('注册错误，注册过程中发生未知错误');
@@ -287,12 +283,14 @@
                     });
                 }
             },
-            gotoLogin() {
-                this.$router.push("/login")
-            },
+
             // 清除cookie
             clearCookie: function () {
                 this.setCookie("", "", -1); // 修改2值都为空，天数为负1天就好了
+            },
+
+            gotoLogin() {
+                this.$router.push("/login")
             },
         },
     }
@@ -303,7 +301,6 @@
     body,
     #app,
     .register-page {
-        /*position: absolute;*/
         top: 0;
         left: 0;
         padding: 0;
@@ -314,7 +311,6 @@
     }
 
     .register-page .register-header {
-        /*border-bottom: 1px solid #DCDFE6;*/
         box-shadow: 0 3px 5px #cac6c6;
         background-color: #FFFFFF;
         color: #000000;

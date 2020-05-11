@@ -120,7 +120,7 @@
                 let params = {
                     businessId: this.$store.getters.AdminInfo_businessId,
                 };
-                ws_axios.fetchPost1('/order/getOrderCount', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
                 });
             },
@@ -130,7 +130,7 @@
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
-                ws_axios.fetchPost1('/order/getOrder', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
                     this.reload();
                 })
@@ -139,7 +139,7 @@
                 let params = {
                     'orderId': this.formQuery.orderId
                 };
-                ws_axios.fetchPost1('/order/getOneOrder', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderInfoByOrderId', params).then((back) => {
                     this.QueryList = back.data;
                     this.queryVisible = true
                 })
@@ -157,7 +157,7 @@
                     'userAddress': this.form.userAddress,
                     'userPhone': this.form.userPhone
                 };
-                ws_axios.fetchPost1('/order/updateOrder', params).then((back) => {
+                ws_axios.fetchPost1('/order/updateOrderInfo', params).then((back) => {
                     this.editVisible = false;
                     location.reload();
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);

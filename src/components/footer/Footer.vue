@@ -72,10 +72,8 @@
 <style scoped>
     .div-footer {
         width: 100%;
-        /*height: 390px;*/
         background-color: #F7F7F7;
         border-top: 2px solid #f56c6c;
-        /*position: absolute;*/
         bottom: 0;
     }
 
@@ -102,7 +100,7 @@
         position: absolute;
         width: 36px;
         height: 42px;
-        background-image: url("~assets/img/footer/ico_service.png");
+        background-image: url("../../assets/img/footer/ico_service.png");
         text-indent: -999px;
     }
 

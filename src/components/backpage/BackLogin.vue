@@ -48,13 +48,11 @@
             submitForm() {
                 this.$refs.login.validate((valid) => {
                     if (valid) {
-                        // 提交表单到 checkLogin 方法
                         let params = {
                             adminId: this.param.adminId,
                             adminPassword: this.param.adminPassword
                         };
                         ws_axios.fetchPost1('/admin/checkLogin', params).then((back) => {
-                            // console.log(back.data);
                             if (back.data.resultCode === "1") {
                                 this.$message.error('登录错误，请输入正确的用户名或密码');
                             } else {

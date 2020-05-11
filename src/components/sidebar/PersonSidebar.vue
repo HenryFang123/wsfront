@@ -1,6 +1,5 @@
 <template>
     <div class="sidebar">
-
         <el-menu
             :collapse="collapse"
             :default-active="onRoutes"
@@ -13,7 +12,7 @@
             <template>
                 <el-submenu index="1">
                     <template slot="title">
-                        <i class="el-icon-menu"></i>
+                        <i class="el-icon-menu"/>
                         <span>个人中心</span>
                     </template>
                     <el-menu-item-group>
@@ -24,7 +23,7 @@
                 </el-submenu>
                 <el-submenu index="2">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
+                        <i class="el-icon-location"/>
                         <span>收货地址</span>
                     </template>
                     <el-menu-item-group>
@@ -36,7 +35,7 @@
                 </el-submenu>
                 <el-submenu index="3">
                     <template slot="title">
-                        <i class="el-icon-bangzhu"></i>
+                        <i class="el-icon-bangzhu"/>
                         <span>购物订单</span>
                     </template>
                     <el-menu-item-group>
@@ -47,7 +46,7 @@
                 </el-submenu>
                 <el-submenu index="4">
                     <template slot="title">
-                        <i class="el-icon-s-help"></i>
+                        <i class="el-icon-s-help"/>
                         <span>购物车</span>
                     </template>
                     <el-menu-item-group>
@@ -61,7 +60,7 @@
 </template>
 
 <script>
-    import bus from '../common/bus';
+    import bus from 'components/common/bus';
 
     export default {
         methods: {},

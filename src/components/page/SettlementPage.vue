@@ -1,8 +1,8 @@
 <template>
-    <div class="shop_car-page">
+    <div class="settlement-page">
         <Header/>
 
-        <div class="shop_car" v-if="this.order.length">
+        <div class="settlement" v-if="this.order.length">
             <el-container style="border: 1px solid #eee">
                 <el-header style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); height: 100px">
                     <el-row style="margin-top: 5px; padding: 0; display: flex">
@@ -16,7 +16,7 @@
                     <el-row style="margin-top: 10px; padding: 0; display: flex">
                         <el-col :span="4"/>
                         <el-col :span="16" style="text-align: left">
-                            <span style="font-family:Microsoft YaHei; font-size: 20px; color: #F56C6C;">订单</span>
+                            <span style="font-family: Microsoft YaHei; font-size: 20px; color: #F56C6C;">订单</span>
                         </el-col>
                         <el-col :span="4"/>
                     </el-row>
@@ -43,7 +43,6 @@
                     </el-row>
                 </el-header>
 
-                <!--  订单项-->
                 <el-main style="margin: 5px auto; padding: 0; width: 100%;">
                     <el-row style="padding: 0; display: flex;">
                         <el-col :span="4"/>
@@ -75,7 +74,7 @@
                     <el-row style="margin-top: 6px; padding: 0; display: flex;">
                         <el-col :span="4"/>
                         <el-col :span="16">
-                            <div class="settle-shop-car">
+                            <div class="settle-settlement">
                                 <el-row>
                                     <el-col :span="1"/>
                                     <el-col :span="21" style="text-align: right">总价：
@@ -84,11 +83,11 @@
                                     <el-col :span="2">
                                         <div class="go-buy-it" @click="gotoPayDone" v-if="!isShow">
                                             <b>去付款</b><br/>
-                                            <i class="el-icon-right"></i>
+                                            <i class="el-icon-right"/>
                                         </div>
                                         <div v-else class="go-buy-it2">
                                             <b>您已付款</b><br/>
-                                            <i class="el-icon-finished"></i>
+                                            <i class="el-icon-finished"/>
                                         </div>
                                     </el-col>
                                 </el-row>
@@ -96,11 +95,10 @@
                         </el-col>
                         <el-col :span="4"/>
                     </el-row>
-
                 </el-main>
             </el-container>
         </div>
-        <div v-else style="width: 100%;height: 70%;">
+        <div v-else style="width: 100%;">
             <el-row>
                 <el-col style="text-align: center"><h1>订单为空</h1></el-col>
             </el-row>
@@ -126,12 +124,10 @@
             }
         },
         created(){
-            // ws_axios.setBaseIrl(1);
-            ws_axios.fetchPost1('/order/getOrdersByUserId',{'userId':this.$store.state.userInfo.userId}).then((back)=>{
+            ws_axios.fetchPost1('/order/getOrderInfoListByUserId',{'userId':this.$store.state.userInfo.userId}).then((back)=>{
                 this.order=back.data
-            })
-            this.isShow = this.$store.state.resultInfo.orderConfirm
-            console.log(this.$store.state.resultInfo.orderConfirm)
+            });
+            this.isShow = this.$store.state.resultInfo.orderConfirm;
         },
         methods:{
             gotoHome() {
@@ -149,7 +145,7 @@
         computed: {
             totalPrice() {
                 return this.order.reduce(function (prevalue,n) {
-                            return prevalue + n.totalPrice
+                    return prevalue + n.totalPrice
                 },0)
             }
         }
@@ -160,7 +156,7 @@
     html,
     body,
     #app,
-    .shop_car-page {
+    .settlement-page {
         top: 0;
         left: 0;
         padding: 0;
@@ -170,11 +166,11 @@
         background-color: #FFFFFF;
     }
 
-    .shop_car {
-           padding: 0;
-           margin: 0 auto;
-           width: 100%;
-       }
+    .settlement {
+        padding: 0;
+        margin: 0 auto;
+        width: 100%;
+    }
 
     .select-item-show {
         border-radius: 4px;
@@ -183,12 +179,11 @@
         width: 100%;
     }
 
-    .settle-shop-car {
+    .settle-settlement {
         border-radius: 4px;
         background-color: #EBEEF5;
         height: 50px;
     }
-
 
     .go-buy-it {
         background-color: #FF3228;
@@ -210,12 +205,5 @@
         margin-left: 10px;
         padding-top: 5px;
         color: #FFFFFF;
-    }
-
-    .el-col {
-        min-height: 1px;
-    }
-    .el-header{
-        padding: 0px;
     }
 </style>
