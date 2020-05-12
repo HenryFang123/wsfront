@@ -1,7 +1,5 @@
 <template>
     <div class="header">
-        <!-- 折叠按钮 -->
-
         <div>
             <div @click="collapseChage" class="collapse-btn">
                 <i class="el-icon-s-fold" v-if="!collapse"/>
@@ -24,7 +22,7 @@
                     <!-- 用户名下拉菜单 -->
                     <el-dropdown @command="handleCommand" class="user-name" trigger="click">
                     <span class="el-dropdown-link">
-                       {{this.$store.getters.userInfo_userSelf}}
+                       {{this.$store.getters.currUserInfo.userName}}
 
                         <i class="el-icon-caret-bottom"/>
                     </span>
@@ -41,16 +39,14 @@
                 <el-link :underline="false"  icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
             </div>
         </div>
-
-
-
     </div>
-
 </template>
+
 <script>
-    import bus from '../common/bus';
+    import bus from 'components/common/bus';
 
     export default {
+        name: "PersonHeader.vue",
         data() {
             return {
                 collapse: false,
@@ -59,14 +55,12 @@
                 message: 2
             };
         },
-
         computed: {
             username() {
                 let adminId = localStorage.getItem('adminId');
                 return adminId ? adminId : adminId;
             }
         },
-
         methods: {
             // 用户名下拉菜单选择事件
             handleCommand(command) {
@@ -110,7 +104,6 @@
                 this.fullscreen = !this.fullscreen;
             }
         },
-
         mounted() {
             if (document.body.clientWidth < 1500) {
                 this.collapseChage();

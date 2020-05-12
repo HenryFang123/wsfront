@@ -7,15 +7,15 @@
             <div class="business_recommend_book">
                 <div :key="index"
                      class="business_recommend_list"
-                     v-for="(bookItem, index) in this.$store.getters.resultInfo_bookDetailInfo_businessBookList">
+                     v-for="(bookItem, index) in this.businessBookList">
                     <div class="business_recommend_image">
                         <el-image style="height: 150px; width: 130px;cursor: pointer;"
-                                  v-bind:src="bookItem.book_image_path"/>
+                                  v-bind:src="bookItem.bookImagePath"/>
                     </div>
                     <div class="business_recommend_info">
               <span>
-                <span class="business_recommend_num">{{index + 1}}</span> 热销{{bookItem.book_num}}件</span>
-                        <span class="business_recommend_price">￥{{bookItem.book_price}}</span>
+                <span class="business_recommend_num">{{index + 1}}</span> 热销{{bookItem.bookNumber}}件</span>
+                        <span class="business_recommend_price">￥{{bookItem.bookPrice}}</span>
                     </div>
                 </div>
             </div>
@@ -58,11 +58,11 @@
             <el-row>
                 <div class="book_recommend_block">
                     <el-tabs @tab-click="handleClickRecommend" type="border-card" v-model="activeNameRecommend">
-                        <el-tab-pane label="相同作者" name="first">
+                        <el-tab-pane @click="getAuthorBookRecommendInfo()" label="相同作者" name="first">
                             <el-row>
                                 <el-col :key="index"
                                         :span="4"
-                                        v-for="(bookItem,index) in this.$store.getters.resultInfo_bookDetailInfo_authorBookList">
+                                        v-for="(bookItem,index) in this.authorBookList">
                                     <div class="book_card">
                                         <div class="book_img">
                                             <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
@@ -80,11 +80,11 @@
                                 </el-col>
                             </el-row>
                         </el-tab-pane>
-                        <el-tab-pane label="相同类型" name="second">
+                        <el-tab-pane @click="getTypeBookRecommendInfo()" label="相同类型" name="second">
                             <el-row>
                                 <el-col :key="index"
                                         :span="4"
-                                        v-for="(bookItem,index) in this.$store.getters.resultInfo_bookDetailInfo_typeBookList">
+                                        v-for="(bookItem,index) in this.typeBookList">
                                     <div class="book_card">
                                         <div class="book_img">
                                             <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
@@ -102,11 +102,11 @@
                                 </el-col>
                             </el-row>
                         </el-tab-pane>
-                        <el-tab-pane label="相同出版社" name="third">
+                        <el-tab-pane @click="getPressBookRecommendInfo()" label="相同出版社" name="third">
                             <el-row>
                                 <el-col :key="index"
                                         :span="4"
-                                        v-for="(bookItem,index) in this.$store.getters.resultInfo_bookDetailInfo_pressBookList">
+                                        v-for="(bookItem,index) in this.pressBookList">
                                     <div class="book_card">
                                         <div class="book_img">
                                             <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
@@ -138,9 +138,12 @@
             return {
                 activeNameDetail: 'first',
                 activeNameRecommend: 'first',
+                businessBookList: [],
+                authorBookList: [],
+                typeBookList: [],
+                pressBookList: [],
             };
         },
-        computed: {},
         methods: {
             handleClickDetail(tab, event) {
                 console.log(tab, event);
@@ -157,11 +160,10 @@
                     'pageNum': 0,
                     'pageSize': 6
                 };
+                console.log(this.bookInfo.bookIsbn);
                 ws_axios.fetchGet2('/author/byBookNodeName', params).then((back) => {
-                    if (back.data.resultCode === "0") {
-                        console.log("error");
-                    } else {
-                        this.$store.dispatch("saveBookDetailInfoAuthorBookList", back.data);
+                    if (back.data.resultCode === "1") {
+                        this.authorBookList = back.data.authorBookList;
                     }
                 });
             },
@@ -174,10 +176,8 @@
                     'pageSize': 6
                 };
                 ws_axios.fetchGet2('/type/byBookNodeName', params).then((back) => {
-                    if (back.data.resultCode === "0") {
-                        console.log("error");
-                    } else {
-                        this.$store.dispatch("saveBookDetailInfoTypeBookList", back.data);
+                    if (back.data.resultCode === "1") {
+                        this.typeBookList = back.data.typeBookList;
                     }
                 });
             },
@@ -190,20 +190,14 @@
                     'pageSize': 6
                 };
                 ws_axios.fetchGet2('/press/byBookNodeName', params).then((back) => {
-                    if (back.data.resultCode === "0") {
-                        console.log("error");
-                    } else {
-                        this.$store.dispatch("saveBookDetailInfoPressBookList", back.data);
+                    if (back.data.resultCode === "1") {
+                        this.pressBookList = back.data.pressBookList;
                     }
                 });
             },
         },
         mounted() {
-            this.getAuthorBookRecommendInfo();
-            this.getTypeBookRecommendInfo();
-            this.getPressBookRecommendInfo();
-        },
-        updated() {
+
         },
     }
 </script>

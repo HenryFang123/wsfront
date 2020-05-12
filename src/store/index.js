@@ -8,8 +8,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-      isLoading: false,
-
       // 商城静态图片
       webImg: {
           wsLogo: "http://image.nicezza.online/web_img/ws_logo.png",
@@ -20,32 +18,14 @@ export default new Vuex.Store({
       },
 
       // 储存进入系统的用户信息
-      userInfo: {
-          // 用户登录ID
-          userId: '',
-          // 用户登录使用名
-          userSelf: '',
-          // 用户验证手机号的验证码
-          phoneCode: ''
-      },
-
+      currUserInfo: {},
       // 存管理员信息
-      adminInfo: {
-          adminId: '',
-          adminPassword: '',
-          adminName: '',
-          businessId: ''
-      },
-
+      adminInfo: {},
       // 存储店铺信息
-      businessInfo: {
-          businessId: '',
-          businessDetail: {}
-      },
+      businessInfo: {},
 
       // 查询存储
       searchInfo: {
-          // 查询表单提交内容
           searchWord: '',
       },
 
@@ -64,20 +44,12 @@ export default new Vuex.Store({
           // 查询结果显示页
           bookListInfo: {
               hotBookInfo: [],
-              itemTotal: 0,
-              bookList: [],
           },
 
           // 书籍详情页
           bookDetailInfo: {
-              bookId: '',
-              businessId: '',
               bookInfo: {},
               businessInfo: {},
-              businessBookList: [],
-              authorBookList: [],
-              typeBookList: [],
-              pressBookList: [],
           },
 
           // 购物车页

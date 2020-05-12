@@ -75,7 +75,7 @@
                                 <div class="show_book-main-main">
                                     <!--每一件图书的可定义样式-->
                                     <div :key="index" class="show_book-main-main-list"
-                                         v-for="(bookItem, index) in this.$store.getters.resultInfo_bookListInfo_bookList">
+                                         v-for="(bookItem, index) in this.solrBookList">
                                         <el-row>
                                             <el-col :span="4">
                                                 <div class="block">
@@ -159,19 +159,19 @@
     import ws_axios from "network/ws_axios";
 
     export default {
+        inject: ['reload'],
         name: "BookList.vue",
         components: {Header, Footer},
-        inject: ['reload'],
         data() {
             return {
-                bookInfoValue: true,
                 currentPage: 1,
                 pageSize: 10,
                 itemTotal: 0,
+                solrBookList: [],
                 tagsInfo: [
                     {
                         tagName: '分类',
-                        tags: ['其他', '工学', '理学', '计算机']
+                        tags: ['名著', '文化', '哲学', '思想']
                     },
                     {
                         tagName: '出版社',
@@ -181,11 +181,32 @@
             }
         },
         methods: {
+            // 获取查询结果列表
+            getSolrBookListInfo: function () {
+                let params = {
+                    'searchWord': this.$store.getters.searchInfo_searchWord,
+                    'pageNum': 1,
+                    'pageSize': 10
+                };
+                ws_axios.fetchPost2('/solr/doSearch', params).then((back) => {
+                    if (back.data.resultCode === "1") {
+                        this.itemTotal = back.data.itemTotal;
+                        this.solrBookList = back.data.jsonArraySolrDocument;
+                    }
+                })
+            },
+
             // 跳转至书籍信息详情页面
             toDetail: function (index) {
-                this.$store.dispatch("saveBookDetailInfoBookId", this.$store.getters.resultInfo_bookListInfo_bookList[index].book_id.toString());
-                this.$store.dispatch("saveBookDetailInfoBusinessId", this.$store.getters.resultInfo_bookListInfo_bookList[index].business_id.toString());
-                this.$router.push("/to_detail");
+                let params = {
+                    'bookId': this.solrBookList[index].book_id,
+                    'businessId': this.solrBookList[index].business_id,
+                };
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                });
+                this.$router.push("/book_detail");
             },
 
             // 收藏书籍
@@ -200,42 +221,29 @@
             // 改变页码选择
             handleCurrentChange(val) {
                 this.currentPage = val;
-                if (this.$store.getters.searchInfo_searchWord.length > 0) {
-                    let params = {
-                        'searchWord': this.$store.getters.searchInfo_searchWord,
-                        'pageNum': val,
-                        'pageSize': this.pageSize
-                    };
-                    ws_axios.fetchPost2('/solr/doSearch', params).then((back) => {
-                        if (back.data.resultCode === "0") {
-                            console.log("error");
-                        } else {
-                            this.$store.dispatch("saveBookListInfoBookList", back.data.jsonArraySolrDocument);
-                        }
-                    })
-                } else {
-                    console.log("error");
-                }
-            },
-
-            // 设置搜索结果总条数
-            setResultItemTotal: function () {
-                if (this.$store.getters.resultInfo_bookListInfo_itemTotal > 0) {
-                    this.itemTotal = this.$store.getters.resultInfo_bookListInfo_itemTotal;
-                }
+                let params = {
+                    'searchWord': this.$store.getters.searchInfo_searchWord,
+                    'pageNum': val,
+                    'pageSize': this.pageSize
+                };
+                ws_axios.fetchPost2('/solr/doSearch', params).then((back) => {
+                    if (back.data.resultCode === "1") {
+                        this.solrBookList = back.data.jsonArraySolrDocument;
+                    }
+                })
             },
 
             gotoHome() {
                 this.$router.push("/")
             },
         },
-        mounted() {
-            this.setResultItemTotal();
-        }
+        created() {
+            this.getSolrBookListInfo();
+        },
     }
 </script>
 
-<style>
+<style scoped>
     .item-class-show {
         margin: 15px auto;
         width: 100%;

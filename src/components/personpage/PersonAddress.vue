@@ -53,6 +53,7 @@
 
 <script>
     import ws_axios from "network/ws_axios";
+
     export default {
         inject: ['reload'],
         name: "PersonAddress.vue",
@@ -80,7 +81,7 @@
         methods: {
             getData() {
                 let params = {
-                    'userPhone': this.$store.getters.userInfo_userSelf,
+                    'userPhone': this.$store.getters.currUserInfo.userPhone,
                 };
                 ws_axios.fetchPost1('/shippingAddress/getShippingAddressByUserPhone', params).then((back) => {
                     this.address = back.data;
@@ -96,21 +97,19 @@
                 this.formData.address = this.address[index].address;
                 this.formData.region = this.address[index].region;
                 this.formData.postPhone = this.address[index].postPhone;
-
             },
 
             // 保存编辑
             saveEdit() {
                 let params = {
                     'id' : this.formData.id,
-                    'userPhone': this.$store.getters.userInfo_userSelf,
+                    'userPhone': this.$store.getters.currUserInfo.userPhone,
                     'consignee' : this.formData.consignee,
                     'province' : this.formData.province,
                     'city' : this.formData.city,
                     'region' : this.formData.region,
                     'address' : this.formData.address,
                     'postPhone' : this.formData.postPhone,
-
                 };
                 ws_axios.fetchPost1('/shippingAddress/updateShippingAddress', params).then((back) => {
                     this.editVisible = false;

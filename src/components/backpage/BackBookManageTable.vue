@@ -105,7 +105,6 @@
 
     export default {
         name: 'BackBookManageTable.vue',
-
         data() {
             return {
                 count: 0,
@@ -123,12 +122,10 @@
                 id: -1,
             };
         },
-
         created() {
             this.getCount();
             this.getData();
         },
-
         methods: {
             current_change:function(currentPage){
                 this.currentPage = currentPage;
@@ -138,7 +135,7 @@
 
             getCount(){
                 let params = {
-                    businessId : this.$store.getters.AdminInfo_businessId,
+                    businessId : this.$store.getters.adminInfo.businessId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoCountByBusinessId',params).then((back) =>{
                     this.itemTotal = back.data;
@@ -147,7 +144,7 @@
 
             getData() {
                 let params = {
-                    businessId : this.$store.getters.AdminInfo_businessId,
+                    businessId : this.$store.getters.adminInfo.businessId,
                     pageIndex:this.currentPage,
                     pageSize:this.pageSize
                 };
@@ -180,7 +177,7 @@
             deleteSearch(){
                 let params = {
                     'bookName': this.formDelete.bookName,
-                    'businessId':this.$store.getters.AdminInfo_businessId
+                    'businessId':this.$store.getters.adminInfo.businessId
                 };
                 this.$confirm(
                     "确认下架吗？",
@@ -212,7 +209,7 @@
 
             uploadBook(){
                 let params = {
-                    'businessId':this.$store.getters.AdminInfo_businessId,
+                    'businessId':this.$store.getters.adminInfo.businessId,
                     'bookId':this.form.bookId,
                     'bookName' :this.form.bookName,
                     'bookImagePath':this.form.bookImagePath,

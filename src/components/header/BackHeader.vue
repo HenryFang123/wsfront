@@ -22,7 +22,7 @@
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown @command="handleCommand" class="user-name" trigger="click">
                     <span class="el-dropdown-link">
-                        {{this.$store.getters.AdminInfo_adminName}}
+                        {{this.$store.getters.adminInfo.adminName}}
 
                         <i class="el-icon-caret-bottom"/>
                     </span>
@@ -35,7 +35,7 @@
     </div>
 </template>
 <script>
-    import bus from '../common/bus';
+    import bus from 'components/common/bus';
 
     export default {
         data() {

@@ -9,33 +9,33 @@
             <div class="handle-box">
         <el-form ref="form" :model="form" label-width="80px "  >
             <el-form-item label="用户名">
-                <el-input v-model="form.userName"  ></el-input>
+                <el-input v-model="form.userName"/>
             </el-form-item>
             <el-form-item label="邮箱">
-                <el-input v-model="form.userEmail"></el-input>
+                <el-input v-model="form.userEmail"/>
             </el-form-item>
             <el-form-item label="性别">
                 <el-radio-group v-model="form.userSex">
-                    <el-radio label="男"></el-radio>
-                    <el-radio label="女"></el-radio>
+                    <el-radio label="男"/>
+                    <el-radio label="女"/>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="年龄">
-                <el-input v-model="form.userAge"></el-input>
+                <el-input v-model="form.userAge"/>
             </el-form-item>
             <el-form-item label="省">
 
-                <el-input v-model="form.userProvince"></el-input>
+                <el-input v-model="form.userProvince"/>
 
             </el-form-item>
             <el-form-item label="市">
-                <el-input v-model="form.userCity"></el-input>
+                <el-input v-model="form.userCity"/>
             </el-form-item>
             <el-form-item label="区">
-                <el-input v-model="form.userRegion"></el-input>
+                <el-input v-model="form.userRegion"/>
             </el-form-item>
             <el-form-item label="详细地址">
-                <el-input v-model="form.userAddress"></el-input>
+                <el-input v-model="form.userAddress"/>
             </el-form-item>
 
             <el-form-item>
@@ -50,6 +50,7 @@
 
 <script>
     import ws_axios from "network/ws_axios";
+
     export default {
         inject: ['reload'],
         name: "PersonInfo.vue",
@@ -65,11 +66,8 @@
         methods: {
             getData() {
                 let params = {
-                    'userPhone': this.$store.getters.userInfo_userSelf,
-
+                    'userPhone': this.$store.getters.currUserInfo.userPhone,
                 };
-                console.log(this.$store.getters.userInfo_userSelf);
-
                 ws_axios.fetchPost1('/user/getUserInfoByUserPhone', params).then((back) => {
                     this.form = back.data;
                     console.log(this.form);
@@ -77,7 +75,7 @@
             },
             onSubmit() {
                 let params = {
-                    'userPhone' : this.$store.getters.userInfo_userSelf,
+                    'userPhone' : this.$store.getters.currUserInfo.userPhone,
                     'userName' : this.form.userName,
                     'userEmail' : this.form.userEmail,
                     'userSex' : this.form.userSex,
@@ -89,8 +87,6 @@
                 ws_axios.fetchPost1('/user/updateUserInfo', params).then((back) => {
                     this.reload();
                 })
-
-
             }
         }
     }

@@ -156,10 +156,6 @@
         },
         created() {
             this.init();
-            ws_axios.fetchPost1('/user/getUserPhoneAndAddressByUserId',{'userId': this.$store.state.userInfo.userId}).then((back)=>{
-                this.userPhone = back.data.userPhone;
-                this.userAddress = back.data.userAddress
-            })
         },
         beforeDestroy() {
             for (let i in this.curList) {
@@ -220,8 +216,8 @@
                 for (let i = 0; i < this.$store.state.resultInfo.shopCarInfo.list.length; i++) {
                     this.selectId.push(this.$store.state.resultInfo.shopCarInfo.list[i].id);
                     this.curList.push({
-                        shopcarId: this.$store.state.resultInfo.shopCarInfo.list[i].shop_car_id
-                        ,bookNum: this.$store.state.resultInfo.shopCarInfo.list[i].book_number
+                        shopcarId: this.$store.state.resultInfo.shopCarInfo.list[i].shop_car_id,
+                        bookNum: this.$store.state.resultInfo.shopCarInfo.list[i].book_number
                     })
                 }
                 this.select = this.selectId;
@@ -233,19 +229,20 @@
 
             gotoSettlement() {
                 let id = [];
-                this.randomNumber(this.select.length,9,function (arr) {id = arr})
+                this.randomNumber(11,9,function (arr) {id = arr});
                 for(let i in this.select){
                     let params = {
                         'orderId':id[i],
-                        'userAddress': this.userAddress,
-                        'userId': this.$store.state.userInfo.userId,
-                        'userPhone': this.userPhone,
+                        'userAddress': this.$store.state.currUserInfo.userAddress,
+                        'userId': this.$store.state.currUserInfo.userId,
+                        'userPhone': this.$store.state.currUserInfo.userPhone,
                         'businessId':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].business_id,
                         'bookId':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_id,
                         'bookName':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_name,
                         'bookImagePath':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_image_path,
                         'bookNumber':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_number,
-                        'totalPrice':this.$store.getters.shopCar_getBookPrice(this.select[i]-1).toFixed(2)
+                        'totalPrice':this.$store.getters.shopCar_getBookPrice(this.select[i]-1).toFixed(2),
+                        'orderState': 1,
                     };
                     ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
                         ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})

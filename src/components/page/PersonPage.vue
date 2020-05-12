@@ -6,10 +6,10 @@
             <div class="content">
                 <transition mode="out-in" name="move">
                     <keep-alive :include="tagsList">
-                        <router-view></router-view>
+                        <router-view/>
                     </keep-alive>
                 </transition>
-                <el-backtop target=".content"></el-backtop>
+                <el-backtop target=".content"/>
             </div>
 
         </div>
@@ -19,21 +19,19 @@
 <script>
     import PersonHeader from '../header/PersonHeader'
     import PersonSidebar from '../sidebar/PersonSidebar';
-    import bus from '../../components/common/bus';
+    import bus from 'components/common/bus';
 
     export default {
         data() {
             return {
                 tagsList: [],
                 collapse: false
-
             };
         },
-        name: "PersonPage",
+        name: "PersonPage.vue",
         components: {
             PersonHeader,
             PersonSidebar,
-
         },
         created() {
             bus.$on('collapse-content', msg => {
@@ -55,5 +53,4 @@
 <style scoped>
     @import "../../assets/css/personmain.css";
     @import "../../assets/css/color-light.css"; /*深色主题*/
-
 </style>

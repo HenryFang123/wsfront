@@ -2,8 +2,22 @@
     <div class="business_page">
         <Header/>
         <div class="business_page_main">
-            <BusinessTop/>
-            <BusinessBottom/>
+            <el-row>
+                <el-col :span="3">
+                    <div class="main_left">
+                        <!--占位块-->
+                    </div>
+                </el-col>
+                <el-col :span="18">
+                    <BusinessTop/>
+                    <BusinessBottom/>
+                </el-col>
+                <el-col :span="3">
+                    <div class="main_right">
+                        <!--占位块-->
+                    </div>
+                </el-col>
+            </el-row>
         </div>
         <Footer/>
     </div>

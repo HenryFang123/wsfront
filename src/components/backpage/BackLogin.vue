@@ -11,7 +11,7 @@
                  status-icon>
             <el-form-item prop="adminId">
                 <el-input auto-complete="off" placeholder="请输入账号" prefix-icon="el-icon-ump-yonghu" type="text" v-model="param.adminId">
-                    <template slot="prepend">账号：</template>
+                    <template slot="prepend">账&emsp;号：</template>
                 </el-input>
             </el-form-item>
             <el-form-item prop="adminPassword">
@@ -53,15 +53,12 @@
                             adminPassword: this.param.adminPassword
                         };
                         ws_axios.fetchPost1('/admin/checkLogin', params).then((back) => {
-                            if (back.data.resultCode === "1") {
+                            if (back.data.resultCode === "0") {
                                 this.$message.error('登录错误，请输入正确的用户名或密码');
                             } else {
-                                // 传入保存登录成功后返回的 UserId
                                 this.$message.success('登录成功');
                                 localStorage.setItem('adminId', this.param.adminId);
-                                this.$store.dispatch('saveAdminInfoAdminName', back.data.adminName);
-                                // 传入保存登录使用名 UserSelf
-                                this.$store.dispatch('saveAdminInfoBusinessId', back.data.businessId);
+                                this.$store.dispatch('saveAdminInfo', back.data.adminInfo);
                                 this.$router.push({path: '/BackHome'});
                             }
                         })

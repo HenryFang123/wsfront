@@ -21,7 +21,7 @@
     import BackHeader from './header/BackHeader'
     import BackSidebar from './sidebar/BackSidebar';
     import VTags from './backpage/BackTags';
-    import bus from '../components/common/bus';
+    import bus from 'components/common/bus';
 
     export default {
         name: "BackHome.vue",

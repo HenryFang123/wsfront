@@ -333,7 +333,6 @@
 </script>
 
 <style scoped>
-    /******************首页面顶部分类推荐开始******************/
     .home-main-middle-top {
         margin: 0 auto;
         padding: 0;
@@ -559,6 +558,4 @@
         font-size: 14px;
         border-bottom: 1px solid #e9e9eb;
     }
-
-    /******************首页面顶部分类推荐结束******************/
 </style>

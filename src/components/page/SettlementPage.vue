@@ -124,7 +124,10 @@
             }
         },
         created(){
-            ws_axios.fetchPost1('/order/getOrderInfoListByUserId',{'userId':this.$store.state.userInfo.userId}).then((back)=>{
+            let params = {
+                'userId': this.$store.state.currUserInfo.userId,
+            };
+            ws_axios.fetchPost1('/order/getOrderInfoListByUserId', params).then((back)=>{
                 this.order=back.data
             });
             this.isShow = this.$store.state.resultInfo.orderConfirm;

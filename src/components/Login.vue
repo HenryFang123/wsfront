@@ -123,28 +123,21 @@
 
             // 登录表单提交+存储操作
             submitForm(login) {
-                // 提交登录表单
                 this.$refs.login.validate((valid) => {
                     if (valid) {
-                        // 提交表单到 checkLogin 方法
                         let params = {
                             'userSelf': this.login.user_self,
                             'userPassWord': this.login.pass_word
                         };
                         ws_axios.fetchPost1('/user/checkLogin', params).then((back) => {
-                            // console.log(back.data);
                             if (back.data.resultCode === "0") {
                                 this.$message.error('登录错误，请输入正确的用户名或密码');
                                 this.clearCookie();
                             } else {
-                                // 传入保存登录成功后返回的 UserId
-                                this.$store.dispatch('saveUserInfoUserId', back.data.userId);
-                                // 传入保存登录使用名 UserSelf
-                                this.$store.dispatch('saveUserInfoUserSelf', this.login.user_self);
+                                this.$store.dispatch('saveCurrUserInfo', back.data.userInfoObject);
 
-                                // 判断复选框是否被勾选 勾选则调用配置cookie方法
                                 if (this.ws_checked === true && !this.isnull(this.login.user_self) && !this.isnull(this.login.pass_word)) {
-                                    this.setCookie(back.data.userId, this.login.user_self, this.login.pass_word, 7);
+                                    this.setCookie(this.$store.getters.currUserInfo.userId, this.login.user_self, this.login.pass_word, 7);
                                 } else {
                                     this.clearCookie();
                                 }
@@ -152,7 +145,7 @@
                                 this.$router.push({path: '/'});
                                 this.$notify({
                                     title: '登录成功',
-                                    message: '欢迎登陆' + this.$store.getters.userInfo_userSelf,
+                                    message: '欢迎登陆' + this.$store.getters.currUserInfo.userName,
                                     type: 'success'
                                 });
                             }
@@ -182,11 +175,14 @@
                     for (let i = 0; i < array_ws_cookie_1.length; i++) {
                         const array_ws_cookie_2 = array_ws_cookie_1[i].split('='); // 再次切割
 
-                        // 判断查找相对应的值
                         if (array_ws_cookie_2[0] === 'WSUserSelf') {
-                            this.login.user_self = array_ws_cookie_2[1];
+                            if (array_ws_cookie_2[1].length > 0) {
+                                this.login.user_self = array_ws_cookie_2[1];
+                            }
                         } else if (array_ws_cookie_2[0] === 'WSPassWord') {
-                            this.login.pass_word = array_ws_cookie_2[1];
+                            if (array_ws_cookie_2[1].length > 0) {
+                                this.login.pass_word = array_ws_cookie_2[1];
+                            }
                         }
                     }
                 }
@@ -200,7 +196,6 @@
             gotoRegister() {
                 this.$router.push("/register")
             }
-
         },
         mounted() {
             this.getCookie();

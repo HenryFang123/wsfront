@@ -6,103 +6,122 @@ const home = () => import('components/Home.vue');
 const login = () => import('components/Login.vue');
 const register = () => import('components/Register.vue');
 const person_page = () => import('components/page/PersonPage');
-const to_list = () => import('components/jump/ToList');
-const book_list = () => import('components/page/BookList');
-const to_detail = () => import('components/jump/ToDetail');
-const book_detail = () => import('components/page/BookDetail');
 const shop_car = () => import('components/page/ShopCar');
 const settlement_page = () => import('components/page/SettlementPage');
+const to_list = () => import('components/jump/ToList');
+const book_list = () => import('components/page/BookList');
+const book_detail = () => import('components/page/BookDetail');
+const business_page = () => import('components/page/BusinessPage');
 const pay_done = () => import('components/page/PayDone');
+const back_login = () => import('components/backpage/BackLogin');
+const back_home = () => import('components/BackHome');
 
 Vue.use(VueRouter);
+
 const routes = [
     {
         path: '/',
-        component: home
-    },
-    {
-        path: '/login',
-        component: login
-    },
-    {
-        path: '/register',
-        component: register
-    },
-    {
-        path: '/to_list',
-        component: to_list
-    },
-    {
-        path: '/book_list',
-        component: book_list
-    },
-    {
-        path: '/to_detail',
-        component: to_detail
-    },
-    {
-        path: '/book_detail',
-        component: book_detail
-    },
-    {
-        path: '/shop_car',
-        component: shop_car
-    },
-    {
-        path: '/settlement_page',
-        component: settlement_page
+        component: home,
+        meta: {title: '首页--WS商城'}
     },
 
     {
-        path: '/pay_done',
-        component: pay_done
+        path: '/login',
+        component: login,
+        meta: {title: '商城登录'}
     },
+
     {
-        path: '/BackHome',
-        redirect: '/BackDashBoard',
+        path: '/register',
+        component: register,
+        meta: {title: '商城注册'}
     },
-    {
-        path: '/BackLogin',
-        component: () => import('components/backpage/BackLogin'),
-        meta: {title: '登录'}
-    },
+
     {
         path: '/person_page',
-        component: () => import('../components/page/PersonPage'),
-        meta: {title: '自述文件'},
+        component: person_page,
+        meta: {title: '个人信息'},
         children: [
             {
                 path: '/PersonInfo',
-                component: () => import('../components/personpage/PersonInfo'),
+                component: () => import('components/personpage/PersonInfo'),
                 meta: {title: '个人信息'}
             },
             {
                 path: '/PersonAddress',
-                component: () => import( '../components/personpage/PersonAddress'),
+                component: () => import( 'components/personpage/PersonAddress'),
                 meta: {title: '我的收货地址'}
             },
             {
                 path: '/AddAddress',
-                component: () => import( '../components/personpage/AddAddress'),
+                component: () => import( 'components/personpage/AddAddress'),
                 meta: {title: '添加收货地址'}
             },
             {
                 path: '/PersonOrder',
-                component: () => import('../components/personpage/PersonOrder'),
+                component: () => import('components/personpage/PersonOrder'),
                 meta: {title: '我的订单'}
             },
             {
                 path: '/PersonShopCar',
-                component: () => import('../components/personpage/PersonShopCar'),
+                component: () => import('components/personpage/PersonShopCar'),
                 meta: {title: '我的购物车'}
             },
-
         ]
     },
+
+    {
+        path: '/shop_car',
+        component: shop_car,
+        meta: {title: '购物车'}
+    },
+
+    {
+        path: '/settlement_page',
+        component: settlement_page,
+        meta: {title: '订单'}
+    },
+
+    {
+        path: '/to_list',
+        component: to_list
+    },
+
+    {
+        path: '/book_list',
+        component: book_list,
+        meta: {title: '查询...'}
+    },
+
+    {
+        path: '/book_detail',
+        component: book_detail,
+        meta: {title: '书籍详情'}
+    },
+
+    {
+        path: '/business_page',
+        component: business_page,
+        meta: {title: '店铺详情'}
+    },
+
+    {
+        path: '/pay_done',
+        component: pay_done,
+        meta: {title: '订单支付'}
+    },
+
+    {
+        path: '/BackLogin',
+        component: back_login,
+        meta: {title: '后台登录'}
+    },
+
     {
         path: '/BackHome',
-        component: () => import('components/BackHome'),
-        meta: {title: '自述文件'},
+        component: back_home,
+        redirect: '/BackDashBoard',
+        meta: {title: '后台管理'},
         children: [
             {
                 path: '/BackDashBoard',
@@ -111,12 +130,12 @@ const routes = [
             },
             {
                 path: '/BackOrderTable',
-                component: () => import( 'components/backpage/BackOrderTable'),
+                component: () => import('components/backpage/BackOrderTable'),
                 meta: {title: '订单列表'}
             },
             {
                 path: '/BackBookManageTable',
-                component: () => import( 'components/backpage/BackBookManageTable'),
+                component: () => import('components/backpage/BackBookManageTable'),
                 meta: {title: '图书操作'}
             },
             {
@@ -126,7 +145,7 @@ const routes = [
             },
             {
                 path: '/BackBookList',
-                component: () => import( 'components/backpage/BackBookList'),
+                component: () => import('components/backpage/BackBookList'),
                 meta: {title: '图书列表'}
             },
             {
@@ -136,7 +155,6 @@ const routes = [
             }
         ]
     },
-
 ];
 
 const router = new VueRouter({
@@ -145,4 +163,4 @@ const router = new VueRouter({
   routes
 });
 
-export default router
+export default router;

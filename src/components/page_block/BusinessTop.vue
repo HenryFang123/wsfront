@@ -3,18 +3,18 @@
         <el-row>
             <el-col :span="3">
                 <el-row>
-                    <el-image style="width: 300px; height: 121px" v-bind:src="this.$store.getters.businessInfo_businessDetail.businessImagePath"/>
+                    <el-image style="width: 300px; height: 121px" v-bind:src="this.$store.getters.businessInfo.businessImagePath"/>
                 </el-row>
                 <el-row>
-                    <span style="font-size: 10px;">店铺ID：{{this.$store.getters.businessInfo_businessDetail.businessId}}</span>
+                    <span style="font-size: 10px;">店铺ID：{{this.$store.getters.businessInfo.businessId}}</span>
                 </el-row>
             </el-col>
             <el-col :span="7">
                 <el-row>
-                    <span style="font-size: 20px; font-weight: bold">{{this.$store.getters.businessInfo_businessDetail.businessName}}</span>
+                    <span style="font-size: 20px; font-weight: bold">{{this.$store.getters.businessInfo.businessName}}</span>
                 </el-row>
                 <el-row>
-                    <span style="font-size: 12px;">店铺描述：{{this.$store.getters.businessInfo_businessDetail.businessDescription}}</span>
+                    <span style="font-size: 12px;">店铺描述：{{this.$store.getters.businessInfo.businessDescription}}</span>
                 </el-row>
             </el-col>
             <el-col :span="14">

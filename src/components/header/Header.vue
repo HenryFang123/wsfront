@@ -41,7 +41,7 @@
                                             <div class="div-header-tools-main-link-main-yes_login" v-if="if_login">
                                                 <el-link :underline="false" @click="gotoPersonPage" type="info">
                                                     欢迎访问WSBook商城：
-                                                    <span>{{this.$store.getters.userInfo_userSelf}}</span></el-link>
+                                                    <span>{{this.$store.getters.currUserInfo.userName}}</span></el-link>
                                             </div>
                                         </el-col>
                                         <el-col :span="14">
@@ -113,7 +113,6 @@
                     </el-col>
                 </el-row>
             </div>
-            <!--      页面头部主体-下行标签、下拉框、链接-->
             <div class="div-header-main-tag">
                 <el-row>
                     <el-col :span="4">
@@ -166,6 +165,7 @@
 </template>
 
 <script>
+    import ws_axios from "network/ws_axios";
 
     export default {
         name: "Header.vue",
@@ -173,7 +173,6 @@
         data() {
             return {
                 if_login: false,
-                user_self: '',
                 search: {
                     inputSearchWord: ''
                 },
@@ -184,14 +183,10 @@
             }
         },
         methods: {
-            // 获取vuex传递参数
-            getDataFromVuex: function () {
-                if (this.$store.getters.userInfo_userSelf.length > 0) {
-                    this.if_login = true;
-                }
-                if (this.$store.getters.searchInfo_searchWord.length > 0) {
-                    this.search.inputSearchWord = this.$store.getters.searchInfo_searchWord;
-                }
+            // 判断输入框是否为空
+            isnull: function (val) {
+                const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
+                return str === '' || str === undefined || str === null;
             },
 
             // 读取cookie
@@ -202,18 +197,48 @@
                     for (let i = 0; i < array_ws_cookie_1.length; i++) {
                         const array_ws_cookie_2 = array_ws_cookie_1[i].split('=');
 
-                        // 判断查找相对应的值
-                        if (array_ws_cookie_2[0] === 'WSUserSelf') {
+                        if (array_ws_cookie_2[0] === 'WSUserId') {
                             if (array_ws_cookie_2[1].length > 0) {
-                                this.$store.dispatch('saveUserInfoUserSelf', array_ws_cookie_2[1]);
-                            }
-                        } else if (array_ws_cookie_2[0] === 'WSUserId') {
-                            if (array_ws_cookie_2[1].length > 0) {
-                                this.$store.dispatch('saveUserInfoUserId', array_ws_cookie_2[1]);
+                                this.if_login = true;
+                                let params = {
+                                  "userId": array_ws_cookie_2[1],
+                                };
+                                this.$store.dispatch('saveCurrUserInfo', params);
+                                this.getShopCarInfoOfCurrentUser();
                             }
                         }
                     }
                 }
+            },
+
+            // 获取vuex传递参数
+            getDataFromVuex: function () {
+                if (this.$store.getters.currUserInfo.userName === undefined) {
+                    let params = {
+                        'userId': this.$store.getters.currUserInfo.userId,
+                    };
+                    ws_axios.fetchPost1('/user/getUserInfoByUserId', params).then((back) => {
+                        this.$store.dispatch('saveCurrUserInfo', back.data);
+                    });
+                } else {
+                    this.if_login = true;
+                    if (this.$store.state.resultInfo.shopCarInfo.list.length === 0){
+                        this.getShopCarInfoOfCurrentUser();
+                    }
+                }
+                if (this.$store.getters.searchInfo_searchWord.length > 0) {
+                    this.search.inputSearchWord = this.$store.getters.searchInfo_searchWord;
+                }
+            },
+
+            // 获取当前用户所有的购物车数据
+            getShopCarInfoOfCurrentUser: function () {
+                let params = {
+                    'userId': this.$store.getters.currUserInfo.userId,
+                };
+                ws_axios.fetchPost1('/shopCar/getShopCarListInfoByUserId', params).then((back) => {
+                    this.$store.dispatch("saveShopCarInfoList", back.data);
+                })
             },
 
             // 改变城市选择
@@ -221,21 +246,13 @@
                 this.city = city;
             },
 
-            // 判断输入框是否为空
-            isnull: function (val) {
-                const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
-                return str === '' || str === undefined || str === null;
-            },
-
             // 查询操作 + 存储
             submitForm(search) {
                 if (this.isnull(this.search.inputSearchWord)) {
                     this.$message.error('错误，输入框不能为空');
                 } else {
-                    // 提交查询表单
                     this.$refs.search.validate((valid) => {
                         if (valid) {
-                            // 保存查询表单输入内容到 vuex 中
                             this.$store.dispatch('saveSearchInfoSearchWord', this.search.inputSearchWord);
                             this.$router.push("/to_list");
                         } else {
@@ -266,8 +283,8 @@
             },
         },
         mounted() {
-            this.getDataFromVuex();
             this.getCookie();
+            this.getDataFromVuex();
         },
     }
 </script>

@@ -43,9 +43,6 @@
         sessionStorage.setItem('store', JSON.stringify(this.$store.state))
       })
     },
-    mounted() {
-      console.log('当前用户：', this.$store.state.userInfo.userId)
-    }
   }
 </script>
 

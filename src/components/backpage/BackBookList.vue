@@ -92,7 +92,6 @@
     export default {
         inject: ['reload'],
         name: 'BackBookList.vue',
-
         data() {
             return {
                 count: 0,
@@ -124,7 +123,7 @@
 
             getCount() {
                 let params = {
-                    businessId: this.$store.getters.AdminInfo_businessId,
+                    businessId: this.$store.getters.adminInfo.businessId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
@@ -133,7 +132,7 @@
 
             getData() {
                 let params = {
-                    businessId: this.$store.getters.AdminInfo_businessId,
+                    businessId: this.$store.getters.adminInfo.businessId,
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
@@ -166,7 +165,7 @@
             // 保存编辑
             saveEdit() {
                 let params = {
-                    'businessId': this.$store.getters.AdminInfo_businessId,
+                    'businessId': this.$store.getters.adminInfo.businessId,
                     'bookName': this.form.bookName,
                     'bookImagePath': this.form.bookImagePath,
                     'bookPrice': this.form.bookPrice,

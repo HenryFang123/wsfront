@@ -10,13 +10,6 @@
                 </el-col>
                 <el-col :span="16">
                     <div class="main_top">
-                        <el-breadcrumb separator-class="el-icon-arrow-right">
-                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                            <el-breadcrumb-item>图书</el-breadcrumb-item>
-                            <el-breadcrumb-item>{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookName}}</el-breadcrumb-item>
-                        </el-breadcrumb>
-                    </div>
-                    <div class="main_middle">
                         <BookSelect/>
                     </div>
                     <div class="main_bottom">
@@ -39,6 +32,7 @@
     import Footer from "../footer/Footer";
     import BookSelect from "../page_block/BookSelect";
     import BookShow from "../page_block/BookShow";
+    import ws_axios from "network/ws_axios";
 
     export default {
         name: "BookDetail.vue",
@@ -88,18 +82,6 @@
     }
 
     .book_detail_page .main .main_top {
-        margin: 0 auto;
-        padding: 0;
-        width: 100%;
-    }
-
-    .book_detail_page .main .main_top .el-breadcrumb {
-        margin: 5px auto;
-        padding: 5px;
-        background-color: #f7f7f7;
-    }
-
-    .book_detail_page .main .main_middle {
         margin: 0 auto;
         padding: 0;
         width: 100%;

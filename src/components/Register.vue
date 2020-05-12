@@ -124,6 +124,7 @@
                     pass_word: '',
                     pass_word2: ''
                 },
+                phoneCode: '',
                 linkItemClass: 'link-item',
                 moreLink: [
                     '关于我们', '联系我们', '联系客服', '合作招商', '商家帮助', '营销中心', '销售联盟', '校园社区', '风险监测', '隐私政策'
@@ -131,6 +132,12 @@
             }
         },
         methods: {
+            // 判断输入框是否为空
+            isnull: function (val) {
+                const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
+                return str === '' || str === undefined || str === null;
+            },
+
             // 获取当前时间并格式化生成用户 userId
             getCurrentTimeToBeUserId: function () {
                 const date = new Date();
@@ -171,7 +178,7 @@
                     submitUserId += "0" + seconds;
                 }
 
-                this.$store.dispatch('saveUserInfoUserId', parseInt(submitUserId));
+                return parseInt(submitUserId);
             },
 
             // 注册页面轮换页
@@ -179,7 +186,7 @@
                 if (this.isnull(this.register.user_phone) || this.isnull(this.register.inputCode)) {
                     this.$message.error('错误，输入框不能为空');
                 } else {
-                    if (this.register.inputCode !== this.$store.getters.userInfo_phoneCode) {
+                    if (this.register.inputCode !== this.phoneCode) {
                         this.$message.error('验证错误，请输入正确的手机验证码');
                     } else {
                         if (this.registerActive++ > 2) {
@@ -215,16 +222,16 @@
                                 message: '验证码已发送，请注意查收',
                                 type: 'success'
                             });
-                            this.$store.dispatch('saveUserInfoPhoneCode', back.data.phoneCode);
+
+                            this.phoneCode = back.data.phoneCode;
 
                             this.sendMsgDisabled = true;
                             let codeTime = this.codeTime;
-                            // 倒计时
                             let interval = window.setInterval(() => {
                                 if (--this.codeTime <= 0) {
                                     this.codeTime = codeTime;
                                     this.sendMsgDisabled = false;
-                                    this.reGet = true; // 重新获取按钮
+                                    this.reGet = true;
                                     window.clearInterval(interval);
                                 }
                             }, 1000);
@@ -238,41 +245,32 @@
                 this.$router.push({path: '/'});
                 this.$notify({
                     title: '注册完成',
-                    message: '欢迎登陆' + this.$store.getters.userInfo_userSelf,
+                    message: '欢迎登陆' + this.$store.getters.currUserInfo.userName,
                     type: 'success'
                 });
-            },
-
-            // 判断输入框是否为空
-            isnull: function (val) {
-                const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
-                return str === '' || str === undefined || str === null;
             },
 
             // 注册提交表单验证
             submitForm(register) {
                 if (this.isnull(this.register.user_name) || this.isnull(this.register.pass_word) || this.isnull(this.register.pass_word2)) {
                     this.$message.error('错误，输入框不能为空');
+                } else if (this.register.pass_word.length < 6 || this.register.pass_word2.length < 6) {
+                    this.$message.error('错误，密码长度最小6位');
                 } else {
                     this.$refs.register.validate((valid) => {
                         if (valid) {
-                            // 调用生成 userId 方法
-                            this.getCurrentTimeToBeUserId();
-
-                            // 提交表单到 doRegister 方法
                             let params = {
-                                'userId': this.$store.getters.userInfo_userId,
+                                userId: this.getCurrentTimeToBeUserId(),
                                 'userName': this.register.user_name,
                                 'userPassWord': this.register.pass_word,
                                 'userPhone': this.register.user_phone,
-                                'userTar': 0
+                                userTar: 0
                             };
                             ws_axios.fetchPost1('/user/doRegister', params).then((back) => {
                                 if (back.data.resultCode === "0") {
                                     this.$message.error('注册错误，注册过程中发生未知错误');
                                 } else {
-                                    // 传入保存登录使用名 UserSelf
-                                    this.$store.dispatch('saveUserInfoUserSelf', this.register.user_phone);
+                                    this.$store.dispatch('saveUserInfo', back.data.userInfoObject);
                                     this.registerActive++;
                                     this.clearCookie();
                                 }

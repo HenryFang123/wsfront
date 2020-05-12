@@ -31,6 +31,7 @@
 
 <script>
     import ws_axios from "network/ws_axios";
+    import HomeTop from "./HomeTop";
 
     export default {
         name: "HomeBottom.vue",
@@ -40,18 +41,16 @@
         methods: {
             // 获取为当前用户推荐的书籍数据
             getRecommendBookInfoOfCurrentUser: function () {
-                if (this.$store.getters.userInfo_userId.length > 0) {
-                    let params = {'userId': this.$store.getters.userInfo_userId};
-                    ws_axios.fetchGet2('redis/byUserId', params).then((back) => {
-                        if (back.data.resultCode === "0") {
-                            console.log("get error");
-                        } else {
-                            this.$store.dispatch("saveHomeInfoBottomInfoBookList", back.data);
-                        }
-                    })
-                } else {
-                    console.log("no user id.");
-                }
+                let params = {
+                    'userId': this.$store.getters.currUserInfo.userId,
+                };
+                ws_axios.fetchGet2('redis/byUserId', params).then((back) => {
+                    if (back.data.resultCode === "0") {
+                        console.log("get error");
+                    } else {
+                        this.$store.dispatch("saveHomeInfoBottomInfoBookList", back.data);
+                    }
+                })
             },
         },
         mounted() {
@@ -61,7 +60,6 @@
 </script>
 
 <style scoped>
-    /******************首页面底部展示推荐开始******************/
     .home-main-middle-bottom {
         margin: 50px auto;
         padding: 0;
@@ -135,6 +133,4 @@
         padding: 0;
         text-align: left;
     }
-
-    /******************首页面底部展示推荐结束******************/
 </style>

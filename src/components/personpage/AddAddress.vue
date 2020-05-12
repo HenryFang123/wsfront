@@ -38,6 +38,7 @@
 
 <script>
     import ws_axios from "network/ws_axios";
+
     export default {
         inject: ['reload'],
         name: "AddAddress.vue",
@@ -52,7 +53,7 @@
         methods: {
             onSubmit() {
                 let params = {
-                    'userPhone' : this.$store.getters.userInfo_userSelf,
+                    'userPhone' : this.$store.getters.currUserInfo.userPhone,
                     'consignee' : this.form.consignee,
                     'province' : this.form.province,
                     'city' : this.form.city,
@@ -63,8 +64,6 @@
                 ws_axios.fetchPost1('/shippingAddress/insertAddress', params).then((back) => {
                     this.reload();
                 })
-
-
             }
         }
     }
