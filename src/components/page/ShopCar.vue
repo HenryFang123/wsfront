@@ -7,14 +7,17 @@
                     <el-row style="margin-top: 5px; padding: 0; display: flex">
                         <el-col :span="4"/>
                         <el-col :span="20" style="text-align: left;">
-                            <el-link :underline="false" @click="gotoHome" icon="el-icon-caret-left" type="info">首页
-                            </el-link>
+                    <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-top: 10px;">
+                                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                                <el-breadcrumb-item>购物车</el-breadcrumb-item>
+                            </el-breadcrumb>
+
                         </el-col>
                     </el-row>
 
                     <el-row style="margin-top: 10px; padding: 0; display: flex">
                         <el-col :span="4"/>
-                        <el-col :span="16" style="text-align: left">
+                        <el-col :span="16" style="text-align: left;padding-top: 4px;">
                             <span style="font-family:Microsoft YaHei; font-size: 20px; color: #F56C6C;">全部商品</span>
                         </el-col>
                         <el-col :span="4"/>
@@ -38,7 +41,7 @@
                                         style="font-size: 14px;">数量</span></el-col>
                                     <el-col style="margin-left: 15px;" :span="1"><span
                                         style="font-size: 14px;">小计</span></el-col>
-                                    <el-col style="margin-left: 25px;" :span="1"><span
+                                    <el-col style="margin-left: 25px;text-align: center" :span="1"><span
                                         style="font-size: 14px;">操作</span></el-col>
                                     <el-col :span="2"/>
                                 </el-row>
@@ -48,12 +51,13 @@
                     </el-row>
                 </el-header>
 
+<!-- 购物车具体项-->
                 <el-main style="margin: 5px auto; padding: 0; width: 100%;">
                     <el-row style="padding: 0; display: flex;">
                         <el-col :span="4"/>
                         <el-col :span="16">
-                            <div style="margin-top: 0;border-radius: 2px;background-color: #F2F6FC;padding: 5px; width: 100%;">
-                                <el-row style="margin-left: 13px;margin-top: 10px;" :key="bookItem.id"
+                            <div style="margin-top: 0;border-radius: 2px;background-color: #F2F6FC;padding: 5px; width: 100%;height: 550px;">
+                                <el-row style="margin-top: 10px;margin-left: 11px;" :key="bookItem.id"
                                         v-for="(bookItem, index) in this.$store.state.resultInfo.shopCarInfo.list">
                                     <el-col :span="2">
                                         <el-checkbox-group v-model="select" @change="CheckedBookSelect">
@@ -61,8 +65,7 @@
                                         </el-checkbox-group>
                                     </el-col>
                                     <el-col :span="2">
-                                        <el-image v-bind:src="bookItem.book_image_path"
-                                                  style="width: 75px;height: 75px;"/>
+                                        <el-image v-bind:src="bookItem.book_image_path" style="width: 75px;height: 85px;"/>
                                     </el-col>
                                     <el-col :span="12" style="text-align: left">
                                         <span style="font-size: 13px;font-family:Microsoft YaHei ">{{bookItem.book_name}}</span>
@@ -72,33 +75,59 @@
                                     </el-col>
                                     <el-col :span="2">
                                         <button @click="decrement(index)" :disabled="bookItem.book_number<=1"
-                                                style="background-color:#EBEEF5; outline: none; font-size: 22px;">-
-                                        </button>
-                                        <input type="text" v-model.lazy.number="bookItem.book_number" size="1px;"
-                                               style="text-align: center;outline: none;"
+                                                style="background-color:#F2F6FC; outline: none; font-size: 22px;">-</button>
+                                        <input type="text" v-model.lazy.number="bookItem.book_number" size="1px;" style="text-align: center;outline: none;background-color: #FFFFFF"
                                                onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^1-9]/g,1)}else{this.value=this.value.replace(/\D/g,'')}"
                                                onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
-                                        <button @click="increment(index)"
-                                                style="background-color:#EBEEF5; outline: none; font-size: 22px;">+
+                                        <button @click="increment(index)" style="background-color:#F2F6FC; outline: none; font-size: 22px;">+
                                         </button>
                                     </el-col>
-                                    <el-col style="text-align: center;" :span="2"><b>{{getBookPrice(index) |
-                                        showPrice}}</b></el-col>
-                                    <el-col :span="2">
-                                        <el-button type="text" icon="el-icon-delete" @click="remove(index)"
-                                                   style="padding-top: 0px;font-size: 13px">删除
-                                        </el-button>
-                                        <br/>
-                                        <el-button type="text" icon="el-icon-star-on" @click=""
-                                                   style="padding-top: 0px;font-size: 13px">移入收藏
-                                        </el-button>
+                                    <el-col style="text-align: center;" :span="2"><b>{{getBookPrice(index) | showPrice}}</b></el-col>
+                                    <el-col :span="2" style="text-align: center">
+                                        <el-popover
+                                            placement="left-start"
+                                            width="100"
+                                            trigger="hover"
+                                            content="将此物品移入您的收藏单中">
+                                            <el-button type="warning" icon="el-icon-star-off" circle size="mini"
+                                                       slot="reference" @click=""/>
+                                        </el-popover>
+                                        <el-popconfirm
+                                            confirmButtonText='删除'
+                                            cancelButtonText='不用了'
+                                            icon="el-icon-delete"
+                                            confirmButtonType="danger"
+                                            iconColor="#FF3228"
+                                            title="您确定将此物品删除吗?"
+                                            @onConfirm="remove(index)">
+                                            <el-button slot="reference" type="danger" icon="el-icon-delete" circle
+                                                       size="mini" style="margin-left: 2px"/>
+                                        </el-popconfirm>
                                     </el-col>
+                                </el-row>
+
+                                <el-row>
+                                    <el-col :span="4"/>
+                                    <el-col :span="16" style="text-align: center">
+
+                                        <el-pagination
+                                            @size-change=""
+                                            @current-change=""
+                                            :current-page.sync="this.currentPage"
+                                            :page-size="this.pageSize"
+                                            layout="total, prev, pager, next"
+                                            :total="this.itemTotal"
+                                            background
+                                            :hide-on-single-page="this.singlePage">
+                                        </el-pagination>
+
+                                    </el-col>
+                                    <el-col :span="4"/>
                                 </el-row>
                             </div>
                         </el-col>
                         <el-col :span="4"/>
                     </el-row>
-
                     <el-row style="margin-top: 6px; padding: 0; display: flex;">
                         <el-col :span="4"/>
                         <el-col :span="16">
@@ -106,8 +135,7 @@
                                 <el-row>
                                     <el-col :span="1"/>
                                     <el-col :span="21" style="text-align: right">总价：
-                                        <span
-                                            style="color: red;font-size: 25px;"><b>{{totalPrice | showPrice}}</b></span>
+                                        <span style="color: red;font-size: 30px;padding-top: 15px;"><b>{{totalPrice | showPrice}}</b></span>
                                     </el-col>
                                     <el-col :span="2">
                                         <div class="go-buy-it" @click="gotoSettlement">
@@ -120,14 +148,31 @@
                         </el-col>
                         <el-col :span="4"/>
                     </el-row>
-
                 </el-main>
             </el-container>
         </div>
         <div v-else style="width: 100%;">
+            <el-row><br/></el-row>
+            <el-row><br/></el-row>
             <el-row>
-                <el-col style="text-align: center"><h1>购物车为空</h1></el-col>
+                <el-col :span="6"/>
+                <el-col :span="6">
+                <img src="~assets/img/payImage/shop_car_empty.png" style="height: 264px;width: 336px"/>
+                </el-col>
+                <el-col :span="8" style="text-align:left">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <span style="font-size: 17px;font-family:Microsoft YaHei">您的购物车还是空的，您可以:
+                        <el-link type="danger" @click="gotoHome" style="font-size: 18px;font-family:Microsoft YaHei" :underline="false">
+                            去逛逛</el-link>
+                    </span>
+                </el-col>
+                <el-col :span="4"/>
             </el-row>
+            <el-row><br/></el-row>
+            <el-row><br/></el-row>
+            <el-row><br/></el-row>
         </div>
         <Footer/>
     </div>
@@ -147,6 +192,10 @@
             return {
                 allSelect: true,
                 isIndeterminate: false,
+                currentPage: 1,
+                pageSize: 5,
+                itemTotal: 5,
+                singlePage:false,
                 select: [],
                 selectId: [],
                 curList: [],
@@ -156,6 +205,11 @@
         },
         created() {
             this.init();
+            ws_axios.fetchPost1('/user/getUserPhoneAndAddressByUserId',{'userId': this.$store.state.userInfo.userId}).then((back)=>{
+                this.userPhone = back.data.userPhone;
+                this.userAddress = back.data.userAddress
+            });
+            document.documentElement.scrollTop=192
         },
         beforeDestroy() {
             for (let i in this.curList) {
@@ -229,7 +283,7 @@
 
             gotoSettlement() {
                 let id = [];
-                this.randomNumber(11,9,function (arr) {id = arr});
+                this.randomNumber(this.select.length,15,function (arr) {id = arr})
                 for(let i in this.select){
                     let params = {
                         'orderId':id[i],
@@ -242,13 +296,11 @@
                         'bookImagePath':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_image_path,
                         'bookNumber':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_number,
                         'totalPrice':this.$store.getters.shopCar_getBookPrice(this.select[i]-1).toFixed(2),
-                        'orderState': 1,
                     };
                     ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
                         ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
                     });
                 }
-                //this.$store.commit('setOrderNum',this.select.length)
                 this.$store.commit('setOrderConfirm',false);
                 this.$router.push("/settlement_page")
             },
@@ -348,5 +400,15 @@
         margin-left: 10px;
         padding-top: 5px;
         color: #FFFFFF;
+    }
+    .el-col{
+        min-height: 1px;
+    }
+
+    .el-header{
+        padding: 0;
+    }
+    .el-button--danger{
+        background-color: #FF3228;
     }
 </style>

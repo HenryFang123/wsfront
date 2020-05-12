@@ -59,10 +59,6 @@ export default {
         state.resultInfo.shopCarInfo.list[index].book_number--
     },
 
-    //订单数，用于header显示
-    setOrderNum(state,payload){
-        state.resultInfo.orderNum = payload
-    },
 
     setOrderConfirm(state,payload){
         state.resultInfo.orderConfirm = payload

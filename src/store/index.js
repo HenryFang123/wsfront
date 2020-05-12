@@ -57,9 +57,7 @@ export default new Vuex.Store({
               list: []
           },
 
-          //订单数量，header显示
-          orderNum:'',
-          orderConfirm:''
+
       },
   },
   mutations,

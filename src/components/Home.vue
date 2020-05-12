@@ -35,6 +35,23 @@
     export default {
         name: "Home.vue",
         components: {Header, Footer, HomeTop, HomeBottom},
+        created() {
+            document.documentElement.scrollTop=0
+        },
+        methods: {
+            // // 获取当前用户所有的购物车数据
+            // getShopCarInfoOfCurrentUser: function () {
+            //     if (this.$store.getters.userInfo_userId.length > 0) {
+            //         let params = {'userId': this.$store.getters.userInfo_userId};
+            //         ws_axios.fetchPost1('/shopCar/getShopCarListInfoByUserId', params).then((back) => {
+            //             this.$store.dispatch("saveShopCarInfoList", back.data);
+            //         })
+            //     }
+            // },
+        },
+        mounted() {
+            // this.getShopCarInfoOfCurrentUser();
+        },
     }
 </script>
 

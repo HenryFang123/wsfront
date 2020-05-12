@@ -133,8 +133,6 @@
                 this.$router.push("/business_page")
             }
         },
-        mounted() {
-        }
     }
 </script>
 

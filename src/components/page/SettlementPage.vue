@@ -114,6 +114,7 @@
 
     export default {
         name: "SettlementPage.vue",
+        inject: ['reload'],
         components: {
             Header, Footer
         },
@@ -131,6 +132,7 @@
                 this.order=back.data
             });
             this.isShow = this.$store.state.resultInfo.orderConfirm;
+            this.reload()
         },
         methods:{
             gotoHome() {

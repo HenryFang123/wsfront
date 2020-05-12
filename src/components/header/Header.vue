@@ -100,11 +100,11 @@
                     <el-col :span="7">
                         <div class="div-header-main-search-button">
                             <div class="div-header-main-search-button-main">
-                                <el-badge :max="99" :value="this.$store.state.resultInfo.shopCarInfo.list.length"
+                                <el-badge :max="99" :value="this.shopCarNum"
                                           class="div-header-main-search-button-shop_car">
                                     <el-button @click="gotoShopCar">购物车</el-button>
                                 </el-badge>
-                                <el-badge :max="99" :value="this.$store.state.resultInfo.orderNum"
+                                <el-badge :max="99" :value="this.orderNum"
                                           class="div-header-main-search-button-order">
                                     <el-button @click="gotoSettlementPage">我的订单</el-button>
                                 </el-badge>
@@ -173,6 +173,9 @@
         data() {
             return {
                 if_login: false,
+                user_self: '',
+                orderNum: 0,
+                shopCarNum: 0,
                 search: {
                     inputSearchWord: ''
                 },
@@ -181,6 +184,14 @@
                     '北京', '上海', '天津', '重庆', '广州', '深圳', '河南', '辽宁', '吉林', '江苏', '江西', '四川', '海南', '贵州', '云南', '西藏', '陕西', '甘肃', '青海', '珠海'
                 ]
             }
+        },
+        created() {
+            ws_axios.fetchPost1('/order/getOrderInfoCountByUserId',{'userId': this.$store.state.currUserInfo.userId}).then((back) =>{
+                this.orderNum=back.data;
+            });
+            ws_axios.fetchPost1('/shopCar/getShopCarInfoCountByUserId',{'userId': this.$store.state.currUserInfo.userId}).then((back) =>{
+                this.shopCarNum=back.data;
+            })
         },
         methods: {
             // 判断输入框是否为空
@@ -232,7 +243,7 @@
             },
 
             // 获取当前用户所有的购物车数据
-            getShopCarInfoOfCurrentUser: function () {
+            getShopCarInfoOfCurrentUser() {
                 let params = {
                     'userId': this.$store.getters.currUserInfo.userId,
                 };
@@ -290,6 +301,9 @@
 </script>
 
 <style>
+    .el-input__inner:focus{
+        border-color:#DCDFE6;
+    }
     .div-header {
         width: 100%;
         text-align: center;
