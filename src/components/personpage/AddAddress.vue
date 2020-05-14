@@ -61,9 +61,20 @@
                     'address' : this.form.address,
                     'postPhone' : this.form.postPhone
                 };
-                ws_axios.fetchPost1('/shippingAddress/insertAddress', params).then((back) => {
-                    this.reload();
+                this.$confirm(
+                    "确认添加吗？",
+                    {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning"
+                    }
+                ).then((back) => {
+                    ws_axios.fetchPost1('/shippingAddress/insertAddress', params).then((back) => {
+                        this.$message.success('添加成功');
+                        location.reload();
+                    })
                 })
+
             }
         }
     }

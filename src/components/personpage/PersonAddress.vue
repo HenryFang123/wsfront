@@ -98,7 +98,25 @@
                 this.formData.region = this.address[index].region;
                 this.formData.postPhone = this.address[index].postPhone;
             },
+            del(index){
+                let params = {
+                    'id' : this.address[index].id,
+                    'userPhone': this.$store.getters.currUserInfo.userPhone,
 
+                };
+                this.$confirm(
+                    "确认删除吗？",
+                    {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning"
+                    }
+                ).then((back) => {
+                    ws_axios.fetchPost1('/shippingAddress/deleteShippingAddress', params).then((back) => {
+                        location.reload();
+                    })
+                })
+            },
             // 保存编辑
             saveEdit() {
                 let params = {
