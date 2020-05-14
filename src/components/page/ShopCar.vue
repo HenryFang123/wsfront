@@ -58,7 +58,7 @@
                         <el-col :span="16">
                             <div style="margin-top: 0;border-radius: 2px;background-color: #F2F6FC;padding: 5px; width: 100%;height: 550px;">
                                 <el-row style="margin-top: 10px;margin-left: 11px;" :key="bookItem.id"
-                                        v-for="(bookItem, index) in this.$store.state.resultInfo.shopCarInfo.list">
+                                        v-for="(bookItem, index) in curPageList">
                                     <el-col :span="2">
                                         <el-checkbox-group v-model="select" @change="CheckedBookSelect">
                                             <el-checkbox v-bind:label="bookItem.id"><span/></el-checkbox>
@@ -94,7 +94,7 @@
                                         </el-popover>
                                         <el-popconfirm
                                             confirmButtonText='删除'
-                                            cancelButtonText='不用了'
+                                            cancelButtonText='再想想'
                                             icon="el-icon-delete"
                                             confirmButtonType="danger"
                                             iconColor="#FF3228"
@@ -111,9 +111,8 @@
                                     <el-col :span="16" style="text-align: center">
 
                                         <el-pagination
-                                            @size-change=""
-                                            @current-change=""
-                                            :current-page.sync="this.currentPage"
+                                            @current-change="handleCurrentChange"
+                                            :current-page="this.currentPage"
                                             :page-size="this.pageSize"
                                             layout="total, prev, pager, next"
                                             :total="this.itemTotal"
@@ -185,6 +184,7 @@
 
     export default {
         name: "ShopCar.vue",
+        inject: ['reload'],
         components: {
             Header, Footer
         },
@@ -194,63 +194,61 @@
                 isIndeterminate: false,
                 currentPage: 1,
                 pageSize: 5,
-                itemTotal: 5,
+                itemTotal: 1,
                 singlePage:false,
                 select: [],
                 selectId: [],
                 curList: [],
-                userPhone:'',
-                userAddress: ''
+                curPageList: []
             }
         },
         created() {
             this.init();
-            ws_axios.fetchPost1('/user/getUserPhoneAndAddressByUserId',{'userId': this.$store.state.userInfo.userId}).then((back)=>{
-                this.userPhone = back.data.userPhone;
-                this.userAddress = back.data.userAddress
-            });
             document.documentElement.scrollTop=192
         },
-        beforeDestroy() {
+        updated() {
             for (let i in this.curList) {
                 let flag = false;
-                for (let k in this.$store.state.resultInfo.shopCarInfo.list) {
-                    if (this.$store.state.resultInfo.shopCarInfo.list[k].shop_car_id === this.curList[i].shopcarId) {
+                for (let k in this.curPageList) {
+                    if (this.curPageList[k].shop_car_id === this.curList[i].shopCarId) {
                         flag = true;
-                        if (this.$store.state.resultInfo.shopCarInfo.list[k].book_number !== this.curList[i].bookNum) {
+                        if (this.curPageList[k].book_number !== this.curList[i].bookNum) {
                             const params = {
-                                'shopCarId': this.curList[i].shopcarId,
-                                'bookNumber': this.$store.state.resultInfo.shopCarInfo.list[k].book_number
+                                'shopCarId': this.curList[i].shopCarId,
+                                'bookNumber': this.curPageList[k].book_number
                         };
-                            ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberChange', params)
+                           ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberChange', params)
                         }
                          break;
                     }
                 }
                 if (flag === false) {
-                    ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.curList[i].shopcarId})
+                    ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.curList[i].shopCarId})
                 }
             }
         },
         methods: {
             //存在传入的index形参，不能用计算属性来完成
             getBookPrice(index) {
-                if (this.$store.state.resultInfo.shopCarInfo.list[index].book_number < 1) {
-                    this.$store.state.resultInfo.shopCarInfo.list[index].book_number = 1;
-                }
-                return this.$store.getters.shopCar_getBookPrice(index)
+                // if (this.$store.state.resultInfo.shopCarInfo.list[index].book_number < 1) {
+                //     this.$store.state.resultInfo.shopCarInfo.list[index].book_number = 1;
+                // }
+                // return this.$store.getters.shopCar_getBookPrice(index)
+                return this.curPageList[index].book_price * this.curPageList[index].book_number
             },
 
             decrement(index) {
-                this.$store.commit('decrement', index)
+                // this.$store.commit('decrement', index)
+                this.curPageList[index].book_number--;
             },
 
             increment(index) {
-                this.$store.commit('increment', index)
+                this.curPageList[index].book_number++;
             },
 
             remove(index) {
-                this.$store.commit('removeBookByIndex', index)
+                // this.$store.commit('removeBookByIndex', index)
+                this.curPageList.splice(index,1);
             },
 
             // val有值时是this.selectId否则为空[]
@@ -267,12 +265,25 @@
             },
 
             init() {
-                for (let i = 0; i < this.$store.state.resultInfo.shopCarInfo.list.length; i++) {
-                    this.selectId.push(this.$store.state.resultInfo.shopCarInfo.list[i].id);
+                this.itemTotal = this.$store.state.resultInfo.shopCarInfo.list.length;
+                if(this.itemTotal <= 5){
+                    this.singlePage = true;
+                    this.curPageList = this.$store.state.resultInfo.shopCarInfo.list
+                }
+                else {
+                    for(let i = 0; i < 5 ; i++){
+                        this.curPageList[i] = this.$store.state.resultInfo.shopCarInfo.list[i]
+                    }
+                }
+                for(let i in this.curPageList){
                     this.curList.push({
-                        shopcarId: this.$store.state.resultInfo.shopCarInfo.list[i].shop_car_id,
-                        bookNum: this.$store.state.resultInfo.shopCarInfo.list[i].book_number
+                        shopCarId: this.curPageList[i].shop_car_id,
+                        bookNum: this.curPageList[i].book_number
                     })
+                }
+
+                for (let i in this.$store.state.resultInfo.shopCarInfo.list) {
+                    this.selectId.push(this.$store.state.resultInfo.shopCarInfo.list[i].id);
                 }
                 this.select = this.selectId;
             },
@@ -297,12 +308,29 @@
                         'bookNumber':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_number,
                         'totalPrice':this.$store.getters.shopCar_getBookPrice(this.select[i]-1).toFixed(2),
                     };
-                    ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
-                        ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
-                    });
+                    // ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
+                    //     ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
+                    // });
                 }
                 this.$store.commit('setOrderConfirm',false);
                 this.$router.push("/settlement_page")
+            },
+
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                let num = val * 5;
+                this.curList = [];
+                for(let i = num-5,k = 0;i < num ;i++,k++){
+                    if(this.$store.state.resultInfo.shopCarInfo.list[i] !== undefined){
+                    this.curPageList[k] = this.$store.state.resultInfo.shopCarInfo.list[i]
+                    this.curList.push({
+                      shopCarId: this.curPageList[k].shop_car_id,
+                      bookNum: this.curPageList[k].book_number
+                    })
+                    }
+                    else {this.curPageList.pop()}
+                }
+                console.log('handleCurrentChange')
             },
 
             // 产生不重复的随机数: num(产生数量)  digits(生成位数) callback(回调函数)
@@ -350,8 +378,16 @@
         computed: {
             totalPrice() {
                 let result = 0;
-                for (let index in this.$store.state.resultInfo.shopCarInfo.list) {
-                    result += this.$store.getters.shopCar_getBookPrice(index);
+                let k=0;
+                for (let i in this.select) {
+                    if(this.select[i]-1 === k){
+                        result += this.curPageList[k].book_number * this.curPageList[k].book_price;
+                        k++;
+                    }
+                    else{k++;}
+                    // result += this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_price * this.curPageList;
+                    // result += this.$store.getters.shopCar_getBookPrice(this.select[i]-1);
+                    // result += this.curPageList[this.select[i]-1].book_price * this.curPageList[this.select[i]-1].book_number
                 }
                 return result
             }

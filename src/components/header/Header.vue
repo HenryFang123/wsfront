@@ -100,11 +100,11 @@
                     <el-col :span="7">
                         <div class="div-header-main-search-button">
                             <div class="div-header-main-search-button-main">
-                                <el-badge :max="99" :value="this.shopCarNum"
+                                <el-badge :max="99" :value="this.$store.state.resultInfo.shopCarInfo.list.length"
                                           class="div-header-main-search-button-shop_car">
                                     <el-button @click="gotoShopCar">购物车</el-button>
                                 </el-badge>
-                                <el-badge :max="99" :value="this.orderNum"
+                                <el-badge :max="99" :value="this.$store.state.resultInfo.orderInfo.list.length"
                                           class="div-header-main-search-button-order">
                                     <el-button @click="gotoSettlementPage">我的订单</el-button>
                                 </el-badge>
@@ -174,8 +174,6 @@
             return {
                 if_login: false,
                 user_self: '',
-                orderNum: 0,
-                shopCarNum: 0,
                 search: {
                     inputSearchWord: ''
                 },
@@ -186,11 +184,11 @@
             }
         },
         created() {
-            ws_axios.fetchPost1('/order/getOrderInfoCountByUserId',{'userId': this.$store.state.currUserInfo.userId}).then((back) =>{
-                this.orderNum=back.data;
+            ws_axios.fetchPost1('/order/getOrderInfoListByUserId',{'userId': this.$store.state.currUserInfo.userId}).then((back) =>{
+                 this.$store.commit('saveOrderInfoList',back.data)
             });
-            ws_axios.fetchPost1('/shopCar/getShopCarInfoCountByUserId',{'userId': this.$store.state.currUserInfo.userId}).then((back) =>{
-                this.shopCarNum=back.data;
+            ws_axios.fetchPost1('/shopCar/getShopCarListInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
+                this.$store.commit('saveShopCarInfoList', back.data);
             })
         },
         methods: {
@@ -215,7 +213,6 @@
                                   "userId": array_ws_cookie_2[1],
                                 };
                                 this.$store.dispatch('saveCurrUserInfo', params);
-                                this.getShopCarInfoOfCurrentUser();
                             }
                         }
                     }
@@ -224,32 +221,19 @@
 
             // 获取vuex传递参数
             getDataFromVuex: function () {
-                if (this.$store.getters.currUserInfo.userName === undefined) {
+                if (this.$store.state.currUserInfo.userName === undefined) {
                     let params = {
-                        'userId': this.$store.getters.currUserInfo.userId,
+                        'userId': this.$store.state.currUserInfo.userId,
                     };
                     ws_axios.fetchPost1('/user/getUserInfoByUserId', params).then((back) => {
                         this.$store.dispatch('saveCurrUserInfo', back.data);
                     });
                 } else {
                     this.if_login = true;
-                    if (this.$store.state.resultInfo.shopCarInfo.list.length === 0){
-                        this.getShopCarInfoOfCurrentUser();
-                    }
                 }
                 if (this.$store.getters.searchInfo_searchWord.length > 0) {
                     this.search.inputSearchWord = this.$store.getters.searchInfo_searchWord;
                 }
-            },
-
-            // 获取当前用户所有的购物车数据
-            getShopCarInfoOfCurrentUser() {
-                let params = {
-                    'userId': this.$store.getters.currUserInfo.userId,
-                };
-                ws_axios.fetchPost1('/shopCar/getShopCarListInfoByUserId', params).then((back) => {
-                    this.$store.dispatch("saveShopCarInfoList", back.data);
-                })
             },
 
             // 改变城市选择

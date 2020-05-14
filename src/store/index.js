@@ -54,10 +54,15 @@ export default new Vuex.Store({
 
           // 购物车页
           shopCarInfo: {
-              list: []
+              list: [],
+              totalprice:''
           },
 
-
+          //订单
+          orderInfo:{
+              list:[],
+              orderConfirm:''
+          }
       },
   },
   mutations,
