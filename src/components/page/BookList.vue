@@ -75,7 +75,7 @@
                                 <div class="show_book-main-main">
                                     <!--每一件图书的可定义样式-->
                                     <div :key="index" class="show_book-main-main-list"
-                                         v-for="(bookItem, index) in this.solrBookList">
+                                         v-for="(bookItem, index) in solrBookList">
                                         <el-row>
                                             <el-col :span="4">
                                                 <div class="block">
@@ -125,15 +125,14 @@
                                     </div>
                                     <div class="block" style="margin-top: 30px">
                                         <el-pagination
-                                            :current-page="this.currentPage"
-                                            :page-size="this.pageSize"
+                                            :current-page="currentPage"
+                                            :page-size="pageSize"
                                             :page-sizes="[10, 20, 30, 40, 50]"
-                                            :total="this.itemTotal"
+                                            :total="itemTotal"
                                             @current-change="handleCurrentChange"
                                             @size-change="handleSizeChange"
                                             background
-                                            layout="total, sizes, prev, pager, next">
-                                        </el-pagination>
+                                            layout="total, sizes, prev, pager, next"/>
                                     </div>
                                 </div>
                             </el-main>

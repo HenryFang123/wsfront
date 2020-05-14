@@ -1,27 +1,26 @@
 <template>
     <div class="business_page_bottom">
-        <el-tabs :tab-position="left" style="height: 200px;">
-            <el-tab-pane @click="getCurrentBusinessTypeBookList(typeIndex)" :key="typeIndex" v-for="(typeItem, typeIndex) in this.currBusinessTypeList">
-                <span slot="label">{{typeItem.typeName}}</span>
+        <el-tabs :tab-position="tabPosition" @tab-click="handleTabClick">
+            <el-tab-pane :key="typeIndex" v-for="(typeItem, typeIndex) in currBusinessTypeList" :name="numToString(typeIndex)" >
+                <span style="font-size: 18px;" slot="label">{{typeItem.bookTypeName}}</span>
                 <div class="type_list_block">
                     <el-row>
                         <el-col :key="index"
                                 :span="4"
-                                v-for="(bookItem,index) in this.currBusinessTypeBookList">
+                                v-for="(bookItem, index) in currBusinessTypeBookList">
                             <div class="book_card">
                                 <div class="book_img">
-                                    <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.bookImgPath"/>
+                                    <el-image style="width: 130px; height: 189px;" v-bind:src="bookItem.bookImagePath"/>
                                 </div>
-                                <div class="book_title">
-                                    <a>{{bookItem.bookTitle}}</a>
-                                </div>
-                                <div class="book_author">
+                                <div class="book_title_author">
+                                    <a>{{bookItem.bookName}}</a>
+                                    <el-divider direction="vertical"/>
                                     <a>{{bookItem.bookAuthor}}</a>
                                 </div>
                                 <div class="book_price">
                                     <a>￥{{bookItem.bookPrice}}</a>
                                 </div>
-                                <div class="book_comment">
+                                <div class="book_comment_rating">
                                     <a>已有{{bookItem.bookComment}}评价</a>
                                     <el-divider direction="vertical"/>
                                     <a>{{bookItem.bookRating}}评分</a>
@@ -33,11 +32,11 @@
                 <div class="block">
                     <el-pagination
                         @current-change="currentChange"
-                        :current-page.sync="currentPage"
-                        :page-size="this.pageSize"
+                        :current-page="currentPage"
+                        :page-size="pageSize"
+                        background
                         layout="total, prev, pager, next"
-                        :total="this.itemTotal">
-                    </el-pagination>
+                        :total="itemTotal"/>
                 </div>
             </el-tab-pane>
         </el-tabs>
@@ -49,9 +48,12 @@
 
     export default {
         name: "BusinessBottom.vue",
+        inject: ['reload'],
         data() {
             return {
-                pageSize: 24,
+                tabPosition: 'left',
+                typeIndex: 0,
+                pageSize: 18,
                 currentPage: 1,
                 itemTotal: 0,
                 currBusinessTypeList: [],
@@ -59,26 +61,44 @@
             };
         },
         methods: {
+            numToString(val){
+                val = val.toString();
+                return val;
+            },
+            stringToNum(val){
+                val = parseInt(val);
+                return val;
+            },
+
+            // 点击标签头处理函数
+            handleTabClick(tab, event) {
+                this.currentPage = 1;
+                this.typeIndex = this.stringToNum(tab.name);
+                this.getCurrentBusinessTypeBookList(tab.name);
+            },
+
             // 改变页面显示分页的当前页码
-            currentChange: function (val) {
+            currentChange(val) {
                 this.currentPage = val;
+                this.getCurrentBusinessTypeBookList(this.typeIndex);
             },
 
             // 获取后端查找店铺下分类信息
-            getTypeListByBusinessId: function () {
+            getTypeListByBusinessId() {
                 let params = {
                     businessId: this.$store.getters.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoTypeListByBusinessId', params).then((back) => {
                     this.currBusinessTypeList = back.data;
+                    this.getCurrentBusinessTypeBookList(0);
                 });
             },
 
             // 获取后端查找店铺下分页的总数
-            getTotal: function (typeIndex) {
+            getTotal(typeIndex) {
                 let params = {
                     businessId: this.$store.getters.businessInfo.businessId,
-                    typeId: this.currBusinessTypeList[typeIndex],
+                    typeId: this.currBusinessTypeList[typeIndex].bookTypeId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoCountByBusinessIdAndTypeId', params).then((back) => {
                     this.itemTotal = back.data;
@@ -86,11 +106,12 @@
             },
 
             // 获取后端查找店铺某一类别下书籍列表
-            getCurrentBusinessTypeBookList: function (typeIndex) {
+            getCurrentBusinessTypeBookList(typeIndex) {
+                typeIndex = this.stringToNum(typeIndex);
                 this.getTotal(typeIndex);
                 let params = {
                     businessId: this.$store.getters.businessInfo.businessId,
-                    typeId: this.currBusinessTypeList[typeIndex],
+                    typeId: this.currBusinessTypeList[typeIndex].bookTypeId,
                     pageNum: this.currentPage,
                     pageSize: this.pageSize,
                 };
@@ -101,20 +122,19 @@
         },
         created() {
             this.getTypeListByBusinessId();
-            this.getCurrentBusinessTypeBookList(0);
         },
     }
 </script>
 
 <style scoped>
     .business_page_bottom {
-        margin: 0 auto;
+        margin: 50px auto;
         padding: 0;
         width: 100%;
     }
 
     .business_page_bottom .type_list_block {
-        margin: 50px auto;
+        margin: 0 auto;
         padding: 0;
         width: 100%;
     }
@@ -134,7 +154,6 @@
         margin: 0 auto;
         padding: 0;
         width: 100%;
-        border-left: 1px solid #e9e9eb;
     }
 
     .business_page_bottom .type_list_block .el-row .el-col .book_card:hover {
@@ -148,7 +167,7 @@
         text-align: center;
     }
 
-    .business_page_bottom .type_list_block .el-row .el-col .book_card .book_title {
+    .business_page_bottom .type_list_block .el-row .el-col .book_card .book_title_author {
         margin-top: 5px;
         margin-left: 30px;
         font-size: 13px;
@@ -164,5 +183,21 @@
         color: #f56c6c;
         padding: 0;
         text-align: left;
+    }
+
+    .business_page_bottom .type_list_block .el-row .el-col .book_card .book_comment_rating {
+        margin-top: 5px;
+        margin-left: 30px;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 0;
+        text-align: left;
+    }
+
+    .business_page_bottom .block {
+        margin: 50px 0 20px 0;
+        padding: 0;
+        text-align: right;
+        width: 100%;
     }
 </style>

@@ -284,10 +284,11 @@
     }
 </script>
 
-<style>
+<style scoped>
     .el-input__inner:focus{
         border-color:#DCDFE6;
     }
+
     .div-header {
         width: 100%;
         text-align: center;

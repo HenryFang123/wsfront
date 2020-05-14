@@ -23,8 +23,9 @@
         <div class="book_detail">
             <el-row>
                 <div class="book_detail_block block_tab">
-                    <el-tabs @tab-click="handleClickDetail" v-model="activeNameDetail">
-                        <el-tab-pane label="商品介绍" name="first">
+                    <el-tabs  type="card" v-model="activeNameDetail">
+                        <el-tab-pane name="first">
+                            <span slot="label">商品介绍</span>
                             <div class="book_detail_main">
                                 <el-row style="text-align: left; margin-left: 30px; margin-top: 5px;">
                                     <span>作者：</span>
@@ -49,20 +50,21 @@
                                 </el-row>
                             </div>
                         </el-tab-pane>
-                        <el-tab-pane label="商品评价" name="second">
-
+                        <el-tab-pane name="second">
+                            <span slot="label">商品评价</span>
                         </el-tab-pane>
                     </el-tabs>
                 </div>
             </el-row>
             <el-row>
                 <div class="book_recommend_block">
-                    <el-tabs @tab-click="handleClickRecommend" type="border-card" v-model="activeNameRecommend">
-                        <el-tab-pane @click="getAuthorBookRecommendInfo()" label="相同作者" name="first">
+                    <el-tabs @tab-click="handleRecommendTabClick" type="border-card">
+                        <el-tab-pane :key="tabIndex" v-for="(tabItem, tabIndex) in tabList" :name="numToString(tabIndex)">
+                            <span slot="label">{{tabItem.labelName}}</span>
                             <el-row>
                                 <el-col :key="index"
                                         :span="4"
-                                        v-for="(bookItem,index) in this.authorBookList">
+                                        v-for="(bookItem, index) in neo4jBookList">
                                     <div class="book_card">
                                         <div class="book_img">
                                             <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
@@ -72,47 +74,6 @@
                                         </div>
                                         <div class="book_author">
                                             <a>{{bookItem.author}}</a>
-                                        </div>
-                                        <div class="book_price">
-                                            <a>￥{{bookItem.price}}</a>
-                                        </div>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-tab-pane>
-                        <el-tab-pane @click="getTypeBookRecommendInfo()" label="相同类型" name="second">
-                            <el-row>
-                                <el-col :key="index"
-                                        :span="4"
-                                        v-for="(bookItem,index) in this.typeBookList">
-                                    <div class="book_card">
-                                        <div class="book_img">
-                                            <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
-                                        </div>
-                                        <div class="book_title">
-                                            <a>{{bookItem.title}}</a>
-                                        </div>
-                                        <div class="book_author">
-                                            <a>{{bookItem.author}}</a>
-                                        </div>
-                                        <div class="book_price">
-                                            <a>￥{{bookItem.price}}</a>
-                                        </div>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-tab-pane>
-                        <el-tab-pane @click="getPressBookRecommendInfo()" label="相同出版社" name="third">
-                            <el-row>
-                                <el-col :key="index"
-                                        :span="4"
-                                        v-for="(bookItem,index) in this.pressBookList">
-                                    <div class="book_card">
-                                        <div class="book_img">
-                                            <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
-                                        </div>
-                                        <div class="book_title">
-                                            <a>{{bookItem.title}}</a>
                                         </div>
                                         <div class="book_price">
                                             <a>￥{{bookItem.price}}</a>
@@ -137,64 +98,60 @@
         data() {
             return {
                 activeNameDetail: 'first',
-                activeNameRecommend: 'first',
                 businessBookList: [],
-                authorBookList: [],
-                typeBookList: [],
-                pressBookList: [],
+                tabList: [
+                    {
+                        "labelName": "相同作者"
+                    },
+                    {
+                        "labelName": "相同类型"
+                    },
+                    {
+                        "labelName": "相同出版社"
+                    }
+                ],
+                neo4jBookList: [],
             };
         },
         methods: {
-            handleClickDetail(tab, event) {
+            numToString(val){
+                val = val.toString();
+                return val;
+            },
+
+            stringToNum(val){
+                val = parseInt(val);
+                return val;
+            },
+
+            // 点击标签头处理
+            handleRecommendTabClick(tab, event) {
                 console.log(tab, event);
+                this.getNeo4jBookRecommendInfo(tab.name);
             },
 
-            handleClickRecommend(tab, event) {
-                console.log(tab, event);
-            },
-
-            // 获取相同作者书籍的推荐
-            getAuthorBookRecommendInfo: function () {
+            // 获取图谱书籍的推荐
+            getNeo4jBookRecommendInfo(val) {
+                val = this.stringToNum(val);
+                let urlList = [
+                    "/author/byBookNodeName",
+                    "/type/byBookNodeName",
+                    "/press/byBookNodeName"
+                ];
                 let params = {
                     'name': this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookIsbn,
                     'pageNum': 0,
                     'pageSize': 6
                 };
-                console.log(this.bookInfo.bookIsbn);
-                ws_axios.fetchGet2('/author/byBookNodeName', params).then((back) => {
+                ws_axios.fetchGet2(urlList[val], params).then((back) => {
                     if (back.data.resultCode === "1") {
-                        this.authorBookList = back.data.authorBookList;
+                        this.neo4jBookList = back.data.bookList;
                     }
                 });
             },
-
-            // 获取相同类型书籍的推荐
-            getTypeBookRecommendInfo: function () {
-                let params = {
-                    'name': this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookIsbn,
-                    'pageNum': 0,
-                    'pageSize': 6
-                };
-                ws_axios.fetchGet2('/type/byBookNodeName', params).then((back) => {
-                    if (back.data.resultCode === "1") {
-                        this.typeBookList = back.data.typeBookList;
-                    }
-                });
-            },
-
-            // 获取相同出版社书籍的推荐
-            getPressBookRecommendInfo: function () {
-                let params = {
-                    'name': this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookIsbn,
-                    'pageNum': 0,
-                    'pageSize': 6
-                };
-                ws_axios.fetchGet2('/press/byBookNodeName', params).then((back) => {
-                    if (back.data.resultCode === "1") {
-                        this.pressBookList = back.data.pressBookList;
-                    }
-                });
-            },
+        },
+        created() {
+            this.getNeo4jBookRecommendInfo(0);
         },
     }
 </script>
