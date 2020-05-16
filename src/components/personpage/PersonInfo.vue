@@ -23,16 +23,8 @@
             <el-form-item label="年龄">
                 <el-input v-model="form.userAge"/>
             </el-form-item>
-            <el-form-item label="省">
-
-                <el-input v-model="form.userProvince"/>
-
-            </el-form-item>
-            <el-form-item label="市">
-                <el-input v-model="form.userCity"/>
-            </el-form-item>
-            <el-form-item label="区">
-                <el-input v-model="form.userRegion"/>
+            <el-form-item label="省市区">
+                <VDistpicker :province="form.userProvince" :city="form.userCity" :area="form.userRegion" @selected="onSelected"></VDistpicker>
             </el-form-item>
             <el-form-item label="详细地址">
                 <el-input v-model="form.userAddress"/>
@@ -50,7 +42,7 @@
 
 <script>
     import ws_axios from "network/ws_axios";
-
+    import VDistpicker from 'v-distpicker'
     export default {
         inject: ['reload'],
         name: "PersonInfo.vue",
@@ -60,10 +52,18 @@
                 List:{}
             }
         },
+        components: {
+            VDistpicker
+        },
         created() {
             this.getData();
         },
         methods: {
+            onSelected(data) {
+                this.form.userProvince = data.province.value;
+                this.form.userCity = data.city.value;
+                this.form.userRegion = data.area.value
+            },
             getData() {
                 let params = {
                     'userPhone': this.$store.getters.currUserInfo.userPhone,
@@ -82,10 +82,11 @@
                     userAge : this.form.userAge,
                     'userProvince' : this.form.userProvince,
                     'userCity' : this.form.userCity,
+                    'userRegion' : this.form.userRegion,
                     'userAddress' : this.form.userAddress
                 };
                 ws_axios.fetchPost1('/user/updateUserInfo', params).then((back) => {
-                    this.reload();
+                    this.$message.success("修改个人信息成功")
                 })
             }
         }

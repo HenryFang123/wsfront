@@ -40,6 +40,7 @@ const routes = [
     {
         path: '/person_page',
         component: person_page,
+        redirect: '/PersonInfo',
         meta: {title: '个人信息'},
         children: [
             {

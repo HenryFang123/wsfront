@@ -6,9 +6,14 @@
             </div>
         </div>
         <div class="address-box" v-for="(item, index) in address" :key="index">
+
             <div class="address-header">
-                <span>{{item.consignee}}</span>
+                <span >{{item.consignee}}
+                <el-tag v-if="item.defaultAddress == 1"style="margin-left: 15px">默认</el-tag>
+                </span>
+
                 <div class="address-action">
+                    <span @click="changeDefaultAddress(index)">设为默认地址</span>
                     <span @click="edit(index)"> 修改</span>
                     <span @click="del(index)"> 删除</span>
                 </div>
@@ -26,14 +31,8 @@
                 <el-form-item label="收货人">
                     <el-input  v-model="formData.consignee"/>
                 </el-form-item>
-                <el-form-item label="省">
-                    <el-input  v-model="formData.province"/>
-                </el-form-item>
-                <el-form-item label="市">
-                    <el-input  v-model="formData.city"/>
-                </el-form-item>
-                <el-form-item label="区">
-                    <el-input  v-model="formData.region"/>
+                <el-form-item label="省市区">
+                    <VDistpicker :province="formData.province" :city="formData.city" :area="formData.region" @selected="onSelected"></VDistpicker>
                 </el-form-item>
                 <el-form-item label="详细地址">
                     <el-input  v-model="formData.address"/>
@@ -53,14 +52,18 @@
 
 <script>
     import ws_axios from "network/ws_axios";
-
+    import VDistpicker from 'v-distpicker'
     export default {
         inject: ['reload'],
+        components: {
+            VDistpicker
+        },
         name: "PersonAddress.vue",
         data() {
             return {
                 modal: false,
                 editVisible: false,
+                value : true,
                 form: {},
                 List:[],
                 address:[],
@@ -79,12 +82,37 @@
             this.getData();
         },
         methods: {
+            onSelected(data) {
+                this.formData.province = data.province.value;
+                this.formData.city = data.city.value;
+                this.formData.region = data.area.value
+            },
             getData() {
                 let params = {
                     'userPhone': this.$store.getters.currUserInfo.userPhone,
                 };
                 ws_axios.fetchPost1('/shippingAddress/getShippingAddressByUserPhone', params).then((back) => {
                     this.address = back.data;
+                    console.log(this.address)
+                })
+            },
+            changeDefaultAddress(index){
+                let params = {
+                    'userPhone': this.$store.getters.currUserInfo.userPhone,
+                    'id' : this.address[index].id,
+            };
+                this.$confirm(
+                    "确认设为默认地址吗？",
+                    {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning"
+                    }
+                ).then((back) => {
+                    ws_axios.fetchPost1('/shippingAddress/setDefaultAddress', params).then((back) => {
+                        this.$message.success('修改成功');
+                        location.reload()
+                    })
                 })
             },
 

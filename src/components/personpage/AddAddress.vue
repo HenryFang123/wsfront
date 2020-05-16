@@ -11,14 +11,8 @@
                     <el-form-item label="收货人">
                         <el-input v-model="form.consignee"  ></el-input>
                     </el-form-item>
-                    <el-form-item label="省">
-                        <el-input v-model="form.province"></el-input>
-                    </el-form-item>
-                    <el-form-item label="市">
-                        <el-input v-model="form.city"></el-input>
-                    </el-form-item>
-                    <el-form-item label="区">
-                        <el-input v-model="form.region"></el-input>
+                    <el-form-item label="省市区">
+                        <VDistpicker :province="form.province" :city="form.city" :area="form.region" @selected="onSelected"></VDistpicker>
                     </el-form-item>
                     <el-form-item label="详细地址">
                         <el-input v-model="form.address"></el-input>
@@ -38,9 +32,12 @@
 
 <script>
     import ws_axios from "network/ws_axios";
-
+    import VDistpicker from 'v-distpicker'
     export default {
         inject: ['reload'],
+        components: {
+            VDistpicker
+        },
         name: "AddAddress.vue",
         data() {
             return {
@@ -51,6 +48,11 @@
 
         },
         methods: {
+            onSelected(data) {
+                this.form.province = data.province.value;
+                this.form.city = data.city.value;
+                this.form.region = data.area.value
+            },
             onSubmit() {
                 let params = {
                     'userPhone' : this.$store.getters.currUserInfo.userPhone,

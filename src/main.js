@@ -12,6 +12,9 @@ import Qs from 'qs'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/index.js'
 import 'assets/css/icon.css';
+import VDistpicker from 'v-distpicker' // 引入省市选择器
+
+Vue.component('v-distpicker', VDistpicker); // 注册组件
 Vue.use(Vuex);
 Vue.use(ElementUI);
 Vue.use(VueResource);
