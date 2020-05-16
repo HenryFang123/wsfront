@@ -37,6 +37,9 @@
     export default {
         name: "BookDetail.vue",
         components: {Header, Footer, BookSelect, BookShow},
+        created() {
+            document.documentElement.scrollTop=0
+        },
     }
 </script>
 

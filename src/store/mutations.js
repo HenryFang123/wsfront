@@ -43,13 +43,13 @@ export default {
     // 保存当前用户的购物车信息列表
     saveShopCarInfoList: (state, param) => {
         state.resultInfo.shopCarInfo.list = param;
+        state.resultInfo.shopCarInfo.number = state.resultInfo.shopCarInfo.list.length
     },
 
-    // //购物车移除操作
+    //   //购物车移除操作
     // removeBookByIndex(state, index) {
     //     state.resultInfo.shopCarInfo.list.splice(index, 1)
     // },
-    //
     // //购物车加数量
     // increment(state, index) {
     //     state.resultInfo.shopCarInfo.list[index].book_number++
@@ -65,6 +65,7 @@ export default {
     },
     //保存订单
     saveOrderInfoList(state,payload){
-        state.resultInfo.orderInfo.list = payload
+        state.resultInfo.orderInfo.list = payload;
+        state.resultInfo.orderInfo.number = state.resultInfo.orderInfo.list.length
     },
 }

@@ -100,11 +100,11 @@
                     <el-col :span="7">
                         <div class="div-header-main-search-button">
                             <div class="div-header-main-search-button-main">
-                                <el-badge :max="99" :value="this.$store.state.resultInfo.shopCarInfo.list.length"
+                                <el-badge :max="99" :value="this.$store.state.resultInfo.shopCarInfo.number"
                                           class="div-header-main-search-button-shop_car">
                                     <el-button @click="gotoShopCar">购物车</el-button>
                                 </el-badge>
-                                <el-badge :max="99" :value="this.$store.state.resultInfo.orderInfo.list.length"
+                                <el-badge :max="99" :value="this.$store.state.resultInfo.orderInfo.number"
                                           class="div-header-main-search-button-order">
                                     <el-button @click="gotoSettlementPage">我的订单</el-button>
                                 </el-badge>
@@ -285,9 +285,13 @@
 </script>
 
 <style scoped>
-    .el-input__inner:focus{
-        border-color:#DCDFE6;
+
+    .el-input__inner .el-input.is-active .el-input .el-input__inner:focus{
+        /*border-color:#DCDFE6;*/
+        border: none;
+        outline: none;
     }
+
 
     .div-header {
         width: 100%;

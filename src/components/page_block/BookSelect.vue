@@ -118,6 +118,7 @@
                         };
                         ws_axios.fetchPost1('/shopCar/insertShopCarInfo', params).then((back) => {
                             this.isDisable = true;
+                            this.$store.state.resultInfo.shopCarInfo.number++;
                             this.$router.push("/");
                         })
                     }

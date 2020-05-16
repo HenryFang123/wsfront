@@ -19,10 +19,10 @@ export default {
     resultInfo_bookDetailInfo_bookInfo: state => state.resultInfo.bookDetailInfo.bookInfo,
     resultInfo_bookDetailInfo_businessInfo: state => state.resultInfo.bookDetailInfo.businessInfo,
 
-    shopCar_getBookPrice(state) {
-        return index => {
-            return  state.resultInfo.shopCarInfo.list[index].book_price * state.resultInfo.shopCarInfo.list[index].book_number
-        }
-    }
+    // shopCar_getBookPrice(state) {
+    //     return index => {
+    //         return  state.resultInfo.shopCarInfo.list[index].book_price * state.resultInfo.shopCarInfo.list[index].book_number
+    //     }
+    // }
 }
 

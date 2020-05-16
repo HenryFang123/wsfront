@@ -1,13 +1,13 @@
 <template>
     <div class="shop_car-page">
         <Header/>
-        <div class="shop_car" v-if="this.$store.state.resultInfo.shopCarInfo.list.length">
+        <div class="shop_car" v-if="this.$store.state.resultInfo.shopCarInfo.number">
             <el-container style="border: 1px solid #eee">
                 <el-header style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); height: 100px;">
                     <el-row style="margin-top: 5px; padding: 0; display: flex">
                         <el-col :span="4"/>
                         <el-col :span="20" style="text-align: left;">
-                    <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-top: 10px;">
+                            <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-top: 10px;">
                                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                                 <el-breadcrumb-item>购物车</el-breadcrumb-item>
                             </el-breadcrumb>
@@ -56,7 +56,7 @@
                     <el-row style="padding: 0; display: flex;">
                         <el-col :span="4"/>
                         <el-col :span="16">
-                            <div style="margin-top: 0;border-radius: 2px;background-color: #F2F6FC;padding: 5px; width: 100%;height: 550px;">
+                            <div style="margin-top: 0;border-radius: 2px;background-color: #F2F6FC;padding: 5px; width: 100%;height: 530px;">
                                 <el-row style="margin-top: 10px;margin-left: 11px;" :key="bookItem.id"
                                         v-for="(bookItem, index) in curPageList">
                                     <el-col :span="2">
@@ -105,21 +105,20 @@
                                         </el-popconfirm>
                                     </el-col>
                                 </el-row>
-
                                 <el-row>
                                     <el-col :span="4"/>
                                     <el-col :span="16" style="text-align: center">
-
-                                        <el-pagination
-                                            @current-change="handleCurrentChange"
-                                            :current-page="this.currentPage"
-                                            :page-size="this.pageSize"
-                                            layout="total, prev, pager, next"
-                                            :total="this.itemTotal"
-                                            background
-                                            :hide-on-single-page="this.singlePage">
-                                        </el-pagination>
-
+                                        <div :style="{position:'relative',top:paginationtop}">
+                                            <el-pagination
+                                                @current-change="handleCurrentChange"
+                                                :current-page="this.currentPage"
+                                                :page-size="this.pageSize"
+                                                layout="total, prev, pager, next"
+                                                :total="this.itemTotal"
+                                                background
+                                                :hide-on-single-page="this.singlePage">
+                                            </el-pagination>
+                                        </div>
                                     </el-col>
                                     <el-col :span="4"/>
                                 </el-row>
@@ -132,8 +131,8 @@
                         <el-col :span="16">
                             <div class="settle-shop-car">
                                 <el-row>
-                                    <el-col :span="1"/>
-                                    <el-col :span="21" style="text-align: right">总价：
+                                    <el-col :span="14"/>
+                                    <el-col :span="8" style="text-align: right">总价：
                                         <span style="color: red;font-size: 30px;padding-top: 15px;"><b>{{totalPrice | showPrice}}</b></span>
                                     </el-col>
                                     <el-col :span="2">
@@ -184,7 +183,6 @@
 
     export default {
         name: "ShopCar.vue",
-        inject: ['reload'],
         components: {
             Header, Footer
         },
@@ -198,8 +196,9 @@
                 singlePage:false,
                 select: [],
                 selectId: [],
-                curList: [],
-                curPageList: []
+                curPageList: [],
+                num:[],
+                paginationtop:''
             }
         },
         created() {
@@ -207,47 +206,61 @@
             document.documentElement.scrollTop=192
         },
         updated() {
-            for (let i in this.curList) {
-                let flag = false;
-                for (let k in this.curPageList) {
-                    if (this.curPageList[k].shop_car_id === this.curList[i].shopCarId) {
-                        flag = true;
-                        if (this.curPageList[k].book_number !== this.curList[i].bookNum) {
-                            const params = {
-                                'shopCarId': this.curList[i].shopCarId,
-                                'bookNumber': this.curPageList[k].book_number
-                        };
-                           ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberChange', params)
-                        }
-                         break;
-                    }
+            for (let i=0; i< this.curPageList.length; i++) {
+                let k = this.curPageList[i].id -1;
+                if (this.num[k] !== this.curPageList[i].book_number) {
+                    this.$set(this.num, k, this.curPageList[i].book_number);
+                    const params = {
+                        'shopCarId': this.curPageList[i].shop_car_id,
+                        'bookNumber': this.curPageList[i].book_number
+                    };
+                    ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberChange', params);
                 }
-                if (flag === false) {
-                    ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.curList[i].shopCarId})
+            }
+            if(this.curPageList.length === 5){this.paginationtop = ''}
+            else if(this.curPageList.length === 4){this.paginationtop = '99px'}
+            else if(this.curPageList.length === 3){this.paginationtop = '198px'}
+            else if(this.curPageList.length === 2){this.paginationtop = '297px'}
+            else if(this.curPageList.length === 1){this.paginationtop = '396px'}
+            else {this.paginationtop = '495px'}
+        },
+        beforeDestroy() {
+            for(let i in this.num){
+                if(this.num[i] !== -1){
+                    if(this.num[i] !== this.$store.state.resultInfo.shopCarInfo.list[i].book_number){
+                        const params = {
+                            'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[i].shop_car_id,
+                            'bookNumber': this.num[i]
+                        };
+                        ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberChange', params);
+                    }
                 }
             }
         },
         methods: {
             //存在传入的index形参，不能用计算属性来完成
             getBookPrice(index) {
-                // if (this.$store.state.resultInfo.shopCarInfo.list[index].book_number < 1) {
-                //     this.$store.state.resultInfo.shopCarInfo.list[index].book_number = 1;
-                // }
-                // return this.$store.getters.shopCar_getBookPrice(index)
                 return this.curPageList[index].book_price * this.curPageList[index].book_number
             },
 
             decrement(index) {
-                // this.$store.commit('decrement', index)
                 this.curPageList[index].book_number--;
+                let k = this.curPageList[index].id -1;
+                this.$set(this.num,k,this.curPageList[index].book_number)
             },
 
             increment(index) {
                 this.curPageList[index].book_number++;
+                let k = this.curPageList[index].id -1;
+                this.$set(this.num,k,this.curPageList[index].book_number)
             },
 
             remove(index) {
-                // this.$store.commit('removeBookByIndex', index)
+                let k = this.curPageList[index].id -1;
+                this.num.splice(k,1,-1);
+                this.select.splice(k,1);
+                ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.curPageList[index].shop_car_id})
+                this.$store.state.resultInfo.shopCarInfo.number-- ;
                 this.curPageList.splice(index,1);
             },
 
@@ -275,15 +288,9 @@
                         this.curPageList[i] = this.$store.state.resultInfo.shopCarInfo.list[i]
                     }
                 }
-                for(let i in this.curPageList){
-                    this.curList.push({
-                        shopCarId: this.curPageList[i].shop_car_id,
-                        bookNum: this.curPageList[i].book_number
-                    })
-                }
-
                 for (let i in this.$store.state.resultInfo.shopCarInfo.list) {
                     this.selectId.push(this.$store.state.resultInfo.shopCarInfo.list[i].id);
+                    this.num.push(this.$store.state.resultInfo.shopCarInfo.list[i].book_number)
                 }
                 this.select = this.selectId;
             },
@@ -296,6 +303,7 @@
                 let id = [];
                 this.randomNumber(this.select.length,15,function (arr) {id = arr})
                 for(let i in this.select){
+                    let toltal = this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_price * this.num[this.select[i]-1]
                     let params = {
                         'orderId':id[i],
                         'userAddress': this.$store.state.currUserInfo.userAddress,
@@ -305,32 +313,31 @@
                         'bookId':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_id,
                         'bookName':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_name,
                         'bookImagePath':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_image_path,
-                        'bookNumber':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_number,
-                        'totalPrice':this.$store.getters.shopCar_getBookPrice(this.select[i]-1).toFixed(2),
+                        'bookNumber':this.num[parseInt(this.select[i] - 1)],
+                        'totalPrice':toltal.toFixed(2),
                     };
-                    // ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
-                    //     ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
-                    // });
+                    ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
+                        ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
+                    });
+                    this.$store.state.resultInfo.orderInfo.number++;
                 }
                 this.$store.commit('setOrderConfirm',false);
                 this.$router.push("/settlement_page")
             },
 
             handleCurrentChange(val) {
+                if(this.$store.state.resultInfo.shopCarInfo.list.length <= 5){
+                    this.singlePage = true;
+                    location.reload()
+                }
                 this.currentPage = val;
-                let num = val * 5;
-                this.curList = [];
-                for(let i = num-5,k = 0;i < num ;i++,k++){
+                let n = (val-1) * 5;
+                for(let i = n,k = 0;i < n+5 ;i++,k++){
                     if(this.$store.state.resultInfo.shopCarInfo.list[i] !== undefined){
                     this.curPageList[k] = this.$store.state.resultInfo.shopCarInfo.list[i]
-                    this.curList.push({
-                      shopCarId: this.curPageList[k].shop_car_id,
-                      bookNum: this.curPageList[k].book_number
-                    })
                     }
                     else {this.curPageList.pop()}
                 }
-                console.log('handleCurrentChange')
             },
 
             // 产生不重复的随机数: num(产生数量)  digits(生成位数) callback(回调函数)
@@ -378,16 +385,9 @@
         computed: {
             totalPrice() {
                 let result = 0;
-                let k=0;
                 for (let i in this.select) {
-                    if(this.select[i]-1 === k){
-                        result += this.curPageList[k].book_number * this.curPageList[k].book_price;
-                        k++;
-                    }
-                    else{k++;}
-                    // result += this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_price * this.curPageList;
-                    // result += this.$store.getters.shopCar_getBookPrice(this.select[i]-1);
-                    // result += this.curPageList[this.select[i]-1].book_price * this.curPageList[this.select[i]-1].book_number
+                    let k = parseInt(this.select[i] - 1);
+                    result += this.$store.state.resultInfo.shopCarInfo.list[k].book_price * this.num[k]
                 }
                 return result
             }

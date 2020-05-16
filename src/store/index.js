@@ -55,12 +55,13 @@ export default new Vuex.Store({
           // 购物车页
           shopCarInfo: {
               list: [],
-              totalprice: ''
+              number:''
           },
 
           //订单
           orderInfo:{
               list: [],
+              number:'',
               orderConfirm: ''
           }
       },
