@@ -91,7 +91,7 @@
                 let params = {
                     'userPhone': this.$store.getters.currUserInfo.userPhone,
                 };
-                ws_axios.fetchPost1('/shippingAddress/getShippingAddressByUserPhone', params).then((back) => {
+                ws_axios.fetchPost1('/shippingAddress/getShippingAddressListByUserPhone', params).then((back) => {
                     this.address = back.data;
                     console.log(this.address)
                 })

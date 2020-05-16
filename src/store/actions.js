@@ -11,6 +11,12 @@ export default {
     saveBusinessInfo: ({commit}, payload) => {
         commit('saveBusinessInfo', payload);
     },
+
+    // 触发保存 用户全部收货收货地址信息
+    saveCurrShippingAddress: ({commit}, payload) => {
+        commit('saveCurrShippingAddress', payload);
+    },
+
     // 触发保存 查询表单提交内容
     saveSearchInfoSearchWord: ({commit}, payload) => {
         commit('saveSearchInfoSearchWord', payload);

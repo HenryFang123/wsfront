@@ -23,6 +23,8 @@ export default new Vuex.Store({
       adminInfo: {},
       // 存储店铺信息
       businessInfo: {},
+      // 储存进入系统的用户全部收货地址信息
+      currShippingAddress: {},
 
       // 查询存储
       searchInfo: {

@@ -11,6 +11,10 @@ export default {
     saveBusinessInfo: (state, param) => {
         state.businessInfo = param;
     },
+    // 保存用户全部收货收货地址信息
+    saveCurrShippingAddress: (state, param) => {
+        state.currShippingAddress = param;
+    },
 
     // 保存查询表单提交内容
     saveSearchInfoSearchWord: (state, param) => {

@@ -189,7 +189,10 @@
             });
             ws_axios.fetchPost1('/shopCar/getShopCarListInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
                 this.$store.commit('saveShopCarInfoList', back.data);
-            })
+            });
+            ws_axios.fetchPost1('/shippingAddress/getShippingAddressListByUserPhoneAndHandle', {'userPhone': this.$store.state.currUserInfo.userPhone}).then((back) => {
+                this.$store.commit('saveCurrShippingAddress', back.data);
+            });
         },
         methods: {
             // 判断输入框是否为空
@@ -287,7 +290,6 @@
 <style scoped>
 
     .el-input__inner .el-input.is-active .el-input .el-input__inner:focus{
-        /*border-color:#DCDFE6;*/
         border: none;
         outline: none;
     }
