@@ -210,6 +210,17 @@
 
             // 收藏书籍
             addCollect: function (index) {
+                let params = {
+                    'userId': this.$store.state.currUserInfo.userId,
+                    'userStarId': this.solrBookList[index].book_id,
+                    'userStarTag': 0
+                };
+                ws_axios.fetchPost1('/userStar/insertUserStar', params).then((back) => {
+                });
+                this.$message({
+                    message: '收藏成功',
+                    type: 'success'
+                });
             },
 
             // 改变搜索显示页页大小限制

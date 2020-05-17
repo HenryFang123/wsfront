@@ -64,9 +64,14 @@ const routes = [
                 meta: {title: '我的订单'}
             },
             {
-                path: '/PersonShopCar',
-                component: () => import('components/personpage/PersonShopCar'),
-                meta: {title: '我的购物车'}
+                path: '/PersonStarBook',
+                component: () => import('components/personpage/PersonStarBook'),
+                meta: {title: '收藏图书'}
+            },
+            {
+                path: '/PersonStarBusiness',
+                component: () => import('components/personpage/PersonStarBusiness'),
+                meta: {title: '收藏店铺'}
             },
         ]
     },

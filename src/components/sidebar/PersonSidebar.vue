@@ -46,11 +46,12 @@
                 </el-submenu>
                 <el-submenu index="4">
                     <template slot="title">
-                        <i class="el-icon-s-help"/>
-                        <span>购物车</span>
+                        <i class="el-icon-star-off"/>
+                        <span>收藏</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="PersonShopCar">我的购物车</el-menu-item>
+                        <el-menu-item index="PersonStarBook">收藏书籍</el-menu-item>
+                        <el-menu-item index="PersonStarBusiness">收藏店铺</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </template>

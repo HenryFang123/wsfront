@@ -69,7 +69,7 @@
                     </div>
                     <div class="business_block_button">
                         <el-button @click="gotoBusinessPage" plain>进入店铺</el-button>
-                        <el-button plain>收藏店铺</el-button>
+                        <el-button @click="addCollect" plain>收藏店铺</el-button>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
         },
         methods: {
             // 加书籍进购物车或更新购物车中的书籍
-            addShoppingCartBtn: function () {
+            addShoppingCartBtn () {
                 let flag = 0;
                 let params = {};
                 if (this.bookCount > 0) {
@@ -126,13 +126,28 @@
             },
 
             // 直接购买书籍
-            payForBookBtn: function () {
+            payForBookBtn () {
             },
 
-            gotoBusinessPage() {
+            gotoBusinessPage () {
                 this.$store.dispatch("saveBusinessInfo", this.$store.getters.resultInfo_bookDetailInfo_businessInfo);
                 this.$router.push("/business_page")
-            }
+            },
+
+            // 收藏店铺
+            addCollect () {
+                let params = {
+                    'userId': this.$store.state.currUserInfo.userId,
+                    'userStarId': this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessId,
+                    'userStarTag': 1
+                };
+                ws_axios.fetchPost1('/userStar/insertUserStar', params).then((back) => {
+                });
+                this.$message({
+                    message: '收藏成功',
+                    type: 'success'
+                });
+            },
         },
     }
 </script>

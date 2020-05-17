@@ -9,7 +9,7 @@
 
             <div class="address-header">
                 <span >{{item.consignee}}
-                <el-tag v-if="item.defaultAddress == 1"style="margin-left: 15px">默认</el-tag>
+                <el-tag v-if="item.defaultAddress === 1"style="margin-left: 15px">默认</el-tag>
                 </span>
 
                 <div class="address-action">
