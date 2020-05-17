@@ -85,6 +85,7 @@
                     'userRegion' : this.form.userRegion,
                     'userAddress' : this.form.userAddress
                 };
+                this.$store.getters.currUserInfo.userName = this.form.userName;
                 ws_axios.fetchPost1('/user/updateUserInfo', params).then((back) => {
                     this.$message.success("修改个人信息成功")
                 })

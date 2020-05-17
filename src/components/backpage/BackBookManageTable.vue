@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-s-grid"/> 订单列表
+                    <i class="el-icon-s-grid"/> 图书操作
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -20,15 +20,33 @@
                       class="table"
                       ref="multipleTable"
                       header-cell-class-name="table-header">
-                <el-table-column prop="bookId" label="图书ID" width="55" align="center"/>
+                <el-table-column prop="bookId" label="图书ID" width="60" align="center"/>
                 <el-table-column property="bookName" label="书名" width="150"/>
-                <el-table-column property="bookImagePath" label="图片"/>
+                <el-table-column label="图片" property="bookImagePath"  width="130">
+                    <template slot-scope="scope">
+                        <el-image :src="scope.row.bookImagePath" width="110" height="150"/>
+                    </template>
+                </el-table-column>
                 <el-table-column property="bookAuthor" label="作者"/>
                 <el-table-column property="bookPub" label="出版社"/>
                 <el-table-column property="bookYear" label="出版年"/>
                 <el-table-column  prop="bookIsbn" label="ISBN"/>
                 <el-table-column  prop="bookPrice" label="价格(元)"/>
-                <el-table-column  prop="bookDescription" label="简介"/>
+                <el-table-column label="简介" prop="briefDescription">
+                    <template slot-scope="scope">
+                        <el-popover
+                            placement="top-start"
+                            title="详细介绍"
+                            width="250"
+                            trigger="hover"
+                        >
+                            <div slot="default">
+                                {{scope.row.bookDescription}}
+                            </div>
+                            <div slot="reference">{{scope.row.briefDescription}}</div>
+                        </el-popover>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-delete" class="red" @click.native.prevent="deleteRow(scope.$index, List)">下架</el-button>
@@ -45,15 +63,33 @@
             </el-pagination>
             <el-dialog title="编辑" :visible.sync="queryVisible" width="100%">
                 <el-table v-bind:data="QueryList">
-                    <el-table-column prop="bookId" label="图书ID" width="55" align="center"/>
+                    <el-table-column prop="bookId" label="图书ID" width="60" align="center"/>
                     <el-table-column property="bookName" label="书名" width="150"/>
-                    <el-table-column property="bookImagePath" label="图片"/>
+                    <el-table-column label="图片" property="bookImagePath" width="130">
+                        <template slot-scope="scope">
+                            <el-image :src="scope.row.bookImagePath" width="110" height="150"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column property="bookAuthor" label="作者" width="200"/>
                     <el-table-column property="bookPub" label="出版社"/>
                     <el-table-column property="bookYear" label="出版年"/>
                     <el-table-column  prop="bookIsbn" label="ISBN"/>
                     <el-table-column  prop="bookPrice" label="价格(元)"/>
-                    <el-table-column  prop="bookDescription" label="简介"/>
+                    <el-table-column label="简介" prop="briefDescription" >
+                        <template slot-scope="scope">
+                            <el-popover
+                                placement="top-start"
+                                title="详细介绍"
+                                width="250"
+                                trigger="hover"
+                            >
+                                <div slot="default">
+                                    {{scope.row.bookDescription}}
+                                </div>
+                                <div slot="reference">{{scope.row.briefDescription}}</div>
+                            </el-popover>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-delete" class="red" @click="deleteSearch">删除</el-button>
@@ -150,9 +186,10 @@
                 };
                 ws_axios.fetchPost1('/book/getBookInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
-                    for (let i in this.List) {
-                        this.List[i].id = ++this.count
+                    for(let i in this.List) {
+                        this.List[i].briefDescription = this.List[i].bookDescription.substring(0,10);
                     }
+                    this.reload()
                 })
             },
 
@@ -170,6 +207,7 @@
                 ).then((back) => {
                     ws_axios.fetchPost1('/book/deleteBookInfoByBookId', params).then((back) => {
                         rows.splice(index, 1);
+                        location.reload()
                     })
                 })
             },
@@ -199,6 +237,9 @@
                 };
                 ws_axios.fetchPost1('/book/getBookInfoByBookName', params).then((back) => {
                     this.QueryList = back.data;
+                    for(let i in this.QueryList) {
+                        this.QueryList[i].briefDescription = this.QueryList[i].bookDescription.substring(0,10);
+                    }
                     this.queryVisible = true
                 })
             },

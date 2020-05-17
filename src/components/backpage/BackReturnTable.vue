@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-s-grid"/> 订单列表
+                    <i class="el-icon-s-grid"/> 退货管理
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -132,6 +132,7 @@
                 ).then((back) => {
                     ws_axios.fetchPost1('order/deleteOrderInfoByOrderId', params).then((back) => {
                         rows.splice(index, 1);
+                        location.reload()
                     })
                 })
             },
