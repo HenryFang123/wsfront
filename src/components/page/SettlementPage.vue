@@ -28,16 +28,18 @@
                         <el-col :span="16">
                             <div class="select-item-show" style="padding-left: 5px;">
                                 <el-row>
-                                    <el-col :span="1"/>
-                                    <el-col style="text-align: left" :span="14"><span
+                                    <el-col style="text-align: left;margin-left: 10px;" :span="12"><span
                                         style="font-size: 14px;padding-left: 20px;">商品</span></el-col>
-                                    <el-col  :span="2"/>
                                     <el-col  :span="2"><span
                                         style="font-size: 14px;">数量</span></el-col>
                                     <el-col style="text-align: center" :span="2"><span
                                         style="font-size: 14px;">小计</span></el-col>
+                                    <el-col style="text-align: center" :span="4"><span
+                                        style="font-size: 14px;">收货信息</span>
+                                    </el-col>
                                     <el-col style="text-align: center" :span="3"><span
                                         style="font-size: 14px;">操作</span></el-col>
+                                    <el-col :span="1"/>
                                 </el-row>
                             </div>
                         </el-col>
@@ -53,36 +55,42 @@
                             <div style="margin-top: 0;border-radius: 2px;background-color: #F2F6FC;padding: 5px; width: 100%;">
                                 <el-row style="margin-left: 13px;margin-top: 10px;" :key="index"  v-infinite-scroll=""
                                         v-for="(bookItem, index) in this.$store.state.resultInfo.orderInfo.list">
-<!--                                    <ul class="infinite-list" v-infinite-scroll="" style="overflow:auto">-->
-<!--                                        <li>{{ i }}</li>-->
-<!--                                    </ul>-->
-<!--                                    -->
-<!--                                    class="infinite-list" v-infinite-scroll="" style="overflow:auto"-->
-                                    <el-col :span="1"/>
-                                    <el-col :span="2">
+                                    <el-col :span="2" style="margin-left: 10px;">
                                         <el-image :src="bookItem.bookImagePath"
                                                   style="width: 75px;height: 85px;"/>
                                     </el-col>
-                                    <el-col :span="12" style="text-align: left">
+                                    <el-col :span="9" style="text-align: left">
                                         <span style="font-size: 13px;font-family:Microsoft YaHei ">{{bookItem.bookName}}</span>
                                     </el-col>
-                                    <el-col :span="2"/>
+                                    <el-col :span="1"/>
                                     <el-col :span="2">
                                        <span style="font-size: 13px;font-family:Microsoft YaHei;">{{bookItem.bookNumber}}</span>
                                     </el-col>
                                     <el-col style="text-align: center;" :span="2"><b>{{bookItem.totalPrice | showPrice}}</b></el-col>
-                                    <el-col :span="3" style="text-align: center">
-                                        <el-button type="danger" round size="mini" icon="el-icon-close" @click="dialogFormVisible=true">取消订单</el-button>
+                                    <el-col :span="4" style="text-align: center;">
+                                        <el-select v-model="tempAddress[index]" size="mini" @change="changeAddress($event,index)">
+                                        <el-option
+                                            v-for="item in allAddress"
+                                            :key="item.id"
+                                            :label="item.detail"
+                                            :value="item.detail">
+                                        </el-option>
+                                    </el-select>
                                     </el-col>
+                                    <el-col :span="3" style="text-align: center">
+                                        <el-button type="info" round size="mini" icon="el-icon-close" @click="deleteOrder($event,index)"/>
+                                    </el-col>
+                                    <el-col :span="1"/>
                                 </el-row>
                             </div>
                         </el-col>
                         <el-col :span="4"/>
                     </el-row>
 
+                    <!--取消订单弹出框 -->
                     <el-dialog title="您确定取消订单吗？取消订单后不能恢复！" :visible.sync="dialogFormVisible">
                         <el-form :model="dialogForm" :rules="rules" ref="dialogForm" >
-                            <el-form-item label="请选择取消原因：" prop="radio" label-width="150px">
+                            <el-form-item label="请选择取消原因:" prop="radio" label-width="150px" :rules="rules.radio">
                                 <el-radio-group v-model="dialogForm.radio">
                                     <el-radio   label="我不想买了">我不想买了</el-radio>
                                     <el-radio   label="信息填写错误">信息填写错误</el-radio>
@@ -91,7 +99,7 @@
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item>
-                                <div >
+                                <div style="text-align: right;">
                                     <el-button @click="dialogFormVisible = false">取 消</el-button>
                                     <el-button type="primary" @click="submitForm('dialogForm')">确 定</el-button>
                                 </div>
@@ -106,17 +114,13 @@
                                 <el-row>
                                     <el-col :span="13"/>
                                     <el-col :span="8" style="text-align: right">总价：
-                                        <span style="color: red;font-size: 25px;padding-top: 15px;"><b>{{totalPrice | showPrice}}</b></span>
+                                        <span style="color: red;font-size: 25px;"><b>{{totalPrice | showPrice}}</b></span>
                                     </el-col>
                                     <el-col :span="1"/>
                                     <el-col :span="2">
-                                        <div class="go-buy-it" @click="gotoPayDone" v-if="!isShow">
+                                        <div class="go-buy-it" @click="gotoPayDone">
                                             <b>去付款</b><br/>
                                             <i class="el-icon-right"/>
-                                        </div>
-                                        <div v-else class="go-buy-it2">
-                                            <b>您已付款</b><br/>
-                                            <i class="el-icon-finished"/>
                                         </div>
                                     </el-col>
                                 </el-row>
@@ -139,7 +143,7 @@
                     <br/>
                     <br/>
                     <br/>
-                    <span style="font-size: 17px;font-family:Microsoft YaHei">您暂时没有订单，您可以:
+                    <span style="font-size: 17px;font-family:Microsoft YaHei">您暂时没有未付款订单，您可以:
                         <el-link type="danger" @click="gotoHome" style="font-size: 18px;font-family:Microsoft YaHei" :underline="false">
                             去逛逛</el-link>
                     </span>
@@ -166,11 +170,13 @@
         },
         data() {
             return {
-                // order:[],
-                isShow:false,
                 dialogFormVisible: false,
+                curIndex:0,
+                allAddress:[],
+                curAddress:'',
+                tempAddress:[],
                 dialogForm: {
-                    radio: '',
+                    radio: [],
                 },
                 rules: {
                     radio: [
@@ -180,20 +186,46 @@
             }
         },
         created(){
-            document.documentElement.scrollTop=192
-            this.isShow = this.$store.state.resultInfo.orderConfirm;
+            document.documentElement.scrollTop=192;
+            for(let k of this.$store.state.currShippingAddress){
+                if(k.ifDefaultAddress === 1){this.curAddress = k.detail}
+                this.allAddress.push({'id':k.id,
+                    'detail':k.detail})
+            }
+            for(let i =0;i< this.$store.state.resultInfo.orderInfo.number;i++){
+               this.tempAddress.push(this.$store.state.resultInfo.orderInfo.list[i].userAddress)
+            }
+        },
+        updated() {
+
         },
         methods:{
-            submitForm(dialogForm) {
-                // console.log(this.$refs[formName])
-               // this.$refs.login.validate
-                this.$refs.dialogForm[0].validate((valid) => {
-                    if (valid) {
-                        console.log(this.dialogForm.radio)
-                        this.dialogFormVisible = true
+            changeAddress(event,index){
+                if(this.$store.state.resultInfo.orderInfo.list[index].userAddress !== event){
+                    let param = {
+                        'orderId':this.$store.state.resultInfo.orderInfo.list[index].orderId,
+                        'userAddress': event
+                    };
+                    ws_axios.fetchPost1('/order/updateUserAddressByOrderId',param)
+                }
 
+            },
+            deleteOrder(event,index){
+                this.dialogFormVisible=true;
+                this.curIndex = index;
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.dialogFormVisible = false;
+                        let parm = {
+                            'orderId':this.$store.state.resultInfo.orderInfo.list[this.curIndex].orderId,
+                            'orderInfo':'已取消：'+this.dialogForm.radio
+                        };
+                        ws_axios.fetchPost1('/order/deleteOrderInfoByOrderId', parm);
+                        this.$store.state.resultInfo.orderInfo.list.splice(this.curIndex,1);
+                        this.$refs[formName].resetFields();
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });
@@ -263,26 +295,11 @@
         padding-top: 5px;
         color: #FFFFFF;
     }
-
-    .go-buy-it2 {
-        background-color: #E6A23C;
-        text-align: center;
-        width: 85px;
-        height: 45px;
-        border-radius: 4px;
-        margin-left: 10px;
-        padding-top: 5px;
-        color: #FFFFFF;
-    }
     .el-col{
         min-height: 1px;
     }
 
     .el-header{
         padding: 0;
-    }
-    .el-button--danger{
-        background-color: #E6A23C;
-        border-color: #E6A23C;
     }
 </style>

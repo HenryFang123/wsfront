@@ -47,8 +47,4 @@ export default {
         commit('saveBookDetailInfoBusinessInfo', payload);
     },
 
-    // // 触发保存 当前用户的购物车信息列表
-    // saveShopCarInfoList: ({commit}, payload) => {
-    //     commit('saveShopCarInfoList', payload);
-    // },
 }

@@ -36,7 +36,7 @@
                 <el-link :underline="false" icon="el-icon-message-solid" type="info">我的消息</el-link>&nbsp;&nbsp;&nbsp;
                 <el-link :underline="false" icon="el-icon-s-platform" type="info">网站导航</el-link>&nbsp;&nbsp;&nbsp;
                 <el-link :underline="false" icon="el-icon-edit" type="info">问题反馈</el-link>&nbsp;&nbsp;&nbsp;
-                <el-link :underline="false"  icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
+                <el-link :underline="false" href="/" icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
             </div>
         </div>
     </div>

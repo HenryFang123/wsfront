@@ -70,7 +70,6 @@
                 };
                 ws_axios.fetchPost1('/user/getUserInfoByUserPhone', params).then((back) => {
                     this.form = back.data;
-                    console.log(this.form);
                 })
             },
             onSubmit() {
