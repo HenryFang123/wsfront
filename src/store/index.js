@@ -11,8 +11,6 @@ export default new Vuex.Store({
       // 商城静态图片
       webImg: {
           wsLogo: "http://image.nicezza.online/web_img/ws_logo.png",
-          homeTopJgtj: "http://image.nicezza.online/web_img/home_top_jgtj.jpg",
-          homeTopPltj: "http://image.nicezza.online/web_img/home_top_pltj.jpg",
           homeTopPjtj: "http://image.nicezza.online/web_img/home_top_pjtj.jpg",
           homeBottomDjtj: "http://image.nicezza.online/web_img/home_bottom_djtj.jpg",
       },
@@ -36,6 +34,11 @@ export default new Vuex.Store({
           // 首页
           homeInfo: {
               topInfo: {
+                  imgList: [
+                      {
+                          imgBlock: "http://image.nicezza.online/static_img/lb_dzs.jpg"
+                      }
+                  ],
                   bookList: [],
               },
               bottomInfo: {

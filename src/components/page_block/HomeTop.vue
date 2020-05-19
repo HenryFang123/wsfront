@@ -3,57 +3,6 @@
         <div class="home-main-middle-top-block">
             <!--占位块-->
         </div>
-        <div class="home-main-middle-top-tag">
-            <el-row>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">图书排行榜</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">计算机</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">国内名著</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">国内文学</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">国外文学</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">小说悬疑</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">经典</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">历史文化</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">哲学思想</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">诗词诗歌</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">金庸武侠</el-link>
-                </el-col>
-                <el-divider direction="vertical"/>
-                <el-col :span="2">
-                    <el-link :underline="false" href="" type="info">国外名著</el-link>
-                </el-col>
-            </el-row>
-        </div>
         <div class="home-main-middle-top-main">
             <el-row>
                 <el-col :span="4">
@@ -145,52 +94,21 @@
                         </div>
                         <div class="home-main-middle-top-main-select_content-suggest-book">
                             <el-row>
-                                <el-col :span="8">
-                                    <el-divider content-position="left">
-                                        <el-image style="height: 35px; width: 87px;" v-bind:src="this.$store.getters.webImg_homeTopJgtj"/>
-                                    </el-divider>
-                                    <div :key="index"
-                                         class="price_sort_card"
-                                         v-for="(priceSortItem,index) in this.$store.getters.resultInfo_homeInfo_topInfo_bookList.topPrice">
-                                        <el-row>
-                                            <el-col :span="1">
-                                                <span>{{index+1}}</span>
-                                            </el-col>
-                                            <el-col :span="18">
-                                                <span>{{priceSortItem.bookName}}</span>
-                                            </el-col>
-                                            <el-col :span="5">
-                                                <span>￥{{priceSortItem.bookPrice}}</span>
-                                            </el-col>
-                                        </el-row>
-                                    </div>
+                                <el-col :span="16">
+                                    <el-carousel :interval="5000" arrow="always">
+                                        <el-carousel-item v-for="(imgItem, index) in this.$store.state.resultInfo.homeInfo.topInfo.imgList" :key="index">
+                                            <div class="img_block">
+                                                <el-image style="margin: 0 auto;" v-bind:src="imgItem.imgBlock"/>
+                                            </div>
+                                        </el-carousel-item>
+                                    </el-carousel>
                                 </el-col>
                                 <el-col :span="8">
                                     <el-divider content-position="left">
-                                        <el-image style="height: 35px; width: 87px;" v-bind:src="this.$store.getters.webImg_homeTopPltj"/>
-                                    </el-divider>
-                                    <div :key="index"
-                                         class="comment_sort_card"
-                                         v-for="(commentSortItem,index) in this.$store.getters.resultInfo_homeInfo_topInfo_bookList.topComment">
-                                        <el-row>
-                                            <el-col :span="1">
-                                                <span>{{index+1}}</span>
-                                            </el-col>
-                                            <el-col :span="18">
-                                                <span>{{commentSortItem.bookName}}</span>
-                                            </el-col>
-                                            <el-col :span="5">
-                                                <span>{{commentSortItem.bookComment}} 评论</span>
-                                            </el-col>
-                                        </el-row>
-                                    </div>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-divider content-position="left">
-                                        <el-image style="height: 35px; width: 87px;" v-bind:src="this.$store.getters.webImg_homeTopPjtj"/>
+                                        <el-image style="height: 35px; width: 87px;" v-bind:src="this.$store.state.webImg.homeTopPjtj"/>
                                     </el-divider>
                                     <div :key="index" class="rating_sort_card"
-                                         v-for="(ratingSortItem,index) in this.$store.getters.resultInfo_homeInfo_topInfo_bookList.topRating">
+                                         v-for="(ratingSortItem,index) in this.$store.state.this.$store.state.resultInfo.homeInfo.topInfo.bookList.topRating">
                                         <el-row>
                                             <el-col :span="1">
                                                 <span>{{index+1}}</span>
@@ -343,32 +261,6 @@
         margin: 0 auto;
         padding: 0;
         width: 100%;
-    }
-
-    .home-main-middle-top .home-main-middle-top-tag {
-        margin: 0 auto;
-        padding: 0;
-        width: 100%;
-        background-color: #f7f7f7;
-    }
-
-    .home-main-middle-top .home-main-middle-top-tag .el-row {
-        margin: 0 auto;
-        padding: 0;
-        width: 100%;
-        display: flex
-    }
-
-    .home-main-middle-top .home-main-middle-top-tag .el-row .el-col {
-        margin: 5px auto;
-        padding: 0;
-        height: 100%;
-    }
-
-    .home-main-middle-top .home-main-middle-top-tag .el-row .el-divider {
-        margin-top: 10px;
-        margin-left: 1px;
-        margin-right: 1px;
     }
 
     .home-main-middle-top .home-main-middle-top-main {
@@ -538,18 +430,8 @@
         height: 100%;
     }
 
-    .home-main-middle-top .home-main-middle-top-main .home-main-middle-top-main-select_content-suggest .home-main-middle-top-main-select_content-suggest-book .el-row .el-col .price_sort_card {
-        margin: 5px auto;
-        padding: 0;
-        font-size: 14px;
-        border-bottom: 1px solid #e9e9eb;
-    }
-
-    .home-main-middle-top .home-main-middle-top-main .home-main-middle-top-main-select_content-suggest .home-main-middle-top-main-select_content-suggest-book .el-row .el-col .comment_sort_card {
-        margin: 5px auto;
-        padding: 0;
-        font-size: 14px;
-        border-bottom: 1px solid #e9e9eb;
+    .home-main-middle-top .home-main-middle-top-main .home-main-middle-top-main-select_content-suggest .home-main-middle-top-main-select_content-suggest-book .el-row .el-col .el-carousel__item .img_block {
+        margin: 0 auto;
     }
 
     .home-main-middle-top .home-main-middle-top-main .home-main-middle-top-main-select_content-suggest .home-main-middle-top-main-select_content-suggest-book .el-row .el-col .rating_sort_card {

@@ -95,7 +95,7 @@
                 let params = {};
                 if (this.bookCount > 0) {
                     for (let i = 0; i < this.$store.state.resultInfo.shopCarInfo.list.length; i++) {
-                        if (this.$store.state.resultInfo.shopCarInfo.list[i].book_id === this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookId) {
+                        if (this.$store.state.resultInfo.shopCarInfo.list[i].book_id === this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookId) {
                             flag = 1;
                             params = {
                                 "shopCarId": this.$store.state.resultInfo.shopCarInfo.list[i].shop_car_id,
@@ -107,21 +107,23 @@
                     if (flag === 1) {
                         ws_axios.fetchPost1('/shopCar/updateShopCarInfoBookNumberAdd', params).then((back) => {
                             this.isDisable = true;
-                            this.$router.push("/");
+                            this.$router.push("/book_list");
                         });
                     } else {
                         params = {
-                            'userId': this.$store.getters.currUserInfo.userId,
-                            'businessId': this.$store.getters.resultInfo_bookDetailInfo_businessInfo.businessId,
-                            'bookId': this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookId,
+                            'userId': this.$store.state.currUserInfo.userId,
+                            'businessId': this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessId,
+                            'bookId': this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookId,
                             'bookNumber': this.bookCount
                         };
                         ws_axios.fetchPost1('/shopCar/insertShopCarInfo', params).then((back) => {
                             this.isDisable = true;
                             this.$store.state.resultInfo.shopCarInfo.number++;
-                            this.$router.push("/");
+                            this.$router.push("/book_list");
                         })
                     }
+                } else {
+                    this.$message.error('商品数量不能为空！');
                 }
             },
 
@@ -130,7 +132,7 @@
             },
 
             gotoBusinessPage () {
-                this.$store.dispatch("saveBusinessInfo", this.$store.getters.resultInfo_bookDetailInfo_businessInfo);
+                this.$store.dispatch("saveBusinessInfo", this.$store.state.resultInfo.bookDetailInfo.businessInfo);
                 this.$router.push("/business_page")
             },
 
