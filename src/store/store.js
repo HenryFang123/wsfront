@@ -66,8 +66,7 @@ export default new Vuex.Store({
           //订单
           orderInfo:{
               list: [],
-              number:'',
-              orderConfirm: ''
+              number:''
           }
       },
   },

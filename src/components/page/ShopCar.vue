@@ -61,11 +61,11 @@
                                         v-for="(bookItem, index) in curPageList">
                                     <el-col :span="2">
                                         <el-checkbox-group v-model="select" @change="CheckedBookSelect">
-                                            <el-checkbox v-bind:label="bookItem.id"><span/></el-checkbox>
+                                            <el-checkbox :label="bookItem.id"><span/></el-checkbox>
                                         </el-checkbox-group>
                                     </el-col>
                                     <el-col :span="2">
-                                        <el-image v-bind:src="bookItem.book_image_path" style="width: 75px;height: 85px;"/>
+                                        <el-image :src="bookItem.book_image_path" style="width: 75px;height: 85px;"/>
                                     </el-col>
                                     <el-col :span="12" style="text-align: left">
                                         <span style="font-size: 13px;font-family:Microsoft YaHei ">{{bookItem.book_name}}</span>
@@ -304,9 +304,13 @@
                 this.randomNumber(this.select.length,15,function (arr) {id = arr})
                 for(let i in this.select){
                     let toltal = this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_price * this.num[this.select[i]-1]
+                    let address='';
+                    for(let k of this.$store.state.currShippingAddress){
+                        if(k.ifDefaultAddress === 1){address = k.detail}
+                    }
                     let params = {
                         'orderId':id[i],
-                        'userAddress': this.$store.state.currUserInfo.userAddress,
+                        'userAddress': address,
                         'userId': this.$store.state.currUserInfo.userId,
                         'userPhone': this.$store.state.currUserInfo.userPhone,
                         'businessId':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].business_id,
@@ -314,19 +318,18 @@
                         'bookName':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_name,
                         'bookImagePath':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_image_path,
                         'bookNumber':this.num[parseInt(this.select[i] - 1)],
-                        'totalPrice':toltal.toFixed(2),
+                        'totalPrice':toltal.toFixed(2)
                     };
                     ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
                         ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
                     });
                     this.$store.state.resultInfo.orderInfo.number++;
                 }
-                this.$store.commit('setOrderConfirm',false);
                 this.$router.push("/settlement_page")
             },
 
             handleCurrentChange(val) {
-                if(this.$store.state.resultInfo.shopCarInfo.list.length <= 5){
+                if(this.$store.state.resultInfo.shopCarInfo.number <= 5){
                     this.singlePage = true;
                     location.reload()
                 }

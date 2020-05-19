@@ -59,9 +59,24 @@ const routes = [
                 meta: {title: '添加收货地址'}
             },
             {
-                path: '/PersonOrder',
-                component: () => import('components/personpage/PersonOrder'),
-                meta: {title: '我的订单'}
+                path: '/PersonOrder1',
+                component: () => import('components/personpage/PersonOrder/PersonOrder1'),
+                meta: {title: '进行中'}
+            },
+            {
+                path: '/PersonOrder2',
+                component: () => import('components/personpage/PersonOrder/PersonOrder2'),
+                meta: {title: '待发货'}
+            },
+            {
+                path: '/PersonOrder3',
+                component: () => import('components/personpage/PersonOrder/PersonOrder3'),
+                meta: {title: '待确认'}
+            },
+            {
+                path: '/PersonOrder4',
+                component: () => import('components/personpage/PersonOrder/PersonOrder4'),
+                meta: {title: '历史订单'}
             },
             {
                 path: '/PersonStarBook',

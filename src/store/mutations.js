@@ -50,23 +50,6 @@ export default {
         state.resultInfo.shopCarInfo.number = state.resultInfo.shopCarInfo.list.length
     },
 
-    //   //购物车移除操作
-    // removeBookByIndex(state, index) {
-    //     state.resultInfo.shopCarInfo.list.splice(index, 1)
-    // },
-    // //购物车加数量
-    // increment(state, index) {
-    //     state.resultInfo.shopCarInfo.list[index].book_number++
-    // },
-    // //购物车减数量
-    // decrement(state, index) {
-    //     state.resultInfo.shopCarInfo.list[index].book_number--
-    // },
-
-    //设置订单状态
-    setOrderConfirm(state,payload){
-        state.resultInfo.orderInfo.orderConfirm = payload
-    },
     //保存订单
     saveOrderInfoList(state,payload){
         state.resultInfo.orderInfo.list = payload;

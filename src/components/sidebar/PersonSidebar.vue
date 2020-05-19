@@ -36,12 +36,13 @@
                 <el-submenu index="3">
                     <template slot="title">
                         <i class="el-icon-bangzhu"/>
-                        <span>购物订单</span>
+                        <span>我的订单</span>
                     </template>
                     <el-menu-item-group>
-
-                        <el-menu-item index="PersonOrder">我的订单</el-menu-item>
-
+                      <el-menu-item index="PersonOrder1">进行中</el-menu-item>
+                      <el-menu-item index="PersonOrder2">待发货</el-menu-item>
+                      <el-menu-item index="PersonOrder3">待确认</el-menu-item>
+                      <el-menu-item index="PersonOrder4">历史订单</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="4">
