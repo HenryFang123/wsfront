@@ -32,10 +32,11 @@
 </template>
 
 <script>
+    import ws_axios from "network/ws_axios";
     import Header from '../header/Header'
     import Footer from '../footer/Footer'
     export default {
-        name: ".vue",
+        name: "PayDone.vue",
         components: {  Header, Footer},
         data() {
             return {}
