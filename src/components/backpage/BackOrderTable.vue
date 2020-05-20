@@ -22,16 +22,37 @@
                 <el-table-column align="center" label="ID" prop="id" width="55">
                     <template slot-scope="scope">{{scope.$index+1}}</template>
                 </el-table-column>
-                <el-table-column label="订单ID" prop="orderId" v-model="query.orderId"/>
+                <el-table-column label="订单ID" prop="orderId" v-model="query.orderId" width="140"/>
                 <el-table-column label="用户ID" prop="userId"/>
                 <el-table-column label="图书ID" property="bookId"/>
-                <el-table-column label="图书名称" property="bookName"/>
+                <el-table-column label="图书名称" property="bookName" width="150"/>
                 <el-table-column label="商品数量(件)" property="bookNumber"/>
                 <el-table-column label="商品价格(元)" prop="totalPrice"/>
-                <el-table-column label="地址" prop="userAddress"/>
-                <el-table-column label="用户号码" prop="userPhone" v-model="query.userPhone"/>
+                <el-table-column label="地址" property="briefAddress">
+                    <template slot-scope="scope">
+                        <el-popover
+                            placement="top-start"
+                            title="详细地址"
+                            width="250"
+                            trigger="hover"
+                        >
+                            <div slot="default">
+                                {{scope.row.userAddress}}
+                            </div>
+                            <div slot="reference">{{scope.row.briefAddress}}</div>
+                        </el-popover>
+                    </template>
+                </el-table-column>
+                <el-table-column label="状态" prop="orderInfo">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.orderState===2" type="danger">未发货</el-tag>
+                        <el-tag v-if="scope.row.orderState===3" type="success">已发货</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="用户号码" prop="userPhone" width="110"/>
                 <el-table-column align="center" label="操作" width="180">
                     <template slot-scope="scope">
+                        <el-button v-if="scope.row.orderState===2" @click.native.prevent="ship(scope.$index, List)" icon="el-icon-circle-check" type="text">发货</el-button>
                         <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
                     </template>
                 </el-table-column>
@@ -54,9 +75,6 @@
                     <el-form-item label="地址">
                         <el-input v-model="form.userAddress"/>
                     </el-form-item>
-                    <el-form-item label="用户号码">
-                        <el-input v-model="form.userPhone"/>
-                    </el-form-item>
                 </el-form>
                 <span class="dialog-footer" slot="footer">
                     <el-button @click="editVisible = false">取 消</el-button>
@@ -71,10 +89,31 @@
                     <el-table-column label="图书名称" property="bookName"/>
                     <el-table-column label="商品数量(件)" property="bookNumber"/>
                     <el-table-column label="商品价格(元)" property="totalPrice"/>
-                    <el-table-column label="地址" property="userAddress"/>
-                    <el-table-column label="用户号码" prop="userPhone"/>
+                    <el-table-column label="地址" property="briefAddress">
+                        <template slot-scope="scope">
+                            <el-popover
+                                placement="top-start"
+                                title="详细地址"
+                                width="250"
+                                trigger="hover"
+                            >
+                                <div slot="default">
+                                    {{scope.row.userAddress}}
+                                </div>
+                                <div slot="reference">{{scope.row.briefAddress}}</div>
+                            </el-popover>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="状态" prop="orderInfo">
+                        <template slot-scope="scope">
+                            <el-tag v-if="scope.row.orderState===2" type="danger">未发货</el-tag>
+                            <el-tag v-if="scope.row.orderState===3" type="success">已发货</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="用户号码" prop="userPhone" />
                     <el-table-column align="center" label="操作" width="180">
                         <template slot-scope="scope">
+                            <el-button v-if="scope.row.orderState===2" @click.native.prevent="shipSearch(scope.$index, QueryList)" icon="el-icon-circle-check" type="text">发货</el-button>
                             <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
                         </template>
                     </el-table-column>
@@ -105,6 +144,7 @@
                 formQuery: {},
                 idx: -1,
                 id: -1,
+                briefAddress:''
             };
         },
         created() {
@@ -120,7 +160,7 @@
                 let params = {
                     businessId: this.$store.getters.adminInfo.businessId,
                 };
-                ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderSumCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
                 });
             },
@@ -133,6 +173,9 @@
                 console.log(this.$store.getters.adminInfo.businessId);
                 ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
+                    for(let i in this.List) {
+                        this.List[i].briefAddress = this.List[i].userAddress.substring(0,15);
+                    }
                     this.reload();
                 })
             },
@@ -142,6 +185,9 @@
                 };
                 ws_axios.fetchPost1('/order/getOrderInfoByOrderId', params).then((back) => {
                     this.QueryList = back.data;
+                    for(let i in this.QueryList) {
+                        this.QueryList[i].briefAddress = this.QueryList[i].userAddress.substring(0,15);
+                    }
                     this.queryVisible = true
                 })
 
@@ -151,12 +197,45 @@
                 this.form = row;
                 this.editVisible = true;
             },
+            ship(index,rows){
+                let params = {
+                    'orderId': this.List[index].orderId,
+                };
+                this.$confirm(
+                    "确认发货吗？",
+                    {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning"
+                    }
+                ).then((back) => {
+                    ws_axios.fetchPost1('order/shipByOrderId', params).then((back) => {
+                        location.reload()
+                    })
+                })
+            },
+            shipSearch(index,rows){
+                let params = {
+                    'orderId': this.QueryList[index].orderId,
+                };
+                this.$confirm(
+                    "确认发货吗？",
+                    {
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        type: "warning"
+                    }
+                ).then((back) => {
+                    ws_axios.fetchPost1('order/shipByOrderId', params).then((back) => {
+                        location.reload()
+                    })
+                })
+            },
             // 保存编辑
             saveEdit() {
                 let params = {
                     'orderId': this.form.orderId,
                     'userAddress': this.form.userAddress,
-                    'userPhone': this.form.userPhone
                 };
                 ws_axios.fetchPost1('/order/updateOrderInfo', params).then((back) => {
                     this.editVisible = false;
