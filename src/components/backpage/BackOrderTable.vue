@@ -16,16 +16,29 @@
             </div>
             <el-table v-bind:data="List"
                       border
+                      v-loading="loading"
+                      element-loading-text="拼命加载中"
                       class="table"
                       header-cell-class-name="table-header"
                       ref="multipleTable">
                 <el-table-column align="center" label="ID" prop="id" width="55">
                     <template slot-scope="scope">{{scope.$index+1}}</template>
                 </el-table-column>
-                <el-table-column label="订单ID" prop="orderId" v-model="query.orderId" width="140"/>
+                <el-table-column label="订单ID" prop="orderId" v-model="query.orderId" width="140">
+                    <template slot-scope="scope">
+                        <router-link :to="{path:'BackOrderDetail?orderId='+scope.row.orderId}">
+                            {{scope.row.orderId}}
+                        </router-link>
+                    </template>
+                </el-table-column>
                 <el-table-column label="用户ID" prop="userId"/>
                 <el-table-column label="图书ID" property="bookId"/>
-                <el-table-column label="图书名称" property="bookName" width="150"/>
+                <el-table-column label="图书名称" property="bookName" />
+                <el-table-column label="图片" property="bookImagePath" width="130">
+                    <template slot-scope="scope">
+                        <el-image :src="scope.row.bookImagePath" width="110" height="150"/>
+                    </template>
+                </el-table-column>
                 <el-table-column label="商品数量(件)" property="bookNumber"/>
                 <el-table-column label="商品价格(元)" prop="totalPrice"/>
                 <el-table-column label="地址" property="briefAddress">
@@ -83,10 +96,21 @@
             </el-dialog>
             <el-dialog :visible.sync="queryVisible" title="编辑" width="100%">
                 <el-table v-bind:data="QueryList">
-                    <el-table-column label="订单ID" property="orderId" width="150"/>
+                    <el-table-column label="订单ID" property="orderId" width="150">
+                        <template slot-scope="scope">
+                            <router-link :to="{path:'BackOrderDetail?orderId='+scope.row.orderId}">
+                                {{scope.row.orderId}}
+                            </router-link>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="用户ID" property="userId" width="200"/>
                     <el-table-column label="图书ID" property="bookId"/>
                     <el-table-column label="图书名称" property="bookName"/>
+                    <el-table-column label="图片" property="bookImagePath" width="130">
+                        <template slot-scope="scope">
+                            <el-image :src="scope.row.bookImagePath" width="110" height="150"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="商品数量(件)" property="bookNumber"/>
                     <el-table-column label="商品价格(元)" property="totalPrice"/>
                     <el-table-column label="地址" property="briefAddress">
@@ -131,6 +155,7 @@
         name: 'BackOrderTable.vue',
         data() {
             return {
+                loading: true,
                 count: 0,
                 pageSize: 5,//每页的数据条数
                 currentPage: 1,//默认开始页面
@@ -160,7 +185,7 @@
                 let params = {
                     businessId: this.$store.getters.adminInfo.businessId,
                 };
-                ws_axios.fetchPost1('/order/getOrderSumCountByBusinessId', params).then((back) => {
+                ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
                 });
             },
@@ -176,6 +201,7 @@
                     for(let i in this.List) {
                         this.List[i].briefAddress = this.List[i].userAddress.substring(0,15);
                     }
+                    this.loading = false;
                     this.reload();
                 })
             },

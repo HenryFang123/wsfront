@@ -165,6 +165,11 @@ const routes = [
                 meta: {title: '退货管理'}
             },
             {
+                path: '/BackOrderDetail',
+                component: () => import('components/backpage/BackOrderDetail'),
+                meta: {title: '订单详情'}
+            },
+            {
                 path: '/BackBookList',
                 component: () => import('components/backpage/BackBookList'),
                 meta: {title: '图书列表'}
