@@ -17,8 +17,9 @@
 
                 <!-- 用户头像 -->
                 <div class="user-avator">
-                    <img src="../../assets/img/header/img.jpg"/>
+                    <el-image v-bind:src="this.$store.state.businessInfo.businessImagePath"/>
                 </div>
+
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown @command="handleCommand" class="user-name" trigger="click">
                     <span class="el-dropdown-link">
@@ -176,7 +177,7 @@
         margin-left: 20px;
     }
 
-    .user-avator img {
+    .user-avator .el-image {
         display: block;
         width: 40px;
         height: 40px;

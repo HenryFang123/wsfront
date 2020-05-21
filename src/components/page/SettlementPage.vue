@@ -196,9 +196,6 @@
                this.tempAddress.push(this.$store.state.resultInfo.orderInfo.list[i].userAddress)
             }
         },
-        updated() {
-
-        },
         methods:{
             changeAddress(event,index){
                 if(this.$store.state.resultInfo.orderInfo.list[index].userAddress !== event){

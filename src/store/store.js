@@ -11,8 +11,12 @@ export default new Vuex.Store({
       // 商城静态图片
       webImg: {
           wsLogo: "http://image.nicezza.online/web_img/ws_logo.png",
-          homeTopPjtj: "http://image.nicezza.online/web_img/home_top_pjtj.jpg",
           homeBottomDjtj: "http://image.nicezza.online/web_img/home_bottom_djtj.jpg",
+      },
+
+      // 书籍分类信息
+      systemType: {
+
       },
 
       // 储存进入系统的用户信息
@@ -37,7 +41,10 @@ export default new Vuex.Store({
                   imgList: [
                       {
                           imgBlock: "http://image.nicezza.online/static_img/lb_dzs.jpg"
-                      }
+                      },
+                      {
+                          imgBlock: "http://image.nicezza.online/static_img/lb_sfj.jpg"
+                      },
                   ],
                   bookList: [],
               },

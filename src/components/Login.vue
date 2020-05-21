@@ -4,7 +4,7 @@
         <div class="login-header">
             <div class="login-header-block">
                 <div class="login-header-block-img">
-                    <el-image v-bind:src="this.$store.getters.webImg_wsLogo" style="height: 80px; width: 80px"/>
+                    <el-image v-bind:src="this.$store.state.webImg.wsLogo" style="height: 80px; width: 80px"/>
                 </div>
                 <div class="login-header-block-span">
                     <span>欢迎登录</span>
@@ -26,7 +26,7 @@
                 <el-form-item prop="user_self">
                     <el-input auto-complete="off" placeholder="手机号/用户名" prefix-icon="el-icon-ump-yonghu" type="text"
                               v-model="login.user_self">
-                        <template slot="prepend">用户名：</template>
+                        <template slot="prepend">用&emsp;&emsp;户：</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="pass_word">

@@ -3,7 +3,7 @@
         <div class="login-header">
             <div class="login-header-block">
                 <div class="login-header-block-img">
-                    <el-image v-bind:src="this.$store.getters.webImg_wsLogo" style="height: 80px; width: 80px"/>
+                    <el-image v-bind:src="this.$store.state.webImg.wsLogo" style="height: 80px; width: 80px"/>
                 </div>
                 <div class="login-header-block-span">
                     <span>欢迎登录商家管理系统</span>
@@ -100,6 +100,14 @@
                                 this.$message.success('登录成功');
                                 localStorage.setItem('adminId', this.param.adminId);
                                 this.$store.dispatch('saveAdminInfo', back.data.adminInfo);
+
+                                let params = {
+                                    'businessId': this.$store.state.adminInfo.businessId,
+                                };
+                                ws_axios.fetchPost1('/business/getBusinessInfoByBusinessId', params).then((back) => {
+                                    this.$store.dispatch("saveBusinessInfo", back.data);
+                                });
+
                                 this.$router.push({path: '/BackHome'});
                             }
                         })

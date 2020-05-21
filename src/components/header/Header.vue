@@ -41,7 +41,7 @@
                                             <div class="div-header-tools-main-link-main-yes_login" v-if="if_login">
                                                 <el-link :underline="false" @click="gotoPersonPage" type="info">
                                                     欢迎访问WSBook商城：
-                                                    <span>{{this.$store.getters.currUserInfo.userName}}</span></el-link>
+                                                    <span>{{this.$store.state.currUserInfo.userName}}</span></el-link>
                                             </div>
                                         </el-col>
                                         <el-col :span="14">
@@ -78,7 +78,7 @@
                         <div class="div-header-main-search-ico">
                             <div class="div-header-main-search-ico-main">
                                 <a href="/">
-                                    <el-image v-bind:src="this.$store.getters.webImg_wsLogo" style="height: 115px; width: 115px"/>
+                                    <el-image v-bind:src="this.$store.state.webImg.wsLogo" style="height: 115px; width: 115px"/>
                                 </a>
                             </div>
                         </div>

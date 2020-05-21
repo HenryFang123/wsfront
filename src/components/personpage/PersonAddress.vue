@@ -93,7 +93,6 @@
                 };
                 ws_axios.fetchPost1('/shippingAddress/getShippingAddressListByUserPhone', params).then((back) => {
                     this.address = back.data;
-                    console.log(this.address)
                 })
             },
             changeDefaultAddress(index){

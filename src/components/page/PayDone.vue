@@ -35,6 +35,7 @@
     import ws_axios from "network/ws_axios";
     import Header from '../header/Header'
     import Footer from '../footer/Footer'
+
     export default {
         name: "PayDone.vue",
         components: {  Header, Footer},
@@ -48,7 +49,6 @@
             gotoHome(){
                 for(let i in this.$store.state.resultInfo.orderInfo.list){
                     ws_axios.fetchPost1('/order/payOrderInfoByOrderId',{'orderId':this.$store.state.resultInfo.orderInfo.list[i].orderId})
-
                 }
                 this.$router.push("/")
             }

@@ -63,9 +63,9 @@
                 <div class="business_block">
                     <div class="business_block_info">
                         <el-image style="width: 200px; height: 80px;"
-                                  v-bind:src="this.$store.getters.resultInfo_bookDetailInfo_businessInfo.businessImagePath"/>
-                        <p><span>店铺名：</span> {{this.$store.getters.resultInfo_bookDetailInfo_businessInfo.businessName}}</p>
-                        <p><span>店铺ID：</span> {{this.$store.getters.resultInfo_bookDetailInfo_businessInfo.businessId}}</p>
+                                  v-bind:src="this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessImagePath"/>
+                        <p><span>店铺名：</span> {{this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessName}}</p>
+                        <p><span>店铺ID：</span> {{this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessId}}</p>
                     </div>
                     <div class="business_block_button">
                         <el-button @click="gotoBusinessPage" plain>进入店铺</el-button>

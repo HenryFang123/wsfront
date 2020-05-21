@@ -28,6 +28,7 @@
     "@vue/cli-plugin-vuex": "~4.3.0",
     "@vue/cli-service": "~4.3.0",
     "components": "^0.1.0",
+    "crypto-js": "^4.0.0",
     "css-loader": "^3.5.3",
     "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-plugin": "^4.3.0",

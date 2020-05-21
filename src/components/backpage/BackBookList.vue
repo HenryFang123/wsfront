@@ -168,7 +168,7 @@
 
             getData() {
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.adminInfo.businessId,
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };

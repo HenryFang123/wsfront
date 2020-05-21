@@ -11,76 +11,22 @@
                     </div>
                     <div class="home-main-middle-top-main-menu_side" ref="menuSide">
                         <ul>
-                            <li @mouseenter="showDetail(1)" @mouseleave="hideDetail(1)">
-                                <span class="menu_side-item">名著</span> /
-                                <span class="menu_side-item">外国名著</span>
-                            </li>
-                            <li @mouseenter="showDetail(2)" @mouseleave="hideDetail(2)">
-                                <span class="menu_side-item">计算机</span> /
-                                <span class="menu_side-item">大数据</span> /
-                                <span class="menu_side-item">人工智能</span>
-                            </li>
-                            <li @mouseenter="showDetail(3)" @mouseleave="hideDetail(3)">
-                                <span class="menu_side-item">经典</span> /
-                                <span class="menu_side-item">武侠</span> /
-                                <span class="menu_side-item">金庸精选</span>
+                            <li :key="liIndex" v-for="(liItem, liIndex) in tsflList" @mouseenter="showDetail(liIndex)" @mouseleave="hideDetail()">
+                                <span class="menu_side-item" :key="headTagsIndex" v-for="(headTagsItem, headTagsIndex) in liItem.headTags">{{headTagsItem.headTagsName}} / </span>
                             </li>
                         </ul>
                     </div>
-                    <!-- 右侧弹出框布局 -->
-                    <!--第一个弹出框-->
                     <transition name="fade">
-                        <div :duration="{ enter: 100, leave: 100 }" @mouseenter="showDetail(1)"
-                             @mouseleave="hideDetail(1)"
-                             class="detail-item-panel panel-1" ref="itemPanel1" v-show="panel1">
+                        <div :duration="{ enter: 100, leave: 100 }"
+                             class="detail-item-panel" ref="itemPanel" @mouseenter="showPanel()" @mouseleave="hideDetail()" v-show="panel">
                             <div class="nav-detail-item">
-                                <span :key="index" v-for="(item, index) in panelData1.navTags">{{item}} > </span>
+                                <span :key="navTagsIndex" v-for="(navTagsItem, navTagsIndex) in tsflIndexList.navTags">{{navTagsItem.navTagsName}} > </span>
                             </div>
                             <ul>
-                                <li :key="index" class="detail-item-row" v-for="(items, index) in panelData1.classNav">
-                              <span class="detail-item-title">{{items.title}}
-                                <span class="glyphicon glyphicon-menu-right"/>
-                              </span>
-                                    <router-link :key="subIndex" to="/goodsList" v-for="(item, subIndex) in items.tags">
-                                        <span class="detail-item">{{item}}</span>
-                                    </router-link>
-                                </li>
-                            </ul>
-                        </div>
-                    </transition>
-                    <transition name="fade">
-                        <div :duration="{ enter: 100, leave: 100 }" @mouseenter="showDetail(2)"
-                             @mouseleave="hideDetail(2)"
-                             class="detail-item-panel panel-2" ref="itemPanel2" v-show="panel2">
-                            <div class="nav-detail-item">
-                                <span :key="index" v-for="(item, index) in panelData2.navTags">{{item}} > </span>
-                            </div>
-                            <ul>
-                                <li :key="index" class="detail-item-row" v-for="(items, index) in panelData2.classNav">
-                            <span class="detail-item-title">{{items.title}}
-                              <span class="glyphicon glyphicon-menu-right"/>
-                            </span>
-                                    <router-link :key="subIndex" to="/goodsList" v-for="(item, subIndex) in items.tags">
-                                        <span class="detail-item">{{item}}</span>
-                                    </router-link>
-                                </li>
-                            </ul>
-                        </div>
-                    </transition>
-                    <transition name="fade">
-                        <div :duration="{ enter: 100, leave: 100 }" @mouseenter="showDetail(3)"
-                             @mouseleave="hideDetail(3)"
-                             class="detail-item-panel panel-3" ref="itemPanel3" v-show="panel3">
-                            <div class="nav-detail-item">
-                                <span :key="index" v-for="(item, index) in panelData3.navTags">{{item}} > </span>
-                            </div>
-                            <ul>
-                                <li :key="index" class="detail-item-row" v-for="(items, index) in panelData3.classNav">
-                            <span class="detail-item-title">{{items.title}}
-                              <span class="glyphicon glyphicon-menu-right"/>
-                            </span>
-                                    <router-link :key="subIndex" to="/goodsList" v-for="(item, subIndex) in items.tags">
-                                        <span class="detail-item">{{item}}</span>
+                                <li :key="classNavIndex" class="detail-item-row" v-for="(classNavItem, classNavIndex) in tsflIndexList.classNav">
+                                    <span class="detail-item-title">{{classNavItem.title}}<span class="glyphicon glyphicon-menu-right"/></span>
+                                    <router-link :key="tagsIndex" to="/goodsList" v-for="(tagsItem, tagsIndex) in classNavItem.tags">
+                                        <span class="detail-item">{{tagsItem.classNavTagsName}}</span>
                                     </router-link>
                                 </li>
                             </ul>
@@ -90,7 +36,7 @@
                 <el-col :span="20">
                     <div class="home-main-middle-top-main-select_content-suggest">
                         <div class="home-main-middle-top-main-select_content-suggest-top">
-                            <a>排行推荐</a>
+                            <a>图书推荐</a>
                         </div>
                         <div class="home-main-middle-top-main-select_content-suggest-book">
                             <el-row>
@@ -104,20 +50,14 @@
                                     </el-carousel>
                                 </el-col>
                                 <el-col :span="8">
-                                    <el-divider content-position="left">
-                                        <el-image style="height: 35px; width: 87px;" v-bind:src="this.$store.state.webImg.homeTopPjtj"/>
-                                    </el-divider>
                                     <div :key="index" class="rating_sort_card"
-                                         v-for="(ratingSortItem,index) in this.$store.state.this.$store.state.resultInfo.homeInfo.topInfo.bookList.topRating">
+                                         v-for="(ratingSortItem,index) in this.$store.state.resultInfo.homeInfo.topInfo.bookList.topRating">
                                         <el-row>
-                                            <el-col :span="1">
-                                                <span>{{index+1}}</span>
-                                            </el-col>
-                                            <el-col :span="18">
+                                            <el-col :span="19">
                                                 <span>{{ratingSortItem.bookName}}</span>
                                             </el-col>
                                             <el-col :span="5">
-                                                <span>评分: {{ratingSortItem.bookRating}}</span>
+                                                <span>评分:{{ratingSortItem.bookRating}}</span>
                                             </el-col>
                                         </el-row>
                                     </div>
@@ -138,87 +78,424 @@
         name: "HomeTop.vue",
         data() {
             return {
-                panel1: false,
-                panel2: false,
-                panel3: false,
-                panelData1: {
-                    navTags: ['图像识别', ''],
-                    classNav: [
-                        {
-                            title: '计算机',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        },
-                        {
-                            title: '人工智能',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        },
-                        {
-                            title: '大数据',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        },
-                    ]
-                },
-                panelData2: {
-                    navTags: ['XXXXX', 'XXXXX'],
-                    classNav: [
-                        {
-                            title: '人工智能',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        },
-                        {
-                            title: '大数据',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        },
-                        {
-                            title: '云计算',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        }
-                    ]
-                },
-                panelData3: {
-                    navTags: ['XXXXX', 'XXXXX'],
-                    classNav: [
-                        {
-                            title: '经典',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        },
-                        {
-                            title: '名著',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        },
-                        {
-                            title: '古典文学',
-                            tags: ['XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX', 'XXXXX']
-                        }
-                    ]
-                },
+                tsflList: [
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "计算机"
+                            },
+                            {
+                                headTagsName: "操作系统"
+                            },
+                            {
+                                headTagsName: "人工智能"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "C语言",
+                            },
+                            {
+                                navTagsName: "Java",
+                            },
+                            {
+                                navTagsName: "面向对象",
+                            },
+                            {
+                                navTagsName: "人工智能",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '计算机',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "名著"
+                            },
+                            {
+                                headTagsName: "外国名著"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "网书精选",
+                            },
+                            {
+                                navTagsName: "四大名著",
+                            },
+                            {
+                                navTagsName: "老舍",
+                            },
+                            {
+                                navTagsName: "鲁迅",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '名著',
+                                tags: [
+                                    {
+                                        classNavTagsName: "西游记（全二册）",
+                                    },
+                                    {
+                                        classNavTagsName: "三国演义（全二册）",
+                                    },
+                                    {
+                                        classNavTagsName: "了不起的盖茨比",
+                                    },
+                                    {
+                                        classNavTagsName: "红与黑",
+                                    },
+                                    {
+                                        classNavTagsName: "悲惨世界（上中下）",
+                                    },
+                                    {
+                                        classNavTagsName: "童年",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '外国名著',
+                                tags: [
+                                    {
+                                        classNavTagsName: "巴黎圣母院",
+                                    },
+                                    {
+                                        classNavTagsName: "鲁滨孙飘流记",
+                                    },
+                                    {
+                                        classNavTagsName: "复活",
+                                    },
+                                    {
+                                        classNavTagsName: "麦田守望者",
+                                    },
+                                    {
+                                        classNavTagsName: "福尔摩斯探案全集2",
+                                    },
+                                    {
+                                        classNavTagsName: "老人与海",
+                                    },
+                                    {
+                                        classNavTagsName: "巴黎圣母院",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "经典"
+                            },
+                            {
+                                headTagsName: "武侠"
+                            },
+                            {
+                                headTagsName: "金庸精选"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "刘慈欣",
+                            },
+                            {
+                                navTagsName: "金庸",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '经典',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '武侠',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '金庸精选',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "文学"
+                            },
+                            {
+                                headTagsName: "中国文学"
+                            },
+                            {
+                                headTagsName: "当代文学"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "东野圭吾",
+                            },
+                            {
+                                navTagsName: "巴金",
+                            },
+                            {
+                                navTagsName: "南派三叔",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '文学',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '古典文学',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '当代文学',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '中国文学',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '日本文学',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "历史"
+                            },
+                            {
+                                headTagsName: "中国历史"
+                            },
+                            {
+                                headTagsName: "近代史"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "网书精选",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '历史',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '中国历史',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '近代史',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "文化"
+                            },
+                            {
+                                headTagsName: "社会"
+                            },
+                            {
+                                headTagsName: "哲学"
+                            },
+                            {
+                                headTagsName: "思想"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "网书精选",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '文化',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '社会',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '哲学',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '思想',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "诗词"
+                            },
+                            {
+                                headTagsName: "诗歌"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "网书精选",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '诗词',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '诗歌',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        headTags: [
+                            {
+                                headTagsName: "推理"
+                            },
+                            {
+                                headTagsName: "悬疑"
+                            },
+                            {
+                                headTagsName: "小说"
+                            },
+                        ],
+                        navTags: [
+                            {
+                                navTagsName: "网书精选",
+                            },
+                        ],
+                        classNav: [
+                            {
+                                title: '推理',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '悬疑',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                            {
+                                title: '小说',
+                                tags: [
+                                    {
+                                        classNavTagsName: "",
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                ],
+                tsflIndexList: [],
+                panel: false,
             }
         },
         methods: {
             // 首页图书分类, 弹出框显示方法函数
-            showDetail(index) {
-                if (index === 1) {
-                    this.panel1 = true;
-                    this.panel2 = false;
-                    this.panel3 = false;
-                } else if (index === 2) {
-                    this.panel2 = true;
-                    this.panel1 = false;
-                    this.panel3 = false;
-                } else if (index === 3) {
-                    this.panel3 = true;
-                    this.panel1 = false;
-                    this.panel2 = false;
-                }
+            showDetail(liIndex) {
+                this.tsflIndexList = this.tsflList[liIndex];
+                this.panel = true;
             },
-            hideDetail(index) {
-                if (index === 1) {
-                    this.panel1 = false;
-                } else if (index === 2) {
-                    this.panel2 = false;
-                } else if (index === 3) {
-                    this.panel3 = false;
-                }
+            showPanel() {
+                this.panel = true;
+            },
+            hideDetail() {
+                this.panel = false;
             },
 
             // 获取后端系统排行推荐的信息
@@ -232,20 +509,15 @@
         mounted() {
             // 首页图书分类, 弹出框显示高度起始、长度起始设置
             this.getSystemSortRecommend();
-            this.$refs.itemPanel1.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
-            this.$refs.itemPanel2.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
-            this.$refs.itemPanel3.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
-            this.$refs.itemPanel1.style.top = this.$refs.menuSide.offsetTop + 'px';
-            this.$refs.itemPanel2.style.top = this.$refs.menuSide.offsetTop + 'px';
-            this.$refs.itemPanel3.style.top = this.$refs.menuSide.offsetTop + 'px';
+            this.$refs.itemPanel.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
+            this.$refs.itemPanel.style.top = this.$refs.menuSide.offsetTop + 'px';
         },
         updated() {
-            this.$refs.itemPanel1.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
-            this.$refs.itemPanel2.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
-            this.$refs.itemPanel3.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
-            this.$refs.itemPanel1.style.top = this.$refs.menuSide.offsetTop + 'px';
-            this.$refs.itemPanel2.style.top = this.$refs.menuSide.offsetTop + 'px';
-            this.$refs.itemPanel3.style.top = this.$refs.menuSide.offsetTop + 'px';
+            this.$refs.itemPanel.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
+            this.$refs.itemPanel.style.top = this.$refs.menuSide.offsetTop + 'px';
+        },
+        created() {
+
         },
     }
 </script>
@@ -328,10 +600,8 @@
 
     .detail-item-panel {
         text-align: left;
-        width: 720px;
+        width: 690px;
         position: absolute;
-        /*top: 168px;*/
-        /*left: 389px;*/
         z-index: 999;
         background-color: #FFFFFF;
         border-top: 1px solid #b2dfdb;
@@ -350,13 +620,14 @@
     .nav-detail-item span {
         padding: 6px 6px 6px 12px;
         margin-left: 15px;
-        font-size: 12px;
-        background-color: #6e6568;
+        font-size: 13px;
+        background-color: #f44336;
     }
 
     .nav-detail-item span:hover {
         margin-left: 15px;
-        background-color: #f44336;
+        background-color: #b2dfdb;
+        color: #000000;
     }
 
     .detail-item-panel ul {
@@ -371,7 +642,7 @@
     .detail-item-title {
         padding-right: 6px;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 15px;
         cursor: pointer;
         color: #555555;
     }
@@ -385,9 +656,9 @@
     }
 
     .detail-item {
-        font-size: 14px;
-        padding-left: 12px;
-        padding-right: 8px;
+        font-size: 13px;
+        padding-left: 5px;
+        padding-right: 5px;
         cursor: pointer;
         border-left: 1px solid #ccc;
     }
@@ -438,6 +709,7 @@
         margin: 5px auto;
         padding: 0;
         font-size: 14px;
+        border-left: 1px solid #b2dfdb;
         border-bottom: 1px solid #e9e9eb;
     }
 </style>

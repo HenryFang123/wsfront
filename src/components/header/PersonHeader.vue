@@ -16,9 +16,13 @@
                     </div>
 
                     <!-- 用户头像 -->
-                    <div class="user-avator">
-                        <img src="../../assets/img/header/img.jpg"/>
+                    <div class="user-avator_1" v-if="ifUserImage">
+                        <el-image v-bind:src="this.$store.state.currUserInfo.userImagePath"/>
                     </div>
+                    <div class="user-avator_2" v-if="!ifUserImage">
+                        <el-avatar>Hello</el-avatar>
+                    </div>
+
                     <!-- 用户名下拉菜单 -->
                     <el-dropdown @command="handleCommand" class="user-name" trigger="click">
                     <span class="el-dropdown-link">
@@ -33,9 +37,6 @@
                 </div>
             </div>
             <div class="header-link">
-                <el-link :underline="false" icon="el-icon-message-solid" type="info">我的消息</el-link>&nbsp;&nbsp;&nbsp;
-                <el-link :underline="false" icon="el-icon-s-platform" type="info">网站导航</el-link>&nbsp;&nbsp;&nbsp;
-                <el-link :underline="false" icon="el-icon-edit" type="info">问题反馈</el-link>&nbsp;&nbsp;&nbsp;
                 <el-link :underline="false" href="/" icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
             </div>
         </div>
@@ -49,9 +50,9 @@
         name: "PersonHeader.vue",
         data() {
             return {
+                ifUserImage: false,
                 collapse: false,
                 fullscreen: false,
-                name: 'zjh',
                 message: 2
             };
         },
@@ -59,6 +60,11 @@
             username() {
                 let adminId = localStorage.getItem('adminId');
                 return adminId ? adminId : adminId;
+            }
+        },
+        created() {
+            if (this.$store.state.currUserInfo.userImagePath !== undefined){
+                this.ifUserImage = true;
             }
         },
         methods: {
@@ -188,11 +194,15 @@
         margin-left: 10px;
     }
 
-    .user-avator {
+    .user-avator_1 {
         margin-left: 20px;
     }
 
-    .user-avator img {
+    .user-avator_2 {
+        margin-left: 20px;
+    }
+
+    .user-avator_1 .el-image {
         display: block;
         width: 30px;
         height: 30px;

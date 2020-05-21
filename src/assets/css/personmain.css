@@ -4,25 +4,17 @@
     padding: 0;
 }
 
-html,
-body,
-#app,
+body {
+    font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
+}
+
 .wrapper {
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
-body {
-    font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
-}
-
-a {
-    text-decoration: none
-}
-
-
-.content-box {
+.wrapper .content-box {
     position: absolute;
     left: 200px;
     right: 0;
@@ -34,7 +26,12 @@ a {
     background: #f0f0f0;
 }
 
-.content {
+
+.wrapper .content-collapse {
+    left: 65px;
+}
+
+.content-box .content {
     width: auto;
     height: 100%;
     padding: 10px;
@@ -42,8 +39,8 @@ a {
     box-sizing: border-box;
 }
 
-.content-collapse {
-    left: 65px;
+a {
+    text-decoration: none
 }
 
 .container {
@@ -94,7 +91,6 @@ a {
 }
 
 /*BaseForm*/
-
 .form-box {
     width: 600px;
 }
@@ -113,7 +109,6 @@ a {
 }
 
 /*Upload*/
-
 .pure-button {
     width: 150px;
     height: 40px;
@@ -132,8 +127,8 @@ a {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     box-sizing: border-box;
-    width: 360px;
-    height: 180px;
+    width: 220px;
+    height: 200px;
     text-align: center;
     cursor: pointer;
     position: relative;
@@ -158,7 +153,6 @@ a {
 }
 
 /*VueEditor*/
-
 .ql-container {
     min-height: 400px;
 }
@@ -172,7 +166,6 @@ a {
 }
 
 /*markdown*/
-
 .v-note-wrapper .v-note-panel {
     min-height: 500px;
 }

@@ -11,7 +11,7 @@
                 </el-col>
                 <el-col :span="16" style="margin: 0 auto; padding: 0; height: 100%;">
                     <el-container style="border: 1px solid #eee">
-                        <el-header style="height: 180px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)">
+                        <el-header style="height: 140px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)">
                             <el-row style="margin-top: 5px;height:10px">
                                 <el-col :span="3" style="text-align: left">
                                     <el-link :underline="false" @click="gotoHome" icon="el-icon-caret-left" type="info">
@@ -21,18 +21,15 @@
                                 <el-col :span="21"/>
                             </el-row>
                             <el-divider/>
-                            <!--书籍分类-->
                             <div class="item-class-show">
                                 <el-row>
                                     <el-col :span="24">
-                                        <el-row :key="index" class="item-class-group"
-                                                v-for="(items, index) in tagsInfo">
-                                            <el-col :span="3" class="item-class-name" style="font-size: 13px">{{
-                                                items.tagName }} :
+                                        <el-row class="item-class-group">
+                                            <el-col :span="3" class="item-class-name" style="font-size: 13px">{{tagsInfo.tagName}} :
                                             </el-col>
                                             <el-col :span="21" class="item-class-select"
                                                     style="text-align: left;font-size: 13px"><span
-                                                :key="subIndex" v-for="(item, subIndex) in items.tags">{{ item }}</span>
+                                                :key="tagsIndex" v-for="(tagsItem, tagsIndex) in tagsInfo.tags">{{tagsItem.tagItemName}}</span>
                                             </el-col>
                                         </el-row>
                                     </el-col>
@@ -50,7 +47,7 @@
                                             </el-row>
                                             <el-row>
                                                 <div :key="index" class="demo-image__placeholder"
-                                                     v-for="(bookItem, index) in this.$store.getters.resultInfo_bookListInfo_hotBookInfo ">
+                                                     v-for="(bookItem, index) in this.$store.state.resultInfo.bookListInfo.hotBookInfo">
                                                     <div class="block"
                                                          style="text-align: center; margin-top: 10px; padding: 0; border-bottom: 1px solid #e9e9eb;">
                                                         <el-image @click="toDetail(index)"
@@ -73,9 +70,60 @@
                             </el-aside>
                             <el-main>
                                 <div class="show_book-main-main">
+                                    <div class="no_result_message" v-show="ifHaveResult">
+                                        <span style="font-size: 15px;">抱歉，没有找到与“</span>
+                                        <span style="font-size: 15px; color: #f56c6c">{{this.$store.state.searchInfo.searchWord}}</span>
+                                        <span style="font-size: 15px;"> ”相关的商品，为您推荐以下商品 ...</span>
+                                    </div>
                                     <!--每一件图书的可定义样式-->
+                                    <div :key="index" class="show_book-main-main-no_result_list"
+                                         v-for="(bookItem, index) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookList" v-show="ifHaveResult">
+                                        <el-row>
+                                            <el-col :span="4">
+                                                <div class="block">
+                                                    <el-image style=" margin-top: 20px; height: 140px; width: 120px;"
+                                                              v-bind:src="bookItem.bookImagePath"/>
+                                                </div>
+                                            </el-col>
+                                            <el-col :span="20" style="text-align: left">
+                                                <el-row>
+                                                    <el-link @click="toDetail(index)" style="font-size: 24px; font-weight: bold; text-underline: none;">{{bookItem.bookName}}
+                                                    </el-link>
+                                                </el-row>
+                                                <el-row
+                                                    style="color: #A94442;font-size: 25px;font-weight: bold;line-height:30px;margin-top: 5px">
+                                                    ￥{{bookItem.bookPrice}}
+                                                </el-row>
+                                                <el-row>
+                                                    <span style="font-size: 14px">
+                                                        {{bookItem.bookAuthor}}
+                                                    </span>
+                                                    <el-divider direction="vertical"/>
+                                                    <span style="font-size: 14px">{{bookItem.bookYear}}</span>
+                                                    <el-divider direction="vertical"/>
+                                                    <span style="font-size: 14px" v-html="bookItem.bookPub">{{bookItem.book_pub}}</span>
+                                                    <el-divider direction="vertical"/>
+                                                    <span style="font-size: 14px" v-html="bookItem.bookIsbn">ISBN: {{bookItem.book_isbn}}</span>
+                                                    <el-divider direction="vertical"/>
+                                                    <span style="font-size: 14px">评分: {{bookItem.bookRating}}</span>
+                                                </el-row>
+                                                <el-row style="margin-top: 5px">
+                                                    <p style="font-size: 14px">{{bookItem.bookDescription}} </p>
+                                                </el-row>
+                                                <el-row style="margin-top: 10px; margin-bottom: 10px;">
+                                                    <el-button @click="toDetailNoResult(index)" type="danger">
+                                                        加入购物车
+                                                    </el-button>
+                                                    <el-button @click="addCollectNoResult(index)" plain
+                                                               style=" margin-left:20px;" type="danger">
+                                                        收藏本书
+                                                    </el-button>
+                                                </el-row>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
                                     <div :key="index" class="show_book-main-main-list"
-                                         v-for="(bookItem, index) in solrBookList">
+                                         v-for="(bookItem, index) in solrBookList" v-show="!ifHaveResult">
                                         <el-row>
                                             <el-col :span="4">
                                                 <div class="block">
@@ -87,7 +135,7 @@
                                                 <el-row>
                                                     <span class="tag"
                                                           style="margin-right: 10px;font-size: 14px;padding: 3px 4px;border-radius: 3px;background-color:#e4393c;color:#fff;">{{bookItem.book_type_name}}</span>
-                                                    <el-link style="font-size: 24px; font-weight: bold"
+                                                    <el-link @click="toDetail(index)" style="font-size: 24px; font-weight: bold; text-underline: none;"
                                                              v-html="bookItem.book_name">{{bookItem.book_name}}
                                                     </el-link>
                                                 </el-row>
@@ -96,9 +144,9 @@
                                                     ￥{{bookItem.book_price}}
                                                 </el-row>
                                                 <el-row>
-                                                    <el-link style="font-size: 14px" v-html="bookItem.book_author">
+                                                    <span style="font-size: 14px" v-html="bookItem.book_author">
                                                         {{bookItem.book_author}}
-                                                    </el-link>
+                                                    </span>
                                                     <el-divider direction="vertical"/>
                                                     <span style="font-size: 14px">{{bookItem.book_year}}</span>
                                                     <el-divider direction="vertical"/>
@@ -123,7 +171,7 @@
                                             </el-col>
                                         </el-row>
                                     </div>
-                                    <div class="block" style="margin-top: 30px">
+                                    <div class="block" style="margin-top: 30px; text-align: right;" v-show="!ifHaveResult">
                                         <el-pagination
                                             :current-page="currentPage"
                                             :page-size="pageSize"
@@ -163,32 +211,47 @@
         components: {Header, Footer},
         data() {
             return {
+                ifHaveResult: false,
                 currentPage: 1,
                 pageSize: 10,
                 itemTotal: 0,
                 solrBookList: [],
-                tagsInfo: [
-                    {
-                        tagName: '分类',
-                        tags: ['名著', '文化', '哲学', '思想']
-                    },
-                    {
-                        tagName: '出版社',
-                        tags: ['人民教育出版社', '中国石油大学出版社', '科学出版社']
-                    }
-                ],
+                tagsInfo: {
+                    tagName: '分类',
+                    tags: [
+                        {
+                            tagItemName: '名著'
+                        },
+                        {
+                            tagItemName: '文化'
+                        },
+                        {
+                            tagItemName: '哲学'
+                        },
+                        {
+                            tagItemName: '思想'
+                        }
+                    ]
+                },
             }
         },
         methods: {
             // 获取查询结果列表
-            getSolrBookListInfo: function () {
+            getSolrBookListInfo() {
                 let params = {
                     'searchWord': this.$store.getters.searchInfo_searchWord,
                     'pageNum': 1,
                     'pageSize': 10
                 };
                 ws_axios.fetchPost2('/solr/doSearch', params).then((back) => {
-                    if (back.data.resultCode === "1") {
+                    if (back.data.resultCode === "0"){
+                        console.log(0);
+                        console.log(this.ifHaveResult);
+                        this.ifHaveResult = true;
+                    } else if (back.data.resultCode === "1") {
+                        console.log(1);
+                        console.log(this.ifHaveResult);
+                        console.log(back.data);
                         this.itemTotal = back.data.itemTotal;
                         this.solrBookList = back.data.jsonArraySolrDocument;
                     }
@@ -196,7 +259,7 @@
             },
 
             // 跳转至书籍信息详情页面
-            toDetail: function (index) {
+            toDetail(index) {
                 let params = {
                     'bookId': this.solrBookList[index].book_id,
                     'businessId': this.solrBookList[index].business_id,
@@ -209,10 +272,38 @@
             },
 
             // 收藏书籍
-            addCollect: function (index) {
+            addCollect(index) {
                 let params = {
                     'userId': this.$store.state.currUserInfo.userId,
                     'userStarId': this.solrBookList[index].book_id,
+                    'userStarTag': 0
+                };
+                ws_axios.fetchPost1('/userStar/insertUserStar', params).then((back) => {
+                });
+                this.$message({
+                    message: '收藏成功',
+                    type: 'success'
+                });
+            },
+
+            // 跳转至书籍信息详情页面
+            toDetailNoResult(index) {
+                let params = {
+                    'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].bookId,
+                    'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].businessId,
+                };
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                });
+                this.$router.push("/book_detail");
+            },
+
+            // 收藏书籍
+            addCollectNoResult(index) {
+                let params = {
+                    'userId': this.$store.state.currUserInfo.userId,
+                    'userStarId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].bookId,
                     'userStarTag': 0
                 };
                 ws_axios.fetchPost1('/userStar/insertUserStar', params).then((back) => {
@@ -246,6 +337,9 @@
             gotoHome() {
                 this.$router.push("/")
             },
+        },
+        created() {
+            this.getSolrBookListInfo();
         },
         created() {
             this.getSolrBookListInfo();
@@ -357,6 +451,16 @@
     }
 
     .show_book-main-main-list:hover {
+        background-color: #f7f7f7;
+    }
+
+    .show_book-main-main-no_result_list {
+        margin-top: 0;
+        padding-top: 10px;
+        border-bottom: 1px solid #e9e9eb;
+    }
+
+    .show_book-main-main-no_result_list:hover {
         background-color: #f7f7f7;
     }
 

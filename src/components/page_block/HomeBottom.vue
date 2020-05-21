@@ -2,14 +2,14 @@
     <div class="home-main-middle-bottom">
         <div class="home-main-middle-bottom-top">
             <el-divider content-position="left">
-                <el-image style="height: 50px; width: 125px;" v-bind:src="this.$store.getters.webImg_homeBottomDjtj"/>
+                <el-image style="height: 50px; width: 125px;" v-bind:src="this.$store.state.webImg.homeBottomDjtj"/>
             </el-divider>
         </div>
         <div class="home-main-middle-bottom-book">
             <el-row>
                 <el-col :key="index" :offset="1" :span="4"
-                        v-for="(bookItem,index) in this.$store.getters.resultInfo_homeInfo_bottomInfo_bookList">
-                    <div class="book_card">
+                        v-for="(bookItem,index) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookList">
+                    <div class="book_card" @click="toDetail(index)">
                         <div class="book_img">
                             <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
                         </div>
@@ -47,6 +47,19 @@
                         this.$store.dispatch("saveHomeInfoBottomInfoBookList", back.data.redisUserCfBookList);
                     }
                 })
+            },
+
+            // 跳转至书籍信息详情页面
+            toDetail: function (index) {
+                let params = {
+                    'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].bookId,
+                    'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].businessId,
+                };
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                });
+                this.$router.push("/book_detail");
             },
         },
         mounted() {
@@ -96,6 +109,10 @@
         border-left: 1px solid #e9e9eb;
     }
 
+    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card:hover {
+        box-shadow: 0 0 4px #ccc;
+    }
+
     .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card .book_img {
         margin: 20px auto;
         padding: 0;
@@ -106,6 +123,7 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card .book_title {
         margin-top: 5px;
         margin-left: 50px;
+        margin-right: 20px;
         font-size: 13px;
         padding: 0;
         text-align: left;
@@ -114,6 +132,7 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card .book_author {
         margin-top: 5px;
         margin-left: 50px;
+        margin-right: 20px;
         font-size: 12px;
         color: #999999;
         padding: 0;

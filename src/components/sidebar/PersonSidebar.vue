@@ -65,7 +65,7 @@
     import bus from 'components/common/bus';
 
     export default {
-        methods: {},
+        name: "PersonSideBar.vue",
         data() {
             return {
                 collapse: false,

@@ -3,7 +3,7 @@
         <div class="register-header">
             <div class="register-header-block">
                 <div class="register-header-block-img">
-                    <el-image style="height: 80px; width: 80px" v-bind:src="this.$store.getters.webImg_wsLogo"/>
+                    <el-image style="height: 80px; width: 80px" v-bind:src="this.$store.state.webImg.wsLogo"/>
                 </div>
                 <div class="register-header-block-span">
                     <span>欢迎注册</span>
