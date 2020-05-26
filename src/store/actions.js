@@ -3,10 +3,6 @@ export default {
     saveCurrUserInfo: ({commit}, payload) => {
         commit('saveCurrUserInfo', payload);
     },
-    // 触发存 管理员信息
-    saveAdminInfo: ({commit}, payload) => {
-        commit('saveAdminInfo', payload);
-    },
     // 触发保存 店铺信息
     saveBusinessInfo: ({commit}, payload) => {
         commit('saveBusinessInfo', payload);

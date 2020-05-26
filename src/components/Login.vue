@@ -137,7 +137,7 @@
                                 this.$store.dispatch('saveCurrUserInfo', back.data.userInfoObject);
 
                                 if (this.ws_checked === true && !this.isnull(this.login.user_self) && !this.isnull(this.login.pass_word)) {
-                                    this.setCookie(this.$store.getters.currUserInfo.userId, this.login.user_self, this.login.pass_word, 7);
+                                    this.setCookie(this.$store.state.currUserInfo.userId, this.login.user_self, this.login.pass_word, 7);
                                 } else {
                                     this.clearCookie();
                                 }
@@ -145,7 +145,7 @@
                                 this.$router.push({path: '/'});
                                 this.$notify({
                                     title: '登录成功',
-                                    message: '欢迎登陆' + this.$store.getters.currUserInfo.userName,
+                                    message: '欢迎登陆' + this.$store.state.currUserInfo.userName,
                                     type: 'success'
                                 });
                             }

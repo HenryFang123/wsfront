@@ -234,8 +234,8 @@
                 } else {
                     this.if_login = true;
                 }
-                if (this.$store.getters.searchInfo_searchWord.length > 0) {
-                    this.search.inputSearchWord = this.$store.getters.searchInfo_searchWord;
+                if (this.$store.state.searchInfo.searchWord.length > 0) {
+                    this.search.inputSearchWord = this.$store.state.searchInfo.searchWord;
                 }
             },
 

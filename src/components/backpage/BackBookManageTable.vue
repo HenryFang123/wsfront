@@ -168,19 +168,17 @@
                 this.getData();
                 console.log(currentPage)
             },
-
             getCount(){
                 let params = {
-                    businessId : this.$store.getters.adminInfo.businessId,
+                    businessId : this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoCountByBusinessId',params).then((back) =>{
                     this.itemTotal = back.data;
                 });
             },
-
             getData() {
                 let params = {
-                    businessId : this.$store.getters.adminInfo.businessId,
+                    businessId : this.$store.state.businessInfo.businessId,
                     pageIndex:this.currentPage,
                     pageSize:this.pageSize
                 };
@@ -192,7 +190,6 @@
                     this.reload()
                 })
             },
-
             deleteRow(index, rows) {
                 let params = {
                     'bookId': this.List[index].bookId,
@@ -211,11 +208,10 @@
                     })
                 })
             },
-
             deleteSearch(){
                 let params = {
                     'bookName': this.formDelete.bookName,
-                    'businessId':this.$store.getters.adminInfo.businessId
+                    'businessId':this.$store.state.businessInfo.businessId
                 };
                 this.$confirm(
                     "确认下架吗？",
@@ -230,7 +226,6 @@
                     })
                 })
             },
-
             handleSearch() {
                 let params = {
                     'bookName': this.formDelete.bookName
@@ -243,14 +238,12 @@
                     this.queryVisible = true
                 })
             },
-
             handleUpload(){
                 this.editVisible=true
             },
-
             uploadBook(){
                 let params = {
-                    'businessId':this.$store.getters.adminInfo.businessId,
+                    'businessId':this.$store.state.businessInfo.businessId,
                     'bookId':this.form.bookId,
                     'bookName' :this.form.bookName,
                     'bookImagePath':this.form.bookImagePath,

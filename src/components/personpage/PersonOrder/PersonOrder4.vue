@@ -16,7 +16,7 @@
                         max-height="642">
                         <el-table-column prop="createTime" label="日期" width="180" align="center" sortable>
                             <template slot-scope="scope">
-                                <i class="el-icon-time"></i>
+                                <i class="el-icon-time"/>
                                 <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
                             </template>
                         </el-table-column>

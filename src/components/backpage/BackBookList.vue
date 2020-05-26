@@ -145,30 +145,26 @@
                 id: -1,
             };
         },
-
         created() {
             this.getCount();
             this.getData();
         },
-
         methods: {
             current_change: function (currentPage) {
                 this.currentPage = currentPage;
                 this.getData();
             },
-
             getCount() {
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
                 });
             },
-
             getData() {
                 let params = {
-                    businessId: this.$store.state.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
@@ -180,7 +176,6 @@
                     this.reload()
                 })
             },
-
             handleSearch() {
                 let params = {
                     'bookName': this.formQuery.bookName
@@ -194,17 +189,15 @@
                 })
 
             },
-
             handleEdit(index, row) {
                 this.idx = index;
                 this.form = row;
                 this.editVisible = true;
             },
-
             // 保存编辑
             saveEdit() {
                 let params = {
-                    'businessId': this.$store.getters.adminInfo.businessId,
+                    'businessId': this.$store.state.businessInfo.businessId,
                     'bookName': this.form.bookName,
                     'bookImagePath': this.form.bookImagePath,
                     'bookPrice': this.form.bookPrice,

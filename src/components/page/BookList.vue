@@ -239,7 +239,7 @@
             // 获取查询结果列表
             getSolrBookListInfo() {
                 let params = {
-                    'searchWord': this.$store.getters.searchInfo_searchWord,
+                    'searchWord': this.$store.state.searchInfo.searchWord,
                     'pageNum': 1,
                     'pageSize': 10
                 };
@@ -323,7 +323,7 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
                 let params = {
-                    'searchWord': this.$store.getters.searchInfo_searchWord,
+                    'searchWord': this.$store.state.searchInfo.searchWord,
                     'pageNum': val,
                     'pageSize': this.pageSize
                 };
@@ -337,9 +337,6 @@
             gotoHome() {
                 this.$router.push("/")
             },
-        },
-        created() {
-            this.getSolrBookListInfo();
         },
         created() {
             this.getSolrBookListInfo();

@@ -9,13 +9,13 @@
             <div class="handle-box">
                 <el-form ref="form" :model="form" label-width="80px "  >
                     <el-form-item label="收货人">
-                        <el-input v-model="form.consignee"  ></el-input>
+                        <el-input v-model="form.consignee"/>
                     </el-form-item>
                     <el-form-item label="省市区">
-                        <VDistpicker :province="form.province" :city="form.city" :area="form.region" @selected="onSelected"></VDistpicker>
+                        <VDistpicker :province="form.province" :city="form.city" :area="form.region" @selected="onSelected"/>
                     </el-form-item>
                     <el-form-item label="详细地址">
-                        <el-input v-model="form.address"></el-input>
+                        <el-input v-model="form.address"/>
                     </el-form-item>
                     <el-form-item label="手机号码">
                         <el-input  v-model="form.postPhone"/>
@@ -55,7 +55,7 @@
             },
             onSubmit() {
                 let params = {
-                    'userPhone' : this.$store.getters.currUserInfo.userPhone,
+                    'userPhone' : this.$store.state.currUserInfo.userPhone,
                     'consignee' : this.form.consignee,
                     'province' : this.form.province,
                     'city' : this.form.city,

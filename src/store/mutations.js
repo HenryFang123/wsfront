@@ -3,10 +3,6 @@ export default {
     saveCurrUserInfo: (state, param) => {
         state.currUserInfo = param;
     },
-    // 存管理员信息
-    saveAdminInfo: (state, param) => {
-        state.adminInfo = param;
-    },
     // 保存店铺信息
     saveBusinessInfo: (state, param) => {
         state.businessInfo = param;

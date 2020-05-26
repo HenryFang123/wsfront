@@ -1,8 +1,7 @@
 <template>
     <div>
         <div>
-            <span style="font-size: 20px">欢迎光临:{{this.$store.getters.adminInfo.adminName}}</span><br>
-            <span style="font-size: 20px;margin-top: 20px">您的店铺id为:{{this.$store.getters.adminInfo.businessId}}</span>
+            <span style="font-size: 20px">欢迎光临:{{this.$store.state.currUserInfo.userName}}</span><br>
         </div>
         <div class="main-cards">
             <el-row :gutter="20">
@@ -78,7 +77,7 @@
         methods: {
             getOrderCount() {
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/order/getOrderSumCountByBusinessId', params).then((back) => {
                     this.orderCount = back.data;
@@ -86,7 +85,7 @@
             },
             getBookCount(){
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoCountByBusinessId', params).then((back) => {
                     this.bookCount = back.data;
@@ -94,7 +93,7 @@
             },
             getCustomerCount(){
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/order/getCustomerCountByBusinessId', params).then((back) => {
                     this.customerCount = back.data;
@@ -102,7 +101,7 @@
             },
             getPriceCount(){
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/order/getPriceCountByBusinessId', params).then((back) => {
                     this.priceCount = back.data;

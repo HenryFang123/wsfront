@@ -8,13 +8,6 @@
             <div class="logo">我的网书</div>
             <div class="header-right">
                 <div class="header-user-con">
-                    <!-- 全屏显示 -->
-                    <div @click="handleFullScreen" class="btn-fullscreen">
-                        <el-tooltip :content="fullscreen?`取消全屏`:`全屏`" effect="dark" placement="bottom">
-                            <i class="el-icon-rank"/>
-                        </el-tooltip>
-                    </div>
-
                     <!-- 用户头像 -->
                     <div class="user-avator_1" v-if="ifUserImage">
                         <el-image v-bind:src="this.$store.state.currUserInfo.userImagePath"/>
@@ -26,9 +19,7 @@
                     <!-- 用户名下拉菜单 -->
                     <el-dropdown @command="handleCommand" class="user-name" trigger="click">
                     <span class="el-dropdown-link">
-                       {{this.$store.getters.currUserInfo.userName}}
-
-                        <i class="el-icon-caret-bottom"/>
+                        {{this.$store.state.currUserInfo.userName}} <i class="el-icon-caret-bottom"/>
                     </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="loginout" divided>退出登录</el-dropdown-item>
@@ -38,6 +29,7 @@
             </div>
             <div class="header-link">
                 <el-link :underline="false" href="/" icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
+                <el-link v-if="ifUserTar" :underline="false" @click="goToCurrUserBackHome" icon="el-icon-s-home" type="info">我的店铺</el-link>&nbsp;
             </div>
         </div>
     </div>
@@ -45,70 +37,48 @@
 
 <script>
     import bus from 'components/common/bus';
+    import ws_axios from "network/ws_axios";
 
     export default {
         name: "PersonHeader.vue",
         data() {
             return {
                 ifUserImage: false,
+                ifUserTar: false,
                 collapse: false,
-                fullscreen: false,
-                message: 2
             };
-        },
-        computed: {
-            username() {
-                let adminId = localStorage.getItem('adminId');
-                return adminId ? adminId : adminId;
-            }
         },
         created() {
             if (this.$store.state.currUserInfo.userImagePath !== undefined){
                 this.ifUserImage = true;
+            }
+            if (this.$store.state.currUserInfo.userTar === 1){
+                this.ifUserTar = true;
             }
         },
         methods: {
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if (command === 'loginout') {
-                    localStorage.removeItem('adminId');
                     this.$router.push('/login');
                 }
             },
+            // 进入我的店铺
+            goToCurrUserBackHome() {
+                let params = {
+                    'userId': this.$store.state.currUserInfo.userId,
+                };
+                ws_axios.fetchPost1('/business/getBusinessInfoByUserId', params).then((back) => {
+                    this.$store.dispatch("saveBusinessInfo", back.data);
+                });
 
+                this.$router.push({path: '/BackHome'});
+            },
             // 侧边栏折叠
             collapseChage() {
                 this.collapse = !this.collapse;
                 bus.$emit('collapse', this.collapse);
             },
-
-            // 全屏事件
-            handleFullScreen() {
-                let element = document.documentElement;
-                if (this.fullscreen) {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitCancelFullScreen) {
-                        document.webkitCancelFullScreen();
-                    } else if (document.mozCancelFullScreen) {
-                        document.mozCancelFullScreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
-                } else {
-                    if (element.requestFullscreen) {
-                        element.requestFullscreen();
-                    } else if (element.webkitRequestFullScreen) {
-                        element.webkitRequestFullScreen();
-                    } else if (element.mozRequestFullScreen) {
-                        element.mozRequestFullScreen();
-                    } else if (element.msRequestFullscreen) {
-                        // IE11
-                        element.msRequestFullscreen();
-                    }
-                }
-                this.fullscreen = !this.fullscreen;
-            }
         },
         mounted() {
             if (document.body.clientWidth < 1500) {
@@ -157,37 +127,6 @@
         display: flex;
         height: 40px;
         align-items: center;
-    }
-
-    .btn-fullscreen {
-        transform: rotate(45deg);
-        margin-right: 5px;
-        font-size: 24px;
-    }
-
-    .btn-bell,
-    .btn-fullscreen {
-        position: relative;
-        width: 30px;
-        height: 30px;
-        text-align: center;
-        border-radius: 15px;
-        cursor: pointer;
-    }
-
-    .btn-bell-badge {
-        position: absolute;
-        right: 0;
-        top: -2px;
-        width: 8px;
-        height: 8px;
-        border-radius: 4px;
-        background: #f56c6c;
-        color: #fff;
-    }
-
-    .btn-bell .el-icon-bell {
-        color: #fff;
     }
 
     .user-name {

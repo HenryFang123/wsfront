@@ -114,8 +114,8 @@
                 };
                 ws_axios.fetchPost1('/order/getOrderInfoByOrderId', params).then((back) => {
                     this.List = back.data;
-                    this.form = this.List[0]
-                    console.log(this.List[0].orderId)
+                    this.form = this.List[0];
+                    console.log(this.List[0].orderId);
                     console.log(this.form)
 
                 })

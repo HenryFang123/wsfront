@@ -57,9 +57,6 @@
                 this.notDeliverList = back.data;
             });
         },
-        methods: {
-
-        }
     }
 </script>
 

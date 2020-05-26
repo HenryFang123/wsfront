@@ -13,7 +13,6 @@ const book_list = () => import('components/page/BookList');
 const book_detail = () => import('components/page/BookDetail');
 const business_page = () => import('components/page/BusinessPage');
 const pay_done = () => import('components/page/PayDone');
-const back_login = () => import('components/backpage/BackLogin');
 const back_home = () => import('components/BackHome');
 
 Vue.use(VueRouter);
@@ -130,12 +129,6 @@ const routes = [
         path: '/pay_done',
         component: pay_done,
         meta: {title: '订单支付'}
-    },
-
-    {
-        path: '/BackLogin',
-        component: back_login,
-        meta: {title: '后台登录'}
     },
 
     {

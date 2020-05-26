@@ -2,8 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/store'
-
-
 import ElementUI from 'element-ui'
 import VueResource from 'vue-resource'
 import Vuex from 'vuex'
@@ -14,7 +12,7 @@ import 'element-ui/lib/index.js'
 import 'assets/css/icon.css';
 import VDistpicker from 'v-distpicker' // 引入省市选择器
 
-Vue.component('v-distpicker', VDistpicker); // 注册组件
+Vue.component('v-distpicker', VDistpicker);
 Vue.use(Vuex);
 Vue.use(ElementUI);
 Vue.use(VueResource);

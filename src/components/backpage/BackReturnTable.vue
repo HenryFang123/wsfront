@@ -133,6 +133,7 @@
     import ws_axios from "network/ws_axios";
 
     export default {
+        inject: ['reload'],
         name: 'BackReturnTable.vue',
         data() {
             return {
@@ -164,7 +165,7 @@
 
             getCount() {
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
@@ -173,7 +174,7 @@
 
             getData() {
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };

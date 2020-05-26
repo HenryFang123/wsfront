@@ -4,27 +4,26 @@
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                 <el-breadcrumb-item>图书</el-breadcrumb-item>
-                <el-breadcrumb-item>{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookName}}</el-breadcrumb-item>
+                <el-breadcrumb-item>{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookName}}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="book_select_bottom">
             <div class="book_select_left">
                 <div class="book_select_img">
                     <el-image style="height: 200px;"
-                              v-bind:src="this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookImagePath"/>
+                              v-bind:src="this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookImagePath"/>
                 </div>
             </div>
             <div class="book_select_middle">
                 <div class="book_select_title">
-                    <p><span class="book_select_tag">网书配送</span>
-                        {{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookName}}</p>
+                    <p><span class="book_select_tag">网书配送</span>{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookName}}</p>
                 </div>
                 <div class="book_select_info">
                     <div class="book_select_price">
                         <div class="book_price_row">
                             <p>
                                 <span class="book_price_left">商 城 价</span>
-                                <span class="book_price_right">￥{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookPrice}}</span>
+                                <span class="book_price_right">￥{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookPrice}}</span>
                             </p>
                         </div>
                     </div>
@@ -32,7 +31,7 @@
                         <div class="book_comment_row">
                             <p>累计评价</p>
                             <p>
-                                <span class="book_comment_num">{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookComment}} 条</span>
+                                <span class="book_comment_num">{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookComment}} 条</span>
                             </p>
                         </div>
                     </div>

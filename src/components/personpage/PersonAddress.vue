@@ -32,7 +32,7 @@
                     <el-input  v-model="formData.consignee"/>
                 </el-form-item>
                 <el-form-item label="省市区">
-                    <VDistpicker :province="formData.province" :city="formData.city" :area="formData.region" @selected="onSelected"></VDistpicker>
+                    <VDistpicker :province="formData.province" :city="formData.city" :area="formData.region" @selected="onSelected"/>
                 </el-form-item>
                 <el-form-item label="详细地址">
                     <el-input  v-model="formData.address"/>
@@ -89,7 +89,7 @@
             },
             getData() {
                 let params = {
-                    'userPhone': this.$store.getters.currUserInfo.userPhone,
+                    'userPhone': this.$store.state.currUserInfo.userPhone,
                 };
                 ws_axios.fetchPost1('/shippingAddress/getShippingAddressListByUserPhone', params).then((back) => {
                     this.address = back.data;
@@ -97,7 +97,7 @@
             },
             changeDefaultAddress(index){
                 let params = {
-                    'userPhone': this.$store.getters.currUserInfo.userPhone,
+                    'userPhone': this.$store.state.currUserInfo.userPhone,
                     'id' : this.address[index].id,
             };
                 this.$confirm(
@@ -128,7 +128,7 @@
             del(index){
                 let params = {
                     'id' : this.address[index].id,
-                    'userPhone': this.$store.getters.currUserInfo.userPhone,
+                    'userPhone': this.$store.state.currUserInfo.userPhone,
 
                 };
                 this.$confirm(
@@ -148,7 +148,7 @@
             saveEdit() {
                 let params = {
                     'id' : this.formData.id,
-                    'userPhone': this.$store.getters.currUserInfo.userPhone,
+                    'userPhone': this.$store.state.currUserInfo.userPhone,
                     'consignee' : this.formData.consignee,
                     'province' : this.formData.province,
                     'city' : this.formData.city,

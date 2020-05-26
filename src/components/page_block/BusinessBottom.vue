@@ -86,7 +86,7 @@
             // 获取后端查找店铺下分类信息
             getTypeListByBusinessId() {
                 let params = {
-                    businessId: this.$store.getters.businessInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoTypeListByBusinessId', params).then((back) => {
                     this.currBusinessTypeList = back.data;
@@ -97,7 +97,7 @@
             // 获取后端查找店铺下分页的总数
             getTotal(typeIndex) {
                 let params = {
-                    businessId: this.$store.getters.businessInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                     typeId: this.currBusinessTypeList[typeIndex].bookTypeId,
                 };
                 ws_axios.fetchPost1('/book/getBookInfoCountByBusinessIdAndTypeId', params).then((back) => {
@@ -110,7 +110,7 @@
                 typeIndex = this.stringToNum(typeIndex);
                 this.getTotal(typeIndex);
                 let params = {
-                    businessId: this.$store.getters.businessInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                     typeId: this.currBusinessTypeList[typeIndex].bookTypeId,
                     pageNum: this.currentPage,
                     pageSize: this.pageSize,

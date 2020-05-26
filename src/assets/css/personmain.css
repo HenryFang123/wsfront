@@ -18,7 +18,7 @@ body {
     position: absolute;
     left: 200px;
     right: 0;
-    top: 40px;
+    margin: 0 auto;
     bottom: 0;
     padding-bottom: 30px;
     -webkit-transition: left .3s ease-in-out;

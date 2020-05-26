@@ -51,7 +51,6 @@
                     </el-row>
                 </el-header>
 
-<!-- 购物车具体项-->
                 <el-main style="margin: 5px auto; padding: 0; width: 100%;">
                     <el-row style="padding: 0; display: flex;">
                         <el-col :span="4"/>
@@ -203,7 +202,7 @@
         },
         created() {
             this.init();
-            document.documentElement.scrollTop=192
+            document.documentElement.scrollTop=192;
         },
         updated() {
             for (let i=0; i< this.curPageList.length; i++) {
@@ -300,32 +299,44 @@
             },
 
             gotoSettlement() {
-                let id = [];
-                this.randomNumber(this.select.length,15,function (arr) {id = arr})
-                for(let i in this.select){
-                    let toltal = this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_price * this.num[this.select[i]-1]
-                    let address='';
-                    for(let k of this.$store.state.currShippingAddress){
-                        if(k.ifDefaultAddress === 1){address = k.detail}
-                    }
-                    let params = {
-                        'orderId':id[i],
-                        'userAddress': address,
-                        'userId': this.$store.state.currUserInfo.userId,
-                        'userPhone': this.$store.state.currUserInfo.userPhone,
-                        'businessId':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].business_id,
-                        'bookId':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_id,
-                        'bookName':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_name,
-                        'bookImagePath':this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].book_image_path,
-                        'bookNumber':this.num[parseInt(this.select[i] - 1)],
-                        'totalPrice':toltal.toFixed(2)
-                    };
-                    ws_axios.fetchPost1('/order/insertOrderInfo',params).then((back) => {
-                        ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i]-1].shop_car_id})
+                if (this.select.length === 0){
+                    this.$message({
+                        showClose: true,
+                        message: '请选择要结算的购物车！',
+                        type: 'warning'
                     });
-                    this.$store.state.resultInfo.orderInfo.number++;
+                } else {
+                    let id = [];
+                    this.randomNumber(this.select.length, 15, function (arr) {
+                        id = arr
+                    })
+                    for (let i in this.select) {
+                        let toltal = this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].book_price * this.num[this.select[i] - 1]
+                        let address = '';
+                        for (let k of this.$store.state.currShippingAddress) {
+                            if (k.ifDefaultAddress === 1) {
+                                address = k.detail
+                            }
+                        }
+                        let params = {
+                            'orderId': id[i],
+                            'userAddress': address,
+                            'userId': this.$store.state.currUserInfo.userId,
+                            'userPhone': this.$store.state.currUserInfo.userPhone,
+                            'businessId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].business_id,
+                            'bookId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].book_id,
+                            'bookName': this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].book_name,
+                            'bookImagePath': this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].book_image_path,
+                            'bookNumber': this.num[parseInt(this.select[i] - 1)],
+                            'totalPrice': toltal.toFixed(2)
+                        };
+                        ws_axios.fetchPost1('/order/insertOrderInfo', params).then((back) => {
+                            ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].shop_car_id})
+                        });
+                        this.$store.state.resultInfo.orderInfo.number++;
+                    }
+                    this.$router.push("/settlement_page")
                 }
-                this.$router.push("/settlement_page")
             },
 
             handleCurrentChange(val) {

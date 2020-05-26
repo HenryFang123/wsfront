@@ -137,7 +137,6 @@
                 const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
                 return str === '' || str === undefined || str === null;
             },
-
             // 获取当前时间并格式化生成用户 userId
             getCurrentTimeToBeUserId: function () {
                 const date = new Date();
@@ -180,7 +179,6 @@
 
                 return parseInt(submitUserId);
             },
-
             // 注册页面轮换页
             registerNext: function () {
                 if (this.isnull(this.register.user_phone) || this.isnull(this.register.inputCode)) {
@@ -195,7 +193,6 @@
                     }
                 }
             },
-
             // 验证手机号
             checkPhone: function () {
                 if (this.register.user_phone !== null) {
@@ -207,7 +204,6 @@
                     });
                 }
             },
-
             // 获取手机验证码
             registerGetCode: function () {
                 if (this.register.user_phone.length !== 11) {
@@ -239,17 +235,15 @@
                     });
                 }
             },
-
             // 进入首页，结束注册
             registerOver: function () {
                 this.$router.push({path: '/'});
                 this.$notify({
                     title: '注册完成',
-                    message: '欢迎登陆' + this.$store.getters.currUserInfo.userName,
+                    message: '欢迎登陆' + this.$store.state.currUserInfo.userName,
                     type: 'success'
                 });
             },
-
             // 注册提交表单验证
             submitForm(register) {
                 if (this.isnull(this.register.user_name) || this.isnull(this.register.pass_word) || this.isnull(this.register.pass_word2)) {
@@ -281,12 +275,10 @@
                     });
                 }
             },
-
             // 清除cookie
             clearCookie: function () {
                 this.setCookie("", "", -1); // 修改2值都为空，天数为负1天就好了
             },
-
             gotoLogin() {
                 this.$router.push("/login")
             },

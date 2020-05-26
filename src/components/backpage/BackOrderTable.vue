@@ -183,7 +183,7 @@
             },
             getCount() {
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.currUserInfo.businessId,
                 };
                 ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
@@ -191,11 +191,10 @@
             },
             getData() {
                 let params = {
-                    businessId: this.$store.getters.adminInfo.businessId,
+                    businessId: this.$store.state.currUserInfo.businessId,
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
-                console.log(this.$store.getters.adminInfo.businessId);
                 ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
                     for(let i in this.List) {

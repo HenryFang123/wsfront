@@ -23,35 +23,74 @@
         <div class="book_detail">
             <el-row>
                 <div class="book_detail_block block_tab">
-                    <el-tabs  type="card" v-model="activeNameDetail">
+                    <el-tabs type="card" v-model="activeNameDetail">
                         <el-tab-pane name="first">
                             <span slot="label">商品介绍</span>
                             <div class="book_detail_main">
                                 <el-row style="text-align: left; margin-left: 30px; margin-top: 5px;">
                                     <span>作者：</span>
                                     <el-link style="font-size: 15px;color: #6E77BD">
-                                        {{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookAuthor}}
+                                        {{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookAuthor}}
                                     </el-link>
                                 </el-row>
                                 <el-row style="text-align: left; margin-left: 30px; margin-top: 5px;">
-                                    <span>出版社：{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookPub}}</span>
+                                    <span>出版社：{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookPub}}</span>
                                 </el-row>
                                 <el-row style="text-align: left; margin-left: 30px; margin-top: 5px;">
-                                    <span>出版年月：{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookYear}}</span>
+                                    <span>出版年月：{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookYear}}</span>
                                 </el-row>
                                 <el-row style="text-align: left; margin-left: 30px; margin-top: 5px;">
-                                    <span>ISBN：{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookIsbn}}</span>
+                                    <span>ISBN：{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookIsbn}}</span>
                                 </el-row>
                                 <el-row
                                     style="text-align: left; margin-left: 30px; margin-top: 3px; margin-bottom: 30px;">
                                     <p><span style="color: #527722;margin-left: 0">内容简介  · · · · · ·</span></p>
-                                    <p><span style="margin-left: 20px">{{this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookDescription}}</span>
+                                    <p><span style="margin-left: 20px">{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookDescription}}</span>
                                     </p>
                                 </el-row>
                             </div>
                         </el-tab-pane>
                         <el-tab-pane name="second">
                             <span slot="label">商品评价</span>
+                            <div class="remarks-container">
+                                <div class="remarks-analyse-box">
+                                    <div class="remarks-analyse-goods">
+                                        <el-progress :width="110" :stroke-width="15" stroke-linecap="butt"  type="circle" :percentage="this.$store.state.resultInfo.bookDetailInfo.bookRemark.goodAnalyse" :color="colors">
+                                            <span class="remarks-analyse-num">{{this.$store.state.resultInfo.bookDetailInfo.bookRemark.goodAnalyse}}%</span>
+                                            <p class="remarks-analyse-title">好评率</p>
+                                        </el-progress>
+                                    </div>
+                                    <div class="remarks-analyse-tags">
+                                        <el-tag checkable :color="tagsColor[index % 4]" v-for="(item, index) in this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksTags" :key="index">{{item}}</el-tag>
+                                    </div>
+                                </div>
+                                <div class="remarks-bar">
+                                    <span>好评({{this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksNumDetail[0]}})</span>
+                                    <span>中评({{this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksNumDetail[1]}})</span>
+                                    <span>差评({{this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksNumDetail[2]}})</span>
+                                </div>
+                                <div class="remarks-box" v-for="(item, index) in this.$store.state.resultInfo.bookDetailInfo.bookRemark.detail" :key="index">
+                                    <div class="remarks-user">
+                                        <el-avatar icon="el-icon-user-solid" />
+                                        <span class="remarks-user-name">{{item.username}}</span>
+                                    </div>
+                                    <div class="remarks-content-box">
+                                        <p>
+                                            <el-rate disabled :value="item.values" allow-half class="remarks-star"/>
+                                        </p>
+                                        <p class="remarks-content">{{item.content}}</p>
+                                        <p class="remarks-time">{{item.create_at}}</p>
+                                    </div>
+                                </div>
+                                <div class="remarks-page">
+                                    <el-pagination
+                                        :current-page="currentPage"
+                                        :total="itemTotal"
+                                        @current-change="handleCurrentChange"
+                                        background
+                                        layout="total, prev, pager, next"/>
+                                </div>
+                            </div>
                         </el-tab-pane>
                     </el-tabs>
                 </div>
@@ -98,6 +137,16 @@
         data() {
             return {
                 activeNameDetail: 'first',
+                colors: [
+                    {color: '#1C86EE', percentage: 20},
+                    {color: '#f56c6c', percentage: 40},
+                    {color: '#FF8247', percentage: 60},
+                    {color: '#F4A460', percentage: 80},
+                    {color: '#FFD700', percentage: 100}
+                ],
+                tagsColor: [ '#409EFF', '#67C23A', '#F56C6C', '#FFD700' ],
+                currentPage: 1,
+                itemTotal: 0,
                 businessBookList: [],
                 tabList: [
                     {
@@ -139,7 +188,7 @@
                     "/press/byBookNodeName"
                 ];
                 let params = {
-                    'name': this.$store.getters.resultInfo_bookDetailInfo_bookInfo.bookIsbn,
+                    'name': this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookIsbn,
                     'pageNum': 0,
                     'pageSize': 6
                 };
@@ -148,6 +197,12 @@
                         this.neo4jBookList = back.data.bookList;
                     }
                 });
+            },
+
+            // 改变页码选择
+            handleCurrentChange(val) {
+                this.currentPage = val;
+
             },
         },
         created() {
@@ -236,6 +291,108 @@
         background-color: #F7F7F7;
         border-bottom: 1px solid #e9e9eb;
         font-size: 15px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-analyse-box {
+        padding: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-analyse-box .remarks-analyse-goods {
+        margin-left: 15px;
+        margin-right: 5px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-analyse-box .remarks-analyse-goods .remarks-analyse-num {
+        font-size: 29px;
+        background-color: #f56c6c;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-analyse-box .remarks-analyse-goods .remarks-analyse-title {
+        font-size: 12px;
+        line-height: 20px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-analyse-box .remarks-analyse-tags {
+        margin-left: 30px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-analyse-box .remarks-analyse-tags .el-tag {
+        margin-left: 10px;
+        color: #FFFFFF;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-bar {
+        text-align: right;
+        padding-right: 30px;
+        height: 36px;
+        border-bottom: 1px solid #e9e9eb;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-bar span {
+        margin-right: 15px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box {
+        padding: 15px;
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px #ccc dotted;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-user {
+        margin-left: 20px;
+        width: 170px;
+        text-align: left;
+        display: flex;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-user .el-avatar {
+        width: 45px;
+        height: 45px;
+        margin-top: 10px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-user .remarks-user-name {
+        padding-left: 10px;
+        padding-top: 30px;
+        font-size: 15px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-content-box {
+        width: calc(100% - 180px);
+        text-align: left;
+        background-color: #FFFFFF;
+        padding-left: 10px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-content-box .remarks-star {
+
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-content-box .remarks-content {
+        font-size: 16px;
+        color: #232323;
+        line-height: 28px;
+        margin-top: 5px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-content-box .remarks-time {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #232323;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .remarks-page {
+        margin: 15px;
+        display: flex;
+        justify-content:flex-end;
     }
 
     .book_show .book_detail .book_recommend_block {

@@ -186,7 +186,6 @@
             }
         },
         created(){
-            document.documentElement.scrollTop=192;
             for(let k of this.$store.state.currShippingAddress){
                 if(k.ifDefaultAddress === 1){this.curAddress = k.detail}
                 this.allAddress.push({'id':k.id,
@@ -195,6 +194,7 @@
             for(let i =0;i< this.$store.state.resultInfo.orderInfo.number;i++){
                this.tempAddress.push(this.$store.state.resultInfo.orderInfo.list[i].userAddress)
             }
+            document.documentElement.scrollTop=192;
         },
         methods:{
             changeAddress(event,index){

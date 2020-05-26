@@ -40,7 +40,7 @@
         methods: {
             getRecommendBookInfoOfCurrentUser: function () {
                 let params = {
-                    'userId': this.$store.getters.currUserInfo.userId,
+                    'userId': this.$store.state.currUserInfo.userId,
                 };
                 ws_axios.fetchGet2('redis/byUserId', params).then((back) => {
                     if (back.data.resultCode === "1") {

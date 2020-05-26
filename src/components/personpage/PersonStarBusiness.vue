@@ -52,13 +52,11 @@
                     this.starBusiness = back.data;
                 });
             },
-
             // 保存店铺信息，并转至店铺详情页面
             saveBusinessInfoToBusinessPage(index){
                 this.$store.dispatch("saveBusinessInfo", this.starBusiness[index]);
                 this.$router.push("/business_page")
             },
-
             // 移除收藏
             deleteCurrUserStarBusiness(index){
                 let params = {
@@ -68,7 +66,6 @@
                 ws_axios.fetchPost1('/userStar/updateUserStar', params).then((back) => {
                 });
             },
-
             // 打开消息框
             openBox(index) {
                 this.$confirm('此操作将删除该收藏项, 确认删除?', '提示', {

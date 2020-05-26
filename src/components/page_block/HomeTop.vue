@@ -516,9 +516,6 @@
             this.$refs.itemPanel.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
             this.$refs.itemPanel.style.top = this.$refs.menuSide.offsetTop + 'px';
         },
-        created() {
-
-        },
     }
 </script>
 
