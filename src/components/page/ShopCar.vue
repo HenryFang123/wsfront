@@ -197,7 +197,8 @@
                 selectId: [],
                 curPageList: [],
                 num:[],
-                paginationtop:''
+                paginationtop:'',
+                address:''
             }
         },
         created() {
@@ -309,18 +310,17 @@
                     let id = [];
                     this.randomNumber(this.select.length, 15, function (arr) {
                         id = arr
-                    })
+                    });
+                    for (let k of this.$store.state.currShippingAddress) {
+                        if (k.ifDefaultAddress === 1) {
+                            this.address = k.detail
+                        }
+                    };
                     for (let i in this.select) {
                         let toltal = this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].book_price * this.num[this.select[i] - 1]
-                        let address = '';
-                        for (let k of this.$store.state.currShippingAddress) {
-                            if (k.ifDefaultAddress === 1) {
-                                address = k.detail
-                            }
-                        }
                         let params = {
                             'orderId': id[i],
-                            'userAddress': address,
+                            'userAddress': this.address,
                             'userId': this.$store.state.currUserInfo.userId,
                             'userPhone': this.$store.state.currUserInfo.userPhone,
                             'businessId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].business_id,
@@ -333,9 +333,17 @@
                         ws_axios.fetchPost1('/order/insertOrderInfo', params).then((back) => {
                             ws_axios.fetchPost1('/shopCar/deleteShopCarInfoByShopCarId', {'shopCarId': this.$store.state.resultInfo.shopCarInfo.list[this.select[i] - 1].shop_car_id})
                         });
-                        this.$store.state.resultInfo.orderInfo.number++;
                     }
-                    this.$router.push("/settlement_page")
+                    const loading = this.$loading({
+                        lock: true,
+                        text: '正在生成订单',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    setTimeout(() => {
+                        loading.close();
+                        this.$router.push("/settlement_page")
+                    }, 1500);
                 }
             },
 

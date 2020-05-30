@@ -247,7 +247,7 @@
             // 查询操作 + 存储
             submitForm(search) {
                 if (this.isnull(this.search.inputSearchWord)) {
-                    this.$message.error('错误，输入框不能为空');
+                    this.$message.error('输入框不能为空');
                 } else {
                     this.$refs.search.validate((valid) => {
                         if (valid) {

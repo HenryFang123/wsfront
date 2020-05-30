@@ -28,7 +28,7 @@
                         </el-table-column>
                         <el-table-column prop="bookName" label="书名" width="170" align="center"/>
                         <el-table-column prop="bookNumber" label="数量" width="80" align="center"/>
-                        <el-table-column prop="totalPrice" label="总计" width="80" align="center"/>
+                        <el-table-column prop="totalPrice" label="总价（元）" width="100" align="center"/>
                         <el-table-column prop="userAddress" label="收货信息" align="center"/>
                         <el-table-column prop="orderInfo" label="状态" width="160" align="center"
                                          :filters="[{ text: '已完成', value: '已完成' }, { text: '已取消', value: '已取消' }]"
