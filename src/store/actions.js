@@ -23,9 +23,14 @@ export default {
         commit('saveHomeInfoTopInfoBookList', payload);
     },
 
-    // 触发保存 首页面底部推荐书籍信息
-    saveHomeInfoBottomInfoBookList: ({commit}, payload) => {
-        commit('saveHomeInfoBottomInfoBookList', payload);
+    // 触发保存 首页面底部推荐书籍信息 M
+    saveHomeInfoBottomInfoBookListM: ({commit}, payload) => {
+        commit('saveHomeInfoBottomInfoBookListM', payload);
+    },
+
+    // 触发保存 首页面底部推荐书籍信息 S
+    saveHomeInfoBottomInfoBookListS: ({commit}, payload) => {
+        commit('saveHomeInfoBottomInfoBookListS', payload);
     },
 
     // 触发保存 转至查找结果显示页面的热门书籍信息

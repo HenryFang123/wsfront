@@ -46,7 +46,8 @@ export default new Vuex.Store({
                   bookList: [],
               },
               bottomInfo: {
-                  bookList: [],
+                  bookListM: [],
+                  bookListS: [],
               },
           },
 
@@ -58,19 +59,6 @@ export default new Vuex.Store({
           // 书籍详情页
           bookDetailInfo: {
               bookInfo: {},
-              bookRemark: {
-                  goodAnalyse: 90,
-                  remarksTags: [ '实惠优选', '质量没话说', '比定做还合适', '完美品质', '正品行货', '包装有档次', '书籍很好看' ],
-                  remarksNumDetail: [ 3000, 900, 1 ],
-                  detail: [
-                      {
-                          username: '3581Nicezza',
-                          values: 3,
-                          content: '包装很好，质量也不错！',
-                          create_at: '2018-05-15 09:20'
-                      },
-                  ]
-              },
               businessInfo: {},
           },
 

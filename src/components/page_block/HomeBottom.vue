@@ -6,25 +6,57 @@
             </el-divider>
         </div>
         <div class="home-main-middle-bottom-book">
-            <el-row>
-                <el-col :key="index" :offset="1" :span="4"
-                        v-for="(bookItem,index) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookList">
-                    <div class="book_card" @click="toDetail(index)">
-                        <div class="book_img">
-                            <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
-                        </div>
-                        <div class="book_title">
-                            <a>{{bookItem.bookName}}</a>
-                        </div>
-                        <div class="book_author">
-                            <a>{{bookItem.bookAuthor}}</a>
-                        </div>
-                        <div class="book_price">
-                            <a>￥{{bookItem.bookPrice}}</a>
-                        </div>
+            <el-tabs v-if="ifShowTags">
+                <el-tab-pane :key="itemIndex" v-for="(item, itemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM" >
+                    <span style="font-size: 15px;" slot="label">{{item.bookTypeName}}</span>
+                    <div class="list_block">
+                        <el-row>
+                            <el-col :key="bookItemIndex"
+                                    :offset="1"
+                                    :span="4"
+                                    v-for="(bookItem, bookItemIndex) in item.bookRecommend">
+                                <div class="book_card" @click="toDetailM(itemIndex, bookItemIndex)">
+                                    <div class="book_img">
+                                        <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
+                                    </div>
+                                    <div class="book_title">
+                                        <a>{{bookItem.bookName}}</a>
+                                    </div>
+                                    <div class="book_author">
+                                        <a>{{bookItem.bookAuthor}}</a>
+                                    </div>
+                                    <div class="book_price">
+                                        <a>￥{{bookItem.bookPrice}}</a>
+                                    </div>
+                                </div>
+                            </el-col>
+                        </el-row>
                     </div>
-                </el-col>
-            </el-row>
+                </el-tab-pane>
+                <div class="list_block">
+                    <el-row>
+                        <el-col :key="bookItemIndex"
+                                :offset="1"
+                                :span="4"
+                                v-for="(bookItem, bookItemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS">
+                            <div class="book_card" @click="toDetailS(bookItemIndex)">
+                                <div class="book_img">
+                                    <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
+                                </div>
+                                <div class="book_title">
+                                    <a>{{bookItem.bookName}}</a>
+                                </div>
+                                <div class="book_author">
+                                    <a>{{bookItem.bookAuthor}}</a>
+                                </div>
+                                <div class="book_price">
+                                    <a>￥{{bookItem.bookPrice}}</a>
+                                </div>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-tabs>
         </div>
     </div>
 </template>
@@ -35,25 +67,47 @@
     export default {
         name: "HomeBottom.vue",
         data() {
-            return {}
+            return {
+                ifShowTags: false,
+            }
         },
         methods: {
             getRecommendBookInfoOfCurrentUser: function () {
                 let params = {
                     'userId': this.$store.state.currUserInfo.userId,
                 };
-                ws_axios.fetchGet2('redis/byUserId', params).then((back) => {
+                ws_axios.fetchPost1('recommend/getRecommendMahoutByUserId', params).then((back) => {
                     if (back.data.resultCode === "1") {
-                        this.$store.dispatch("saveHomeInfoBottomInfoBookList", back.data.redisUserCfBookList);
+                        this.$store.dispatch("saveHomeInfoBottomInfoBookListM", back.data.recommendBookListM);
+                    } else {
+                        this.ifShowTags = true;
                     }
-                })
+                });
+                ws_axios.fetchPost1('recommend/getRecommendSystem', params).then((back) => {
+                    if (back.data.resultCode === "1") {
+                        this.ifShowTags = true;
+                        this.$store.dispatch("saveHomeInfoBottomInfoBookListS", back.data.recommendBookListS);
+                    }
+                });
             },
 
             // 跳转至书籍信息详情页面
-            toDetail: function (index) {
+            toDetailM: function (index1, index2) {
                 let params = {
-                    'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].bookId,
-                    'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].businessId,
+                    'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM[index1].bookRecommend[index2].bookId,
+                    'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM[index1].bookRecommend[index2].businessId,
+                };
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                });
+                this.$router.push("/book_detail");
+            },
+            // 跳转至书籍信息详情页面
+            toDetailS: function (index) {
+                let params = {
+                    'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].bookId,
+                    'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].businessId,
                 };
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);

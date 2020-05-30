@@ -10,7 +10,7 @@
                      v-for="(bookItem, index) in this.businessBookList">
                     <div class="business_recommend_image">
                         <el-image style="height: 150px; width: 130px;cursor: pointer;"
-                                  v-bind:src="bookItem.bookImagePath"/>
+                                  v-bind:src="bookItem.bookImagePath" @click="toDetailBH(index)"/>
                     </div>
                     <div class="business_recommend_info">
               <span>
@@ -52,45 +52,59 @@
                         </el-tab-pane>
                         <el-tab-pane name="second">
                             <span slot="label">商品评价</span>
-                            <div class="remarks-container">
-                                <div class="remarks-analyse-box">
-                                    <div class="remarks-analyse-goods">
-                                        <el-progress :width="110" :stroke-width="15" stroke-linecap="butt"  type="circle" :percentage="this.$store.state.resultInfo.bookDetailInfo.bookRemark.goodAnalyse" :color="colors">
-                                            <span class="remarks-analyse-num">{{this.$store.state.resultInfo.bookDetailInfo.bookRemark.goodAnalyse}}%</span>
-                                            <p class="remarks-analyse-title">好评率</p>
-                                        </el-progress>
-                                    </div>
-                                    <div class="remarks-analyse-tags">
-                                        <el-tag checkable :color="tagsColor[index % 4]" v-for="(item, index) in this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksTags" :key="index">{{item}}</el-tag>
-                                    </div>
-                                </div>
-                                <div class="remarks-bar">
-                                    <span>好评({{this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksNumDetail[0]}})</span>
-                                    <span>中评({{this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksNumDetail[1]}})</span>
-                                    <span>差评({{this.$store.state.resultInfo.bookDetailInfo.bookRemark.remarksNumDetail[2]}})</span>
-                                </div>
-                                <div class="remarks-box" v-for="(item, index) in this.$store.state.resultInfo.bookDetailInfo.bookRemark.detail" :key="index">
-                                    <div class="remarks-user">
-                                        <el-avatar icon="el-icon-user-solid" />
-                                        <span class="remarks-user-name">{{item.username}}</span>
-                                    </div>
-                                    <div class="remarks-content-box">
-                                        <p>
-                                            <el-rate disabled :value="item.values" allow-half class="remarks-star"/>
-                                        </p>
-                                        <p class="remarks-content">{{item.content}}</p>
-                                        <p class="remarks-time">{{item.create_at}}</p>
-                                    </div>
-                                </div>
-                                <div class="remarks-page">
-                                    <el-pagination
-                                        :current-page="currentPage"
-                                        :total="itemTotal"
-                                        @current-change="handleCurrentChange"
-                                        background
-                                        layout="total, prev, pager, next"/>
-                                </div>
-                            </div>
+<!--                            <div class="remarks-container">-->
+<!--                                <div class="remarks-analyse-box">-->
+<!--                                    <div class="remarks-analyse-goods">-->
+<!--                                        <el-progress :width="110" :stroke-width="15" stroke-linecap="butt"  type="circle" :percentage="this.bookRemarkSum.goodRating" :color="progressColors">-->
+<!--                                            <span class="remarks-analyse-num">{{this.bookRemarkSum.goodRating}}%</span>-->
+<!--                                            <p class="remarks-analyse-title">好评率</p>-->
+<!--                                        </el-progress>-->
+<!--                                    </div>-->
+<!--                                    <div class="remarks-analyse-tags">-->
+<!--                                        <el-tag checkable :color="tagsColor[index % 4]" v-for="(item, index) in remarksTags" :key="index">{{item}}</el-tag>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="remarks-bar">-->
+<!--                                    <span>好评({{this.bookRemarkSum.remarksNumList[0]}})</span>-->
+<!--                                    <span>中评({{this.bookRemarkSum.remarksNumList[1]}})</span>-->
+<!--                                    <span>差评({{this.bookRemarkSum.remarksNumList[2]}})</span>-->
+<!--                                </div>-->
+<!--                                <div class="remarks-box" v-for="(bookCommentItem, bookCommentIndex) in bookCommentList" :key="bookCommentIndex">-->
+<!--                                    <div class="remarks-user">-->
+<!--                                        <el-avatar icon="el-icon-user-solid" />-->
+<!--                                        <span class="remarks-user-name">{{bookCommentItem.userId}}</span>-->
+<!--                                    </div>-->
+<!--                                    <div class="remarks-content-box">-->
+<!--                                        <p>-->
+<!--                                            <el-rate disabled :value="bookCommentItem.rating" class="remarks-star" show-score text-color="#ff9900" score-template="{{bookCommentItem.values}}"/>-->
+<!--                                        </p>-->
+<!--                                        <p class="remarks-content">{{bookCommentItem.content}}</p>-->
+<!--                                        <p class="remarks-time">{{bookCommentItem.create_time}}</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="remarks-page">-->
+<!--                                    <el-pagination-->
+<!--                                        :current-page="currentPage"-->
+<!--                                        :total="itemTotal"-->
+<!--                                        @current-change="handleCurrentChange"-->
+<!--                                        background-->
+<!--                                        layout="total, prev, pager, next"/>-->
+<!--                                </div>-->
+<!--                                <div class="my-remarks">-->
+<!--                                    <div class="remarks-content-box">-->
+<!--                                        <p>请评分: <el-rate :colors="ratingColors" class="remarks-star" v-model="rating" show-text/></p>-->
+<!--                                        <el-input-->
+<!--                                            type="textarea"-->
+<!--                                            :rows="5"-->
+<!--                                            placeholder="请输入内容"-->
+<!--                                            v-model="comment">-->
+<!--                                        </el-input>-->
+<!--                                    </div>-->
+<!--                                    <div class="remarks-button">-->
+<!--                                        <el-button type="primary" @click="sendMyComment">发送评论</el-button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </el-tab-pane>
                     </el-tabs>
                 </div>
@@ -137,7 +151,7 @@
         data() {
             return {
                 activeNameDetail: 'first',
-                colors: [
+                progressColors: [
                     {color: '#1C86EE', percentage: 20},
                     {color: '#f56c6c', percentage: 40},
                     {color: '#FF8247', percentage: 60},
@@ -145,8 +159,14 @@
                     {color: '#FFD700', percentage: 100}
                 ],
                 tagsColor: [ '#409EFF', '#67C23A', '#F56C6C', '#FFD700' ],
+                remarksTags: [ '实惠优选', '质量没话说', '比定做还合适', '完美品质', '正品行货', '包装有档次', '书籍很好看' ],
+                bookRemarkSum: {},
                 currentPage: 1,
                 itemTotal: 0,
+                bookCommentList: [],
+                rating: null,
+                ratingColors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+                comment: '',
                 businessBookList: [],
                 tabList: [
                     {
@@ -175,8 +195,19 @@
 
             // 点击标签头处理
             handleRecommendTabClick(tab, event) {
-                console.log(tab, event);
                 this.getNeo4jBookRecommendInfo(tab.name);
+            },
+
+            // 获取店铺热门的推荐
+            getBusinessHotRecommend(val) {
+                let params = {
+                    'businessId': this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessId
+                };
+                ws_axios.fetchPost1("/recommend/getRecommendBusinessHot", params).then((back) => {
+                    if (back.data.resultCode === "1") {
+                        this.businessBookList = back.data.recommendBookListBH;
+                    }
+                });
             },
 
             // 获取图谱书籍的推荐
@@ -199,13 +230,62 @@
                 });
             },
 
+            // 获取书籍的评论分析
+            getBookCommentAnalyse() {
+                let params = {
+                    'bookId': this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookId,
+                };
+                ws_axios.fetchPost1('/bookComment/getBookCommentAnalyseByBookId', params).then((back) => {
+                    this.bookRemarkSum = back.data;
+                });
+            },
+
+            // 获取书籍的评论
+            getBookCommentList() {
+                let params = {
+                    'bookId': this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookId,
+                };
+                ws_axios.fetchPost1('/bookComment/getBookCommentListByBookId', params).then((back) => {
+                    if (back.data.resultCode === "1") {
+                        this.bookCommentList = back.data.bookCommentList;
+                    }
+                });
+            },
+
+            // 跳转至书籍信息详情页面
+            toDetailBH(index){
+                let params = {
+                    'bookId': this.businessBookList[index].bookId,
+                    'businessId': this.businessBookList[index].businessId,
+                };
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                });
+
+                this.$router.push("/book_detail");
+            },
+
             // 改变页码选择
             handleCurrentChange(val) {
                 this.currentPage = val;
+            },
 
+            // 发送评论
+            sendMyComment(){
+                let params = {
+                    'userId': this.$store.state.currUserInfo.userId,
+                    'bookId': this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookId,
+                    'comment': this.comment,
+                    'rating': this.rating
+                };
+                ws_axios.fetchPost1('/bookComment/insertBookComment', params).then((back) => {
+                });
             },
         },
         created() {
+            this.getBookCommentAnalyse();
+            this.getBookCommentList();
             this.getNeo4jBookRecommendInfo(0);
         },
     }
@@ -393,6 +473,24 @@
         margin: 15px;
         display: flex;
         justify-content:flex-end;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .my-remarks {
+        padding: 15px;
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px #ccc dotted;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-content-box {
+        width: calc(100% - 180px);
+        text-align: left;
+        background-color: #FFFFFF;
+        margin-left: 20px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-button {
+        margin-left: 10px;
     }
 
     .book_show .book_detail .book_recommend_block {

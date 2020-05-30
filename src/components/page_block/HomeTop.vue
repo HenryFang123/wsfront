@@ -51,7 +51,7 @@
                                 </el-col>
                                 <el-col :span="8">
                                     <div :key="index" class="rating_sort_card"
-                                         v-for="(ratingSortItem,index) in this.$store.state.resultInfo.homeInfo.topInfo.bookList.topRating">
+                                         v-for="(ratingSortItem,index) in this.$store.state.resultInfo.homeInfo.topInfo.bookList">
                                         <el-row>
                                             <el-col :span="19">
                                                 <span>{{ratingSortItem.bookName}}</span>

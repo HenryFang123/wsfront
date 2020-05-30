@@ -21,9 +21,13 @@ export default {
     saveHomeInfoTopInfoBookList: (state, param) => {
         state.resultInfo.homeInfo.topInfo.bookList = param;
     },
-    // 保存首页面底部推荐书籍信息
-    saveHomeInfoBottomInfoBookList: (state, param) => {
-        state.resultInfo.homeInfo.bottomInfo.bookList = param;
+    // 保存首页面底部推荐书籍信息 M
+    saveHomeInfoBottomInfoBookListM: (state, param) => {
+        state.resultInfo.homeInfo.bottomInfo.bookListM = param;
+    },
+    // 保存首页面底部推荐书籍信息 S
+    saveHomeInfoBottomInfoBookListS: (state, param) => {
+        state.resultInfo.homeInfo.bottomInfo.bookListS = param;
     },
 
     // 保存转至查找结果显示页面的热门书籍信息

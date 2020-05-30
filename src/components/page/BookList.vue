@@ -49,17 +49,17 @@
                                                 <div :key="index" class="demo-image__placeholder"
                                                      v-for="(bookItem, index) in this.$store.state.resultInfo.bookListInfo.hotBookInfo">
                                                     <div class="block"
-                                                         style="text-align: center; margin-top: 10px; padding: 0; border-bottom: 1px solid #e9e9eb;">
-                                                        <el-image @click="toDetail(index)"
+                                                         style="text-align: center; margin-top: 10px; padding: 0; border-bottom: 1px solid #e9e9eb;" ">
+                                                        <el-image @click="toDetailSH(index)"
                                                                   style="height: 150px; width: 130px;cursor: pointer;"
-                                                                  v-bind:src="bookItem.book_image_path"/>
+                                                                  v-bind:src="bookItem.bookImagePath"/>
                                                         <br>
                                                         <div class="goods-show-detail">
                                                             <span class="advertise-price text-danger"
-                                                                  style="font-family:Arial;">￥{{bookItem.book_price}}</span>
+                                                                  style="font-family:Arial;">￥{{bookItem.bookPrice}}</span>
                                                         </div>
                                                         <div class="goods-show-detail">
-                                                            <span>{{bookItem.book_name}}</span>
+                                                            <span>{{bookItem.bookName}}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -77,7 +77,7 @@
                                     </div>
                                     <!--每一件图书的可定义样式-->
                                     <div :key="index" class="show_book-main-main-no_result_list"
-                                         v-for="(bookItem, index) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookList" v-show="ifHaveResult">
+                                         v-for="(bookItem, index) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS" v-show="ifHaveResult">
                                         <el-row>
                                             <el-col :span="4">
                                                 <div class="block">
@@ -101,9 +101,9 @@
                                                     <el-divider direction="vertical"/>
                                                     <span style="font-size: 14px">{{bookItem.bookYear}}</span>
                                                     <el-divider direction="vertical"/>
-                                                    <span style="font-size: 14px" v-html="bookItem.bookPub">{{bookItem.book_pub}}</span>
+                                                    <span style="font-size: 14px" v-html="bookItem.bookPub">{{bookItem.bookPub}}</span>
                                                     <el-divider direction="vertical"/>
-                                                    <span style="font-size: 14px" v-html="bookItem.bookIsbn">ISBN: {{bookItem.book_isbn}}</span>
+                                                    <span style="font-size: 14px" v-html="bookItem.bookIsbn">ISBN: {{bookItem.bookIsbn}}</span>
                                                     <el-divider direction="vertical"/>
                                                     <span style="font-size: 14px">评分: {{bookItem.bookRating}}</span>
                                                 </el-row>
@@ -236,26 +236,42 @@
             }
         },
         methods: {
+            // 获取系统热门书籍列表
+            getSystemHotBookInfoList() {
+                ws_axios.fetchPost1('/recommend/getRecommendSystemHot', {}).then((back) => {
+                    if (back.data.resultCode === "1") {
+                        this.$store.dispatch("saveBookListInfoHotBookInfo", back.data.recommendBookListSH)
+                    }
+                })
+            },
+
             // 获取查询结果列表
-            getSolrBookListInfo() {
+            getSolrBookInfoList() {
                 let params = {
                     'searchWord': this.$store.state.searchInfo.searchWord,
                     'pageNum': 1,
                     'pageSize': 10
                 };
                 ws_axios.fetchPost2('/solr/doSearch', params).then((back) => {
-                    if (back.data.resultCode === "0"){
-                        console.log(0);
-                        console.log(this.ifHaveResult);
-                        this.ifHaveResult = true;
-                    } else if (back.data.resultCode === "1") {
-                        console.log(1);
-                        console.log(this.ifHaveResult);
-                        console.log(back.data);
+                    if (back.data.resultCode === "1") {
                         this.itemTotal = back.data.itemTotal;
                         this.solrBookList = back.data.jsonArraySolrDocument;
                     }
                 })
+            },
+
+            // 跳转至书籍信息详情页面
+            toDetailSH(index){
+                let params = {
+                    'bookId': this.$store.state.resultInfo.bookListInfo.hotBookInfo[index].bookId,
+                    'businessId': this.$store.state.resultInfo.bookListInfo.hotBookInfo[index].businessId,
+                };
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                });
+
+                this.$router.push("/book_detail");
             },
 
             // 跳转至书籍信息详情页面
@@ -270,7 +286,6 @@
                 });
                 this.$router.push("/book_detail");
             },
-
             // 收藏书籍
             addCollect(index) {
                 let params = {
@@ -298,7 +313,6 @@
                 });
                 this.$router.push("/book_detail");
             },
-
             // 收藏书籍
             addCollectNoResult(index) {
                 let params = {
@@ -339,7 +353,8 @@
             },
         },
         created() {
-            this.getSolrBookListInfo();
+            this.getSystemHotBookInfoList();
+            this.getSolrBookInfoList();
         },
     }
 </script>
