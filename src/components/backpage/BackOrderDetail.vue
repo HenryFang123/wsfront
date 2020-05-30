@@ -11,11 +11,12 @@
             <div class="block">
                 <el-row>
                     <el-col :span="24">
-                        <el-button type="default" size="mini" @click="printOrder">打 印</el-button>
+                        <el-button size="mini" v-print="'#print'">打 印</el-button>
                     </el-col>
                 </el-row>
             </div>
-            <el-form refs="print" label-width="150px" >
+
+            <el-form id="print" label-width="150px">
                 <el-row>
                     <h3>基本信息</h3>
                     <el-col :span="12">
@@ -32,7 +33,8 @@
                         <el-form-item label="状态" style="font-weight: bold">
                             <span>
                                 <el-tag v-if="form.orderState===2" type="danger">未发货</el-tag>
-                            <el-tag v-if="form.orderState===3" type="success">已发货</el-tag>
+                                <el-tag v-if="form.orderState===3" type="success">已发货</el-tag>
+                                <el-tag v-if="form.orderState===4" type="danger">退货中</el-tag>
                             </span>
                         </el-form-item>
                     </el-col>
@@ -44,17 +46,17 @@
                     <h3>收货信息</h3>
                     <el-col :span="12">
                         <el-form-item label="收货人" style="font-weight: bold">
-                            <span>{{form.userAddress}}</span>
+                            <span>{{form.consignee}}</span>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="联系电话" style="font-weight: bold">
-                            <span>{{form.userAddress}}</span>
+                            <span>{{form.postPhone}}</span>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="收货地址" style="font-weight: bold">
-                            <span>{{form.userAddress}}</span>
+                            <span>{{form.address}}</span>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24" style="margin-bottom: 15px">
@@ -65,13 +67,13 @@
                               class="table"
                               header-cell-class-name="table-header"
                               ref="multipleTable">
-                        <el-table-column label="图书名称" property="bookName" />
-                        <el-table-column label="图片" property="bookImagePath" width="100">
+                        <el-table-column label="图书名称" property="bookName"/>
+                        <el-table-column label="图片" property="bookImagePath" width="130">
                             <template slot-scope="scope">
-                                <el-image :src="scope.row.bookImagePath" />
+                                <el-image :src="scope.row.bookImagePath"/>
                             </template>
                         </el-table-column>
-                        <el-table-column label="价格(元)" >
+                        <el-table-column label="价格(元)">
                             <template slot-scope="scope">
                                 {{scope.row.totalPrice/scope.row.bookNumber}}
                             </template>
@@ -95,8 +97,9 @@
         name: "BackOrderDetail",
         data() {
             return {
-                form:[],
-                List:[]
+                form: [],
+                List: [],
+                add: {}
             };
         },
         watch: {
@@ -115,8 +118,13 @@
                 ws_axios.fetchPost1('/order/getOrderInfoByOrderId', params).then((back) => {
                     this.List = back.data;
                     this.form = this.List[0];
-                    console.log(this.List[0].orderId);
-                    console.log(this.form)
+                    this.form.consignee = this.form.userAddress.split(" ")[0];
+                    this.form.postPhone = this.form.userAddress.split(" ")[1];
+                    this.form.address = this.form.userAddress.split(" ")[2];
+                    for (var i = 3; i < this.form.userAddress.split(" ").length; i++) {
+                        this.form.address += " " + this.form.userAddress.split(" ")[i]
+                    }
+                    console.log(this.form.address)
 
                 })
             },
@@ -130,7 +138,7 @@
 
 <style scoped>
     .block {
-        padding-bottom:25px ;
+        padding-bottom: 25px;
     }
 
     .el-form-item {

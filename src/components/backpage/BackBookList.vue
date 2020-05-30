@@ -10,12 +10,14 @@
         <div class="container" style="margin-top: 15px">
             <div class="handle-box">
                 <el-form :model="formQuery" label-width="70px" ref="form">
-                    <el-input class="handle-input mr10" placeholder="书名" v-model="formQuery.bookName"/>
-                    <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
+                    <el-input size="mini" class="handle-input mr10" placeholder="书名" v-model="formQuery.bookName"/>
+                    <el-button size="mini" @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
                 </el-form>
             </div>
             <el-table v-bind:data="List"
                       border
+                      v-loading="loading"
+                      element-loading-text="拼命加载中"
                       class="table"
                       header-cell-class-name="table-header"
                       ref="multipleTable">
@@ -130,6 +132,7 @@
         name: 'BackBookList.vue',
         data() {
             return {
+                loading: true,
                 count: 0,
                 pageSize: 5,//每页的数据条数
                 currentPage: 1,//默认开始页面
@@ -173,6 +176,7 @@
                     for(let i in this.List) {
                         this.List[i].briefDescription = this.List[i].bookDescription.substring(0,10);
                     }
+                    this.loading = false;
                     this.reload()
                 })
             },

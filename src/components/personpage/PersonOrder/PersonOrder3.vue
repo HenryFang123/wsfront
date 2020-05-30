@@ -117,7 +117,7 @@
                         this.dialogFormVisible = false;
                         let parm = {
                             'orderId':this.curOrderId,
-                            'orderInfo':'已退货：'+this.dialogForm.radio
+                            'orderInfo':this.dialogForm.radio
                         };
                         ws_axios.fetchPost1('/order/cancelOrderInfoByOrderId', parm);
                         this.$refs[formName].resetFields();

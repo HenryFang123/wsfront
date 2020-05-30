@@ -10,19 +10,21 @@
         <div class="container" style="margin-top: 15px">
             <div class="handle-box">
                 <el-form :model="formDelete" label-width="70px" ref="form">
-                    <el-input class="handle-input mr10" placeholder="订单ID" v-model="formDelete.orderId"/>
-                    <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
+                    <el-input size="mini" class="handle-input mr10" placeholder="订单ID" v-model="formDelete.orderId"/>
+                    <el-button size="mini" @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
                 </el-form>
             </div>
             <el-table v-bind:data="List"
                       border
+                      v-loading="loading"
+                      element-loading-text="拼命加载中"
                       class="table"
                       header-cell-class-name="table-header"
                       ref="multipleTable">
                 <el-table-column align="center" label="ID" prop="id" width="55">
                     <template slot-scope="scope">{{scope.$index+1}}</template>
                 </el-table-column>
-                <el-table-column label="订单ID" property="orderId" width="150">
+                <el-table-column label="订单ID" property="orderId" width="140">
                     <template slot-scope="scope">
                         <router-link :to="{path:'BackOrderDetail?orderId='+scope.row.orderId}">
                             {{scope.row.orderId}}
@@ -31,7 +33,7 @@
                 </el-table-column>
                 <el-table-column label="用户ID" prop="userId"/>
                 <el-table-column label="图书ID" property="bookId"/>
-                <el-table-column label="图书名称" property="bookName" />
+                <el-table-column label="图书名称" property="bookName"/>
                 <el-table-column label="图片" property="bookImagePath" width="130">
                     <template slot-scope="scope">
                         <el-image :src="scope.row.bookImagePath" width="110" height="150"/>
@@ -54,16 +56,13 @@
                         </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column label="状态" prop="orderInfo">
-                    <template slot-scope="scope">
-                        <el-tag v-if="scope.row.orderState===2" type="danger">未发货</el-tag>
-                        <el-tag v-if="scope.row.orderState===3" type="success">已发货</el-tag>
-                    </template>
-                </el-table-column>
+                <el-table-column label="退货原因" prop="orderInfo"/>
                 <el-table-column label="用户号码" prop="userPhone" width="110"/>
-                <el-table-column align="center" label="操作" width="180">
+                <el-table-column align="center" label="操作" width="160">
                     <template slot-scope="scope">
-                        <el-button @click.native.prevent="deleteRow(scope.$index, List)" class="red" icon="el-icon-delete" type="text">退货</el-button>
+                        <el-button @click.native.prevent="deleteRow(scope.$index, List)" class="red"
+                                   icon="el-icon-delete" type="text">同意退货
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -110,16 +109,12 @@
                                 </el-popover>
                             </template>
                         </el-table-column>
-                        <el-table-column label="状态" prop="orderInfo">
-                            <template slot-scope="scope">
-                                <el-tag v-if="scope.row.orderState===2" type="danger">未发货</el-tag>
-                                <el-tag v-if="scope.row.orderState===3" type="success">已发货</el-tag>
-                            </template>
-                        </el-table-column>
+                        <el-table-column label="退货原因" prop="orderInfo"/>
                         <el-table-column label="用户号码" prop="userPhone"/>
                         <el-table-column align="center" label="操作" width="180">
                             <template slot-scope="scope">
-                                <el-button @click="deleteSearch" class="red" icon="el-icon-delete" type="text">退货</el-button>
+                                <el-button @click="deleteSearch" class="red" icon="el-icon-delete" type="text">同意退货
+                                </el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -137,6 +132,7 @@
         name: 'BackReturnTable.vue',
         data() {
             return {
+                loading: true,
                 count: 0,
                 pageSize: 5,//每页的数据条数
                 currentPage: 1,//默认开始页面
@@ -150,7 +146,7 @@
                 formDeleteInfo: {},
                 idx: -1,
                 id: -1,
-                briefAddress:''
+                briefAddress: ''
             };
         },
         created() {
@@ -167,7 +163,7 @@
                 let params = {
                     businessId: this.$store.state.businessInfo.businessId,
                 };
-                ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
+                ws_axios.fetchPost1('/order/getReturnOrderInfoCountByBusinessId', params).then((back) => {
                     this.itemTotal = back.data;
                 });
             },
@@ -178,20 +174,22 @@
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
-                ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
+                ws_axios.fetchPost1('/order/getReturnOrderInfoListByBusinessId', params).then((back) => {
                     this.List = back.data;
-                    for(let i in this.List) {
-                        this.List[i].briefAddress = this.List[i].userAddress.substring(0,15);
+                    for (let i in this.List) {
+                        this.List[i].briefAddress = this.List[i].userAddress.substring(0, 15);
                     }
+                    this.loading = false;
                     this.reload();
                 })
             },
             deleteRow(index, rows) {
                 let params = {
                     'orderId': this.List[index].orderId,
+                    'orderInfo': "已退货：" + this.List[index].orderInfo
                 };
                 this.$confirm(
-                    "确认删除吗？",
+                    "同意退货吗？",
                     {
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",
@@ -206,10 +204,11 @@
             },
             deleteSearch() {
                 let params = {
-                    'orderId': this.formDelete.orderId
+                    'orderId': this.formDelete.orderId,
+                    'orderInfo': "已退货：" + this.QueryList[0].orderInfo
                 };
                 this.$confirm(
-                    "确认删除吗？",
+                    "同意退货吗？",
                     {
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",
@@ -227,8 +226,8 @@
                 };
                 ws_axios.fetchPost1('/order/getOrderInfoByOrderId', params).then((back) => {
                     this.QueryList = back.data;
-                    for(let i in this.QueryList) {
-                        this.QueryList[i].briefAddress = this.QueryList[i].userAddress.substring(0,15);
+                    for (let i in this.QueryList) {
+                        this.QueryList[i].briefAddress = this.QueryList[i].userAddress.substring(0, 15);
                     }
                     this.queryVisible = true
                 })

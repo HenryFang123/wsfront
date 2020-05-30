@@ -10,13 +10,15 @@
         <div class="container" style="margin-top: 15px">
             <div class="handle-box">
                 <el-form ref="form" :model="formDelete" label-width="70px"  >
-                    <el-input v-model="formDelete.bookName" placeholder="书名" class="handle-input mr10"/>
-                    <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                    <el-button type="primary" icon="el-icon-upload2" @click="handleUpload" style="float: right">上架图书</el-button>
+                    <el-input size="mini" v-model="formDelete.bookName" placeholder="书名" class="handle-input mr10"/>
+                    <el-button size="mini" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                    <el-button size="mini" type="primary" icon="el-icon-upload2" @click="handleUpload" style="float: right">上架图书</el-button>
                 </el-form>
             </div>
             <el-table v-bind:data="List"
                       border
+                      v-loading="loading"
+                      element-loading-text="拼命加载中"
                       class="table"
                       ref="multipleTable"
                       header-cell-class-name="table-header">
@@ -92,7 +94,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="180" align="center">
                         <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-delete" class="red" @click="deleteSearch">删除</el-button>
+                            <el-button type="text" icon="el-icon-delete" class="red" @click="deleteSearch">下架</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -143,6 +145,7 @@
         name: 'BackBookManageTable.vue',
         data() {
             return {
+                loading: true,
                 count: 0,
                 pageSize:5,//每页的数据条数
                 currentPage:1,//默认开始页面
@@ -187,6 +190,7 @@
                     for(let i in this.List) {
                         this.List[i].briefDescription = this.List[i].bookDescription.substring(0,10);
                     }
+                    this.loading = false;
                     this.reload()
                 })
             },

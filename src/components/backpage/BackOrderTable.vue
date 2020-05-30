@@ -9,9 +9,25 @@
         </div>
         <div class="container" style="margin-top: 15px">
             <div class="handle-box">
-                <el-form :model="formQuery" label-width="70px" ref="form">
-                    <el-input class="handle-input mr10" placeholder="订单ID" v-model="formQuery.orderId"/>
-                    <el-button @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
+                <el-row>
+                    <el-col :span="2" style=";margin-top:.5rem;">
+                        <span style="font-size:.9rem">订单状态：</span>
+                    </el-col>
+                    <el-col :span="22">
+                        <el-button size="mini" autofocus @click.native="getDataAll('All')">全部
+                            <el-tag type="warning" size="mini">{{this.allCount}}</el-tag>
+                        </el-button>
+                        <el-button size="mini" @click.native="getDataPay('Pay')">未发货
+                            <el-tag type="danger" size="mini">{{this.payCount}}</el-tag>
+                        </el-button>
+                        <el-button size="mini" @click.native="getDataSend('Send')">已发货
+                            <el-tag type="success" size="mini">{{this.sendCount}}</el-tag>
+                        </el-button>
+                    </el-col>
+                </el-row>
+                <el-form :model="formQuery" label-width="70px" ref="form" style="margin-top: 15px">
+                    <el-input size="mini" class="handle-input mr10" placeholder="订单ID" v-model="formQuery.orderId"/>
+                    <el-button size="mini" @click="handleSearch" icon="el-icon-search" type="primary">搜索</el-button>
                 </el-form>
             </div>
             <el-table v-bind:data="List"
@@ -33,7 +49,7 @@
                 </el-table-column>
                 <el-table-column label="用户ID" prop="userId"/>
                 <el-table-column label="图书ID" property="bookId"/>
-                <el-table-column label="图书名称" property="bookName" />
+                <el-table-column label="图书名称" property="bookName"/>
                 <el-table-column label="图片" property="bookImagePath" width="130">
                     <template slot-scope="scope">
                         <el-image :src="scope.row.bookImagePath" width="110" height="150"/>
@@ -65,8 +81,12 @@
                 <el-table-column label="用户号码" prop="userPhone" width="110"/>
                 <el-table-column align="center" label="操作" width="180">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.orderState===2" @click.native.prevent="ship(scope.$index, List)" icon="el-icon-circle-check" type="text">发货</el-button>
-                        <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
+                        <el-button v-if="scope.row.orderState===2" @click.native.prevent="ship(scope.$index, List)"
+                                   icon="el-icon-circle-check" type="text">发货
+                        </el-button>
+                        <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"
+                                   type="text">编辑
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -134,11 +154,16 @@
                             <el-tag v-if="scope.row.orderState===3" type="success">已发货</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="用户号码" prop="userPhone" />
+                    <el-table-column label="用户号码" prop="userPhone"/>
                     <el-table-column align="center" label="操作" width="180">
                         <template slot-scope="scope">
-                            <el-button v-if="scope.row.orderState===2" @click.native.prevent="shipSearch(scope.$index, QueryList)" icon="el-icon-circle-check" type="text">发货</el-button>
-                            <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" type="text">编辑</el-button>
+                            <el-button v-if="scope.row.orderState===2"
+                                       @click.native.prevent="shipSearch(scope.$index, QueryList)"
+                                       icon="el-icon-circle-check" type="text">发货
+                            </el-button>
+                            <el-button @click.native.prevent="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"
+                                       type="text">编辑
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -157,6 +182,10 @@
             return {
                 loading: true,
                 count: 0,
+                allCount: '',
+                payCount: '',
+                sendCount: '',
+                status: 'All',
                 pageSize: 5,//每页的数据条数
                 currentPage: 1,//默认开始页面
                 itemTotal: 0,
@@ -169,40 +198,121 @@
                 formQuery: {},
                 idx: -1,
                 id: -1,
-                briefAddress:''
+                briefAddress: ''
             };
         },
         created() {
-            this.getCount();
-            this.getData();
+            this.getCount(this.status);
+            this.getData(this.status);
+            this.getAllCount();
+            this.getPayCount();
+            this.getSendCount();
         },
         methods: {
             current_change: function (currentPage) {
                 this.currentPage = currentPage;
-                this.getData();
+                this.getData(this.status);
             },
-            getCount() {
+            getCount(status) {
                 let params = {
-                    businessId: this.$store.state.currUserInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
-                ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
-                    this.itemTotal = back.data;
-                });
+                if (status === 'All') {
+                    ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
+                        this.itemTotal = back.data;
+                    });
+                } else if (status === 'Pay') {
+                    ws_axios.fetchPost1('/order/getPayOrderInfoCountByBusinessId', params).then((back) => {
+                        this.itemTotal = back.data;
+                    });
+                } else if (status === 'Send') {
+                    ws_axios.fetchPost1('/order/getSendOrderInfoCountByBusinessId', params).then((back) => {
+                        this.itemTotal = back.data;
+                    });
+                }
             },
-            getData() {
+            getDataAll(status) {
+                this.currentPage = 1;
+                this.getData(status)
+            },
+            getDataPay(status) {
+                this.currentPage = 1;
+                this.getData(status)
+            },
+            getDataSend(status) {
+                this.currentPage = 1;
+                this.getData(status)
+
+            },
+            getData(status) {
                 let params = {
-                    businessId: this.$store.state.currUserInfo.businessId,
+                    businessId: this.$store.state.businessInfo.businessId,
                     pageIndex: this.currentPage,
                     pageSize: this.pageSize
                 };
-                ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
-                    this.List = back.data;
-                    for(let i in this.List) {
-                        this.List[i].briefAddress = this.List[i].userAddress.substring(0,15);
-                    }
-                    this.loading = false;
-                    this.reload();
-                })
+                if (status === 'All') {
+                    this.status = 'All';
+                    this.getCount(status);
+                    ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
+                        this.List = back.data;
+                        console.log(this.List)
+                        for (let i in this.List) {
+                            this.List[i].briefAddress = this.List[i].userAddress.substring(0, 15);
+                        }
+                        this.loading = false;
+                        this.reload();
+                    })
+                } else if (status === 'Pay') {
+                    this.status = 'Pay';
+                    this.getCount(status);
+                    ws_axios.fetchPost1('/order/getPayOrderInfoListByBusinessId', params).then((back) => {
+                        this.List = back.data;
+                        console.log(this.List)
+                        for (let i in this.List) {
+                            this.List[i].briefAddress = this.List[i].userAddress.substring(0, 15);
+                        }
+                        this.loading = false;
+                        this.reload();
+                    })
+                } else if (status === 'Send') {
+                    this.status = 'Send';
+                    this.getCount(status);
+                    ws_axios.fetchPost1('/order/getSendOrderInfoListByBusinessId', params).then((back) => {
+                        this.List = back.data;
+                        console.log(this.List)
+                        for (let i in this.List) {
+                            this.List[i].briefAddress = this.List[i].userAddress.substring(0, 15);
+                        }
+                        this.loading = false;
+                        this.reload();
+                    })
+                }
+
+            },
+            getAllCount(){
+                let params = {
+                    businessId: this.$store.state.businessInfo.businessId,
+                };
+                ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
+                    this.allCount = back.data;
+                    console.log(this.allCount)
+                });
+            },
+            getPayCount(){
+                let params = {
+                    businessId: this.$store.state.businessInfo.businessId,
+                };
+                ws_axios.fetchPost1('/order/getPayOrderInfoCountByBusinessId', params).then((back) => {
+                    this.payCount = back.data;
+                });
+            },
+            getSendCount(){
+                let params = {
+                    businessId: this.$store.state.businessInfo.businessId,
+                };
+                ws_axios.fetchPost1('/order/getSendOrderInfoCountByBusinessId', params).then((back) => {
+                    this.sendCount = back.data;
+                });
             },
             handleSearch() {
                 let params = {
@@ -210,8 +320,8 @@
                 };
                 ws_axios.fetchPost1('/order/getOrderInfoByOrderId', params).then((back) => {
                     this.QueryList = back.data;
-                    for(let i in this.QueryList) {
-                        this.QueryList[i].briefAddress = this.QueryList[i].userAddress.substring(0,15);
+                    for (let i in this.QueryList) {
+                        this.QueryList[i].briefAddress = this.QueryList[i].userAddress.substring(0, 15);
                     }
                     this.queryVisible = true
                 })
@@ -222,7 +332,7 @@
                 this.form = row;
                 this.editVisible = true;
             },
-            ship(index,rows){
+            ship(index, rows) {
                 let params = {
                     'orderId': this.List[index].orderId,
                 };
@@ -239,7 +349,7 @@
                     })
                 })
             },
-            shipSearch(index,rows){
+            shipSearch(index, rows) {
                 let params = {
                     'orderId': this.QueryList[index].orderId,
                 };
