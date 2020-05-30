@@ -49,7 +49,7 @@
                                                 <div :key="index" class="demo-image__placeholder"
                                                      v-for="(bookItem, index) in this.$store.state.resultInfo.bookListInfo.hotBookInfo">
                                                     <div class="block"
-                                                         style="text-align: center; margin-top: 10px; padding: 0; border-bottom: 1px solid #e9e9eb;" ">
+                                                         style="text-align: center; margin-top: 10px; padding: 0; border-bottom: 1px solid #e9e9eb;">
                                                         <el-image @click="toDetailSH(index)"
                                                                   style="height: 150px; width: 130px;cursor: pointer;"
                                                                   v-bind:src="bookItem.bookImagePath"/>
@@ -59,7 +59,7 @@
                                                                   style="font-family:Arial;">￥{{bookItem.bookPrice}}</span>
                                                         </div>
                                                         <div class="goods-show-detail">
-                                                            <span>{{bookItem.bookName}}</span>
+                                                            <span>{{bookItem.bookName | ellipsisName}}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -76,8 +76,8 @@
                                         <span style="font-size: 15px;"> ”相关的商品，为您推荐以下商品 ...</span>
                                     </div>
                                     <!--每一件图书的可定义样式-->
-                                    <div :key="index" class="show_book-main-main-no_result_list"
-                                         v-for="(bookItem, index) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS" v-show="ifHaveResult">
+                                    <div :key="'no-result-' + sIndex" class="show_book-main-main-no_result_list"
+                                         v-for="(bookItem, sIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS" v-show="ifHaveResult">
                                         <el-row>
                                             <el-col :span="4">
                                                 <div class="block">
@@ -87,7 +87,7 @@
                                             </el-col>
                                             <el-col :span="20" style="text-align: left">
                                                 <el-row>
-                                                    <el-link @click="toDetail(index)" style="font-size: 24px; font-weight: bold; text-underline: none;">{{bookItem.bookName}}
+                                                    <el-link @click="toDetail(sIndex)" style="font-size: 24px; font-weight: bold; text-underline: none;">{{bookItem.bookName | ellipsisName}}
                                                     </el-link>
                                                 </el-row>
                                                 <el-row
@@ -96,7 +96,7 @@
                                                 </el-row>
                                                 <el-row>
                                                     <span style="font-size: 14px">
-                                                        {{bookItem.bookAuthor}}
+                                                        {{bookItem.bookAuthor | ellipsisAuthor}}
                                                     </span>
                                                     <el-divider direction="vertical"/>
                                                     <span style="font-size: 14px">{{bookItem.bookYear}}</span>
@@ -111,10 +111,10 @@
                                                     <p style="font-size: 14px">{{bookItem.bookDescription}} </p>
                                                 </el-row>
                                                 <el-row style="margin-top: 10px; margin-bottom: 10px;">
-                                                    <el-button @click="toDetailNoResult(index)" type="danger">
+                                                    <el-button @click="toDetailNoResult(sIndex)" type="danger">
                                                         加入购物车
                                                     </el-button>
-                                                    <el-button @click="addCollectNoResult(index)" plain
+                                                    <el-button @click="addCollectNoResult(sIndex)" plain
                                                                style=" margin-left:20px;" type="danger">
                                                         收藏本书
                                                     </el-button>
@@ -122,8 +122,8 @@
                                             </el-col>
                                         </el-row>
                                     </div>
-                                    <div :key="index" class="show_book-main-main-list"
-                                         v-for="(bookItem, index) in solrBookList" v-show="!ifHaveResult">
+                                    <div :key="'result-' + solrIndex" class="show_book-main-main-list"
+                                         v-for="(bookItem, solrIndex) in solrBookList" v-show="!ifHaveResult">
                                         <el-row>
                                             <el-col :span="4">
                                                 <div class="block">
@@ -135,8 +135,8 @@
                                                 <el-row>
                                                     <span class="tag"
                                                           style="margin-right: 10px;font-size: 14px;padding: 3px 4px;border-radius: 3px;background-color:#e4393c;color:#fff;">{{bookItem.book_type_name}}</span>
-                                                    <el-link @click="toDetail(index)" style="font-size: 24px; font-weight: bold; text-underline: none;"
-                                                             v-html="bookItem.book_name">{{bookItem.book_name}}
+                                                    <el-link @click="toDetail(solrIndex)" style="font-size: 24px; font-weight: bold; text-underline: none;"
+                                                             v-html="bookItem.book_name">{{bookItem.book_name | ellipsisName}}
                                                     </el-link>
                                                 </el-row>
                                                 <el-row
@@ -145,7 +145,7 @@
                                                 </el-row>
                                                 <el-row>
                                                     <span style="font-size: 14px" v-html="bookItem.book_author">
-                                                        {{bookItem.book_author}}
+                                                        {{bookItem.book_author | ellipsisAuthor}}
                                                     </span>
                                                     <el-divider direction="vertical"/>
                                                     <span style="font-size: 14px">{{bookItem.book_year}}</span>
@@ -160,10 +160,10 @@
                                                     <p style="font-size: 14px">{{bookItem.book_description}} </p>
                                                 </el-row>
                                                 <el-row style="margin-top: 10px; margin-bottom: 10px;">
-                                                    <el-button @click="toDetail(index)" type="danger">
+                                                    <el-button @click="toDetail(solrIndex)" type="danger">
                                                         加入购物车
                                                     </el-button>
-                                                    <el-button @click="addCollect(index)" plain
+                                                    <el-button @click="addCollect(solrIndex)" plain
                                                                style=" margin-left:20px;" type="danger">
                                                         收藏本书
                                                     </el-button>
@@ -235,6 +235,25 @@
                 },
             }
         },
+        filters: {
+            // 设置书名超长显示内容
+            ellipsisName(value) {
+                if (value.length > 9){
+                    return value.slice(0,9) + '...';
+                } else {
+                    return value;
+                }
+            },
+
+            // 设置作者名超长显示内容
+            ellipsisAuthor(value) {
+                if (value.length > 11){
+                    return value.slice(0,11) + '...';
+                } else {
+                    return value;
+                }
+            },
+        },
         methods: {
             // 获取系统热门书籍列表
             getSystemHotBookInfoList() {
@@ -256,6 +275,8 @@
                     if (back.data.resultCode === "1") {
                         this.itemTotal = back.data.itemTotal;
                         this.solrBookList = back.data.jsonArraySolrDocument;
+                    } else {
+                        this.ifHaveResult = true;
                     }
                 })
             },
@@ -269,9 +290,8 @@
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                    this.$router.push("/book_detail");
                 });
-
-                this.$router.push("/book_detail");
             },
 
             // 跳转至书籍信息详情页面
@@ -280,11 +300,12 @@
                     'bookId': this.solrBookList[index].book_id,
                     'businessId': this.solrBookList[index].business_id,
                 };
+
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                    this.$router.push("/book_detail");
                 });
-                this.$router.push("/book_detail");
             },
             // 收藏书籍
             addCollect(index) {
@@ -304,20 +325,21 @@
             // 跳转至书籍信息详情页面
             toDetailNoResult(index) {
                 let params = {
-                    'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].bookId,
-                    'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].businessId,
+                    'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].bookId,
+                    'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].businessId,
                 };
+
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                    this.$router.push("/book_detail");
                 });
-                this.$router.push("/book_detail");
             },
             // 收藏书籍
             addCollectNoResult(index) {
                 let params = {
                     'userId': this.$store.state.currUserInfo.userId,
-                    'userStarId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookList[index].bookId,
+                    'userStarId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].bookId,
                     'userStarTag': 0
                 };
                 ws_axios.fetchPost1('/userStar/insertUserStar', params).then((back) => {

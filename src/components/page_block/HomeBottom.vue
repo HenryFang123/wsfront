@@ -6,8 +6,8 @@
             </el-divider>
         </div>
         <div class="home-main-middle-bottom-book">
-            <el-tabs v-if="ifShowTags">
-                <el-tab-pane :key="itemIndex" v-for="(item, itemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM" >
+            <el-tabs type="border-card" v-show="ifShowTags" style="margin-top: 40px;">
+                <el-tab-pane :key="'mahout-recommend-' + itemIndex" v-for="(item, itemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM" >
                     <span style="font-size: 15px;" slot="label">{{item.bookTypeName}}</span>
                     <div class="list_block">
                         <el-row>
@@ -20,10 +20,10 @@
                                         <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
                                     </div>
                                     <div class="book_title">
-                                        <a>{{bookItem.bookName}}</a>
+                                        <a>{{bookItem.bookName | ellipsisName}}</a>
                                     </div>
                                     <div class="book_author">
-                                        <a>{{bookItem.bookAuthor}}</a>
+                                        <a>{{bookItem.bookAuthor | ellipsisAuthor}}</a>
                                     </div>
                                     <div class="book_price">
                                         <a>￥{{bookItem.bookPrice}}</a>
@@ -33,30 +33,30 @@
                         </el-row>
                     </div>
                 </el-tab-pane>
-                <div class="list_block">
-                    <el-row>
-                        <el-col :key="bookItemIndex"
-                                :offset="1"
-                                :span="4"
-                                v-for="(bookItem, bookItemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS">
-                            <div class="book_card" @click="toDetailS(bookItemIndex)">
-                                <div class="book_img">
-                                    <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
-                                </div>
-                                <div class="book_title">
-                                    <a>{{bookItem.bookName}}</a>
-                                </div>
-                                <div class="book_author">
-                                    <a>{{bookItem.bookAuthor}}</a>
-                                </div>
-                                <div class="book_price">
-                                    <a>￥{{bookItem.bookPrice}}</a>
-                                </div>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </div>
             </el-tabs>
+            <div class="list_block">
+                <el-row>
+                    <el-col :key="'system-recommend-' + bookItemIndex"
+                            :offset="1"
+                            :span="4"
+                            v-for="(bookItem, bookItemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS">
+                        <div class="book_card" @click="toDetailS(bookItemIndex)">
+                            <div class="book_img">
+                                <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
+                            </div>
+                            <div class="book_title">
+                                <a>{{bookItem.bookName | ellipsisName}}</a>
+                            </div>
+                            <div class="book_author">
+                                <a>{{bookItem.bookAuthor | ellipsisAuthor}}</a>
+                            </div>
+                            <div class="book_price">
+                                <a>￥{{bookItem.bookPrice}}</a>
+                            </div>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
         </div>
     </div>
 </template>
@@ -68,24 +68,44 @@
         name: "HomeBottom.vue",
         data() {
             return {
-                ifShowTags: false,
+                ifShowTags: true,
             }
         },
+        filters: {
+            // 设置书名超长显示内容
+            ellipsisName(value) {
+                if (value.length > 9){
+                    return value.slice(0,9) + '...';
+                } else {
+                    return value;
+                }
+            },
+
+            // 设置作者名超长显示内容
+            ellipsisAuthor(value) {
+                if (value.length > 11){
+                    return value.slice(0,11) + '...';
+                } else {
+                    return value;
+                }
+            },
+        },
         methods: {
-            getRecommendBookInfoOfCurrentUser: function () {
+            getRecommendBookInfoOfCurrentUser () {
                 let params = {
                     'userId': this.$store.state.currUserInfo.userId,
                 };
-                ws_axios.fetchPost1('recommend/getRecommendMahoutByUserId', params).then((back) => {
+
+                ws_axios.fetchPost1('/recommend/getRecommendMahoutByUserId', params).then((back) => {
                     if (back.data.resultCode === "1") {
                         this.$store.dispatch("saveHomeInfoBottomInfoBookListM", back.data.recommendBookListM);
                     } else {
-                        this.ifShowTags = true;
+                        this.ifShowTags = false;
                     }
                 });
-                ws_axios.fetchPost1('recommend/getRecommendSystem', params).then((back) => {
+
+                ws_axios.fetchPost1('/recommend/getRecommendSystem',{}).then((back) => {
                     if (back.data.resultCode === "1") {
-                        this.ifShowTags = true;
                         this.$store.dispatch("saveHomeInfoBottomInfoBookListS", back.data.recommendBookListS);
                     }
                 });
@@ -97,11 +117,12 @@
                     'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM[index1].bookRecommend[index2].bookId,
                     'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM[index1].bookRecommend[index2].businessId,
                 };
+
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                    this.$router.push("/book_detail");
                 });
-                this.$router.push("/book_detail");
             },
             // 跳转至书籍信息详情页面
             toDetailS: function (index) {
@@ -109,14 +130,15 @@
                     'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].bookId,
                     'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].businessId,
                 };
+
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                    this.$router.push("/book_detail");
                 });
-                this.$router.push("/book_detail");
             },
         },
-        mounted() {
+        created() {
             this.getRecommendBookInfoOfCurrentUser();
         }
     }

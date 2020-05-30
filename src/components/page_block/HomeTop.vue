@@ -54,7 +54,7 @@
                                          v-for="(ratingSortItem,index) in this.$store.state.resultInfo.homeInfo.topInfo.bookList">
                                         <el-row>
                                             <el-col :span="19">
-                                                <span>{{ratingSortItem.bookName}}</span>
+                                                <span>{{ratingSortItem.bookName | ellipsisName}}</span>
                                             </el-col>
                                             <el-col :span="5">
                                                 <span>评分:{{ratingSortItem.bookRating}}</span>
@@ -500,21 +500,32 @@
 
             // 获取后端系统排行推荐的信息
             getSystemSortRecommend: function () {
-                let params = {};
-                ws_axios.fetchGet2('redis/getSystemSortList', params).then((back) => {
+                ws_axios.fetchPost2('redis/getSystemSortList',{}).then((back) => {
                     this.$store.dispatch("saveHomeInfoTopInfoBookList", back.data);
                 })
             }
         },
         mounted() {
             // 首页图书分类, 弹出框显示高度起始、长度起始设置
-            this.getSystemSortRecommend();
             this.$refs.itemPanel.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
             this.$refs.itemPanel.style.top = this.$refs.menuSide.offsetTop + 'px';
         },
         updated() {
             this.$refs.itemPanel.style.left = this.$refs.menuSide.offsetLeft + this.$refs.menuSide.offsetWidth + 'px';
             this.$refs.itemPanel.style.top = this.$refs.menuSide.offsetTop + 'px';
+        },
+        created() {
+            this.getSystemSortRecommend();
+        },
+        filters: {
+            // 设置书名超长显示内容
+            ellipsisName(value) {
+                if (value.length > 11){
+                    return value.slice(0,11) + '...';
+                } else {
+                    return value;
+                }
+            },
         },
     }
 </script>

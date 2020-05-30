@@ -14,7 +14,7 @@
                     </div>
                     <div class="business_recommend_info">
               <span>
-                <span class="business_recommend_num">{{index + 1}}</span> 热销{{bookItem.bookNumber}}件</span>
+                <span class="business_recommend_num">{{index + 1}}</span> 评分: {{bookItem.bookRating}}</span>
                         <span class="business_recommend_price">￥{{bookItem.bookPrice}}</span>
                     </div>
                 </div>
@@ -123,10 +123,7 @@
                                             <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
                                         </div>
                                         <div class="book_title">
-                                            <a>{{bookItem.title}}</a>
-                                        </div>
-                                        <div class="book_author">
-                                            <a>{{bookItem.author}}</a>
+                                            <a>{{bookItem.title | ellipsisName}}</a>
                                         </div>
                                         <div class="book_price">
                                             <a>￥{{bookItem.price}}</a>
@@ -182,6 +179,16 @@
                 neo4jBookList: [],
             };
         },
+        filters: {
+            // 设置书名超长显示内容
+            ellipsisName(value) {
+                if (value.length > 9){
+                    return value.slice(0,9) + '...';
+                } else {
+                    return value;
+                }
+            },
+        },
         methods: {
             numToString(val){
                 val = val.toString();
@@ -199,7 +206,7 @@
             },
 
             // 获取店铺热门的推荐
-            getBusinessHotRecommend(val) {
+            getBusinessHotRecommend() {
                 let params = {
                     'businessId': this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessId
                 };
@@ -223,7 +230,7 @@
                     'pageNum': 0,
                     'pageSize': 6
                 };
-                ws_axios.fetchGet2(urlList[val], params).then((back) => {
+                ws_axios.fetchPost2(urlList[val], params).then((back) => {
                     if (back.data.resultCode === "1") {
                         this.neo4jBookList = back.data.bookList;
                     }
@@ -284,6 +291,7 @@
             },
         },
         created() {
+            this.getBusinessHotRecommend();
             this.getBookCommentAnalyse();
             this.getBookCommentList();
             this.getNeo4jBookRecommendInfo(0);
