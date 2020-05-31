@@ -76,6 +76,11 @@ const routes = [
             {
                 path: '/PersonOrder4',
                 component: () => import('components/personpage/PersonOrder/PersonOrder4'),
+                meta: {title: '待确认'}
+            },
+            {
+                path: '/PersonOrder0',
+                component: () => import('components/personpage/PersonOrder/PersonOrder0'),
                 meta: {title: '历史订单'}
             },
             {

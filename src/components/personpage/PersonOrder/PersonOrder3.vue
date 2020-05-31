@@ -44,6 +44,9 @@
                                     <el-radio   label="7天无理由退换货">7天无理由退换货</el-radio><br/>
                                     <el-radio   label="大小尺寸与商品描述不符" style="margin-top: 10px;">大小尺寸与商品描述不符</el-radio><br/>
                                     <el-radio   label="颜色/图案与商品描述不符" style="margin-top: 10px;">颜色/图案与商品描述不符</el-radio><br/>
+                                    <el-radio   label="卖家发错货" style="margin-top: 10px;">卖家发错货</el-radio><br/>
+                                    <el-radio   label="假冒品牌" style="margin-top: 10px;">假冒品牌</el-radio><br/>
+                                    <el-radio   label="收到商品少件/破损或污渍" style="margin-top: 10px;">收到商品少件/破损或污渍</el-radio><br/>
                                     <el-radio   label="材质与商品描述不符" style="margin-top: 10px;">材质与商品描述不符</el-radio><br/>
                                     <el-radio   label="做工粗糙/有瑕疵" style="margin-top: 10px;">做工粗糙/有瑕疵</el-radio>
                                 </el-radio-group>
@@ -121,6 +124,7 @@
                         };
                         ws_axios.fetchPost1('/order/cancelOrderInfoByOrderId', parm);
                         this.$refs[formName].resetFields();
+                        this.$message.success("已提交退货单!");
                     } else {
                         return false;
                     }

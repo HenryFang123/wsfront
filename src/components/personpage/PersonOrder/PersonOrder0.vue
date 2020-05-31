@@ -1,18 +1,25 @@
 <template>
     <div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px;" >
             <div class="info-box">
                 <div class="info-header">
-                    <span>退货中的订单</span>
+                    <span>历史订单</span>
                 </div>
             </div>
-            <div class="container" style="margin-top: 15px" v-if="this.cancelledList.length >0">
+            <div class="container" style="margin-top: 15px" v-if="this.DoneList.length >0">
                 <div class="handle-box">
                     <el-table
-                        :data="this.cancelledList"
+                        :data="this.DoneList"
                         style="width: 100%"
-                        :row-style="{background:'#B1E7E7'}"
+                        stripe
+                        :default-sort = "{prop: 'createTime', order: 'descending'}"
                         max-height="642">
+                        <el-table-column prop="createTime" label="日期" width="180" align="center" sortable>
+                            <template slot-scope="scope">
+                                <i class="el-icon-time"/>
+                                <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="orderId" label="订单号" width="140" align="center"/>
                         <el-table-column prop="bookImagePath" label="图片" width="100" align="center">
                             <template slot-scope="scope">
@@ -22,7 +29,12 @@
                         <el-table-column prop="bookName" label="书名" width="170" align="center"/>
                         <el-table-column prop="bookNumber" label="数量" width="80" align="center"/>
                         <el-table-column prop="totalPrice" label="总价（元）" width="100" align="center"/>
-                        <el-table-column prop="orderInfo" label="退货申请信息" align="center"/>
+                        <el-table-column prop="userAddress" label="收货信息" align="center"/>
+                        <el-table-column prop="orderInfo" label="状态" width="160" align="center"
+                                         :filters="[{ text: '已完成', value: '已完成' },{ text: '已取消', value: '已取消' },{ text: '已退货', value: '已退货' }]"
+                                         :filter-method="filterInfo">
+                        </el-table-column>
+
                     </el-table>
                 </div>
             </div>
@@ -31,7 +43,7 @@
                     title="提示"
                     :visible.sync="dialogVisible"
                     width="30%">
-                    <span>没有退货中的订单</span>
+                    <span>没有历史订单</span>
                     <span slot="footer" class="dialog-footer">
                         <el-button @click="dialogVisible = false">取 消</el-button>
                         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -45,20 +57,22 @@
     import ws_axios from "network/ws_axios";
 
     export default {
-        name: "PersonOrder4.vue",
+        name: "PersonOrder0.vue",
         data() {
             return {
-                cancelledList: [],
-                dialogVisible:true,
+                DoneList: [],
+                dialogVisible:true
             }
         },
         created() {
-            ws_axios.fetchPost1('/order/getCancelOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
-                this.cancelledList = back.data;
-                console.log(back.data)
+            ws_axios.fetchPost1('/order/getDoneOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
+                this.DoneList = back.data;
             });
         },
-        methods:{
+        methods: {
+            filterInfo(value, row){
+                 return  row.orderInfo.substring(0,3) === value
+            }
         }
     }
 </script>
@@ -93,5 +107,4 @@
         font-size: 18px;
 
     }
-
 </style>
