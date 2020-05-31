@@ -11,6 +11,7 @@ export default new Vuex.Store({
       webImg: {
           wsLogo: "http://image.nicezza.online/web_img/ws_logo.png",
           homeBottomDjtj: "http://image.nicezza.online/web_img/home_bottom_djtj.jpg",
+          homeBottomXttj: "http://image.nicezza.online/web_img/home_bottom_xttj.jpg",
       },
 
       // 书籍分类信息

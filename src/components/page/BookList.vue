@@ -258,10 +258,8 @@
             // 获取系统热门书籍列表
             getSystemHotBookInfoList() {
                 ws_axios.fetchPost1('/recommend/getRecommendSystemHot', {}).then((back) => {
-                    if (back.data.resultCode === "1") {
-                        this.$store.dispatch("saveBookListInfoHotBookInfo", back.data.recommendBookListSH)
-                    }
-                })
+                    this.$store.dispatch("saveBookListInfoHotBookInfo", back.data)
+                });
             },
 
             // 获取查询结果列表
@@ -366,6 +364,7 @@
                 ws_axios.fetchPost2('/solr/doSearch', params).then((back) => {
                     if (back.data.resultCode === "1") {
                         this.solrBookList = back.data.jsonArraySolrDocument;
+                        document.documentElement.scrollTop=192;
                     }
                 })
             },

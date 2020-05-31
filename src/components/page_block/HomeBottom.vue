@@ -1,23 +1,23 @@
 <template>
     <div class="home-main-middle-bottom">
-        <div class="home-main-middle-bottom-top">
-            <el-divider content-position="left">
-                <el-image style="height: 50px; width: 125px;" v-bind:src="this.$store.state.webImg.homeBottomDjtj"/>
-            </el-divider>
-        </div>
         <div class="home-main-middle-bottom-book">
-            <el-tabs type="border-card" v-show="ifShowTags" style="margin-top: 40px;">
-                <el-tab-pane :key="'mahout-recommend-' + itemIndex" v-for="(item, itemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM" >
-                    <span style="font-size: 15px;" slot="label">{{item.bookTypeName}}</span>
-                    <div class="list_block">
+            <div class="list_block" v-if="ifShowTags">
+                <el-divider content-position="left">
+                    <el-image style="height: 50px; width: 125px;" v-bind:src="this.$store.state.webImg.homeBottomDjtj"/>
+                </el-divider>
+                <el-tabs style="margin-top: 40px;" type="border-card" :stretch=true>
+                    <el-tab-pane :key="'mahout-recommend-' + itemIndex"
+                                 v-for="(item, itemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM">
+                        <span slot="label" style="font-size: 17px; margin-left: 20px; margin-right: 20px;">{{item.bookTypeName}}</span>
                         <el-row>
-                            <el-col :key="bookItemIndex"
+                            <el-col :key="'mahout-recommend-list-' + bookItemIndex"
                                     :offset="1"
                                     :span="4"
                                     v-for="(bookItem, bookItemIndex) in item.bookRecommend">
-                                <div class="book_card" @click="toDetailM(itemIndex, bookItemIndex)">
+                                <div @click="toDetailM(itemIndex, bookItemIndex)" class="book_card">
                                     <div class="book_img">
-                                        <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
+                                        <el-image style="width: 100px; height: 130px;"
+                                                  v-bind:src="bookItem.bookImagePath"/>
                                     </div>
                                     <div class="book_title">
                                         <a>{{bookItem.bookName | ellipsisName}}</a>
@@ -31,16 +31,19 @@
                                 </div>
                             </el-col>
                         </el-row>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
-            <div class="list_block">
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+            <div class="list_block_2">
+                <el-divider content-position="left">
+                    <el-image style="height: 50px; width: 125px;" v-bind:src="this.$store.state.webImg.homeBottomXttj"/>
+                </el-divider>
                 <el-row>
                     <el-col :key="'system-recommend-' + bookItemIndex"
                             :offset="1"
                             :span="4"
                             v-for="(bookItem, bookItemIndex) in this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS">
-                        <div class="book_card" @click="toDetailS(bookItemIndex)">
+                        <div @click="toDetailS(bookItemIndex)" class="book_card">
                             <div class="book_img">
                                 <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
                             </div>
@@ -68,14 +71,14 @@
         name: "HomeBottom.vue",
         data() {
             return {
-                ifShowTags: true,
+                ifShowTags: false,
             }
         },
         filters: {
             // 设置书名超长显示内容
             ellipsisName(value) {
-                if (value.length > 9){
-                    return value.slice(0,9) + '...';
+                if (value.length > 9) {
+                    return value.slice(0, 9) + '...';
                 } else {
                     return value;
                 }
@@ -83,28 +86,29 @@
 
             // 设置作者名超长显示内容
             ellipsisAuthor(value) {
-                if (value.length > 11){
-                    return value.slice(0,11) + '...';
+                if (value.length > 11) {
+                    return value.slice(0, 11) + '...';
                 } else {
                     return value;
                 }
             },
         },
         methods: {
-            getRecommendBookInfoOfCurrentUser () {
+            getRecommendBookInfoOfCurrentUser() {
                 let params = {
                     'userId': this.$store.state.currUserInfo.userId,
                 };
 
                 ws_axios.fetchPost1('/recommend/getRecommendMahoutByUserId', params).then((back) => {
                     if (back.data.resultCode === "1") {
+                        this.ifShowTags = true;
                         this.$store.dispatch("saveHomeInfoBottomInfoBookListM", back.data.recommendBookListM);
                     } else {
                         this.ifShowTags = false;
                     }
                 });
 
-                ws_axios.fetchPost1('/recommend/getRecommendSystem',{}).then((back) => {
+                ws_axios.fetchPost1('/recommend/getRecommendSystem', {}).then((back) => {
                     if (back.data.resultCode === "1") {
                         this.$store.dispatch("saveHomeInfoBottomInfoBookListS", back.data.recommendBookListS);
                     }
@@ -112,7 +116,7 @@
             },
 
             // 跳转至书籍信息详情页面
-            toDetailM: function (index1, index2) {
+            toDetailM(index1, index2) {
                 let params = {
                     'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM[index1].bookRecommend[index2].bookId,
                     'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM[index1].bookRecommend[index2].businessId,
@@ -125,7 +129,7 @@
                 });
             },
             // 跳转至书籍信息详情页面
-            toDetailS: function (index) {
+            toDetailS(index) {
                 let params = {
                     'bookId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].bookId,
                     'businessId': this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].businessId,
@@ -152,18 +156,18 @@
         text-align: left;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-top {
-        margin: 0 auto;
-        width: 100%;
-    }
-
     .home-main-middle-bottom .home-main-middle-bottom-book {
         margin: 0 auto;
         width: 100%;
         position: relative;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block {
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row {
         margin: 0 auto;
         padding: 0;
         /*text-align: left;*/
@@ -172,31 +176,30 @@
         flex-wrap: wrap;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col {
         margin: 0 auto;
         padding: 0;
         height: 100%;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card {
         margin: 0 auto;
         padding: 0;
         width: 100%;
-        border-left: 1px solid #e9e9eb;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card:hover {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card:hover {
         box-shadow: 0 0 4px #ccc;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card .book_img {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card .book_img {
         margin: 20px auto;
         padding: 0;
         width: 100%;
         text-align: center;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card .book_title {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card .book_title {
         margin-top: 5px;
         margin-left: 50px;
         margin-right: 20px;
@@ -205,7 +208,7 @@
         text-align: left;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card .book_author {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card .book_author {
         margin-top: 5px;
         margin-left: 50px;
         margin-right: 20px;
@@ -215,7 +218,74 @@
         text-align: left;
     }
 
-    .home-main-middle-bottom .home-main-middle-bottom-book .el-row .el-col .book_card .book_price {
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card .book_price {
+        margin-top: 5px;
+        margin-left: 50px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #f56c6c;
+        padding: 0;
+        text-align: left;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 {
+        margin: 50px auto;
+        width: 100%;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row {
+        margin: 0 auto;
+        padding: 0;
+        /*text-align: left;*/
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col {
+        margin: 0 auto;
+        padding: 0;
+        height: 100%;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card {
+        margin: 0 auto;
+        padding: 0;
+        width: 100%;
+        border-left: 1px solid #e9e9eb;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card:hover {
+        box-shadow: 0 0 4px #ccc;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card .book_img {
+        margin: 20px auto;
+        padding: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card .book_title {
+        margin-top: 5px;
+        margin-left: 50px;
+        margin-right: 20px;
+        font-size: 13px;
+        padding: 0;
+        text-align: left;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card .book_author {
+        margin-top: 5px;
+        margin-left: 50px;
+        margin-right: 20px;
+        font-size: 12px;
+        color: #999999;
+        padding: 0;
+        text-align: left;
+    }
+
+    .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card .book_price {
         margin-top: 5px;
         margin-left: 50px;
         font-size: 14px;

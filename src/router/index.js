@@ -9,6 +9,7 @@ const person_page = () => import('components/page/PersonPage');
 const shop_car = () => import('components/page/ShopCar');
 const settlement_page = () => import('components/page/SettlementPage');
 const to_list = () => import('components/jump/ToList');
+const to_detail = () => import('components/jump/ToDetail');
 const book_list = () => import('components/page/BookList');
 const book_detail = () => import('components/page/BookDetail');
 const business_page = () => import('components/page/BusinessPage');
@@ -111,6 +112,11 @@ const routes = [
         path: '/book_list',
         component: book_list,
         meta: {title: '查询...'}
+    },
+
+    {
+        path: '/to_detail',
+        component: to_detail
     },
 
     {

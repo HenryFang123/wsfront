@@ -10,17 +10,17 @@
                 <el-col :span="6" :key="index" v-for="(businessItem, index) in starBusiness">
                     <div class="star_business_block">
                         <el-row :gutter="10">
-                            <el-col :span="11">
-                                <el-image v-bind:src="businessItem.businessImagePath" style="width: 160px; height: 64px; margin-top: 7px;"/>
+                            <el-col :span="12">
+                                <el-image v-bind:src="businessItem.businessImagePath" style="width: 150px; height: 60px; margin-top: 7px;"/>
                             </el-col>
-                            <el-col :span="13">
-                                <p><span style="font-size: 18px; font-weight: bold">{{businessItem.businessName}}</span></p>
+                            <el-col :span="12">
+                                <p><span style="font-size: 18px; font-weight: bold; margin-left: 2px;">{{businessItem.businessName | ellipsisBusinessName}}</span></p>
                                 <el-row :gutter="20" style="margin-top: 10px;">
-                                    <el-col :span="12">
-                                        <el-button type="info" plain @click="saveBusinessInfoToBusinessPage(index)">进入店铺</el-button>
+                                    <el-col :span="10">
+                                        <el-button style="margin: 10px 2px 0; padding: 4px;" type="info" plain @click="saveBusinessInfoToBusinessPage(index)">进入店铺</el-button>
                                     </el-col>
-                                    <el-col :span="12">
-                                        <el-button type="primary" @click="openBox(index)">取消收藏</el-button>
+                                    <el-col :span="10">
+                                        <el-button style="margin: 10px 10px 0; padding: 4px;" type="primary" @click="openBox(index)">取消收藏</el-button>
                                     </el-col>
                                 </el-row>
                             </el-col>
@@ -41,6 +41,16 @@
             return {
                 starBusiness: [],
             }
+        },
+        filters: {
+            // 设置店铺名超长显示内容
+            ellipsisBusinessName(value) {
+                if (value.length > 9) {
+                    return value.slice(0, 9) + '...';
+                } else {
+                    return value;
+                }
+            },
         },
         methods: {
             // 获取用户收藏店铺信息
@@ -64,6 +74,7 @@
                     'userStarId': this.starBusiness[index].businessId,
                 };
                 ws_axios.fetchPost1('/userStar/updateUserStar', params).then((back) => {
+                    this.getCurrUserStarBusinesses();
                 });
             },
             // 打开消息框
@@ -74,7 +85,6 @@
                     type: 'warning'
                 }).then(() => {
                     this.deleteCurrUserStarBusiness(index);
-                    this.getCurrUserStarBusinesses();
                     this.$message({
                         type: 'success',
                         message: '删除成功!'

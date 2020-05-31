@@ -5,16 +5,16 @@
                 <p>店铺热销</p>
             </div>
             <div class="business_recommend_book">
-                <div :key="index"
+                <div :key="'bh-' + index"
                      class="business_recommend_list"
+                     v-if="businessBookList !== undefined"
                      v-for="(bookItem, index) in this.businessBookList">
                     <div class="business_recommend_image">
                         <el-image style="height: 150px; width: 130px;cursor: pointer;"
                                   v-bind:src="bookItem.bookImagePath" @click="toDetailBH(index)"/>
                     </div>
                     <div class="business_recommend_info">
-              <span>
-                <span class="business_recommend_num">{{index + 1}}</span> 评分: {{bookItem.bookRating}}</span>
+                        <span><span class="business_recommend_num">{{index + 1}}</span> 评分: {{bookItem.bookRating}}</span>
                         <span class="business_recommend_price">￥{{bookItem.bookPrice}}</span>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                                 </el-row>
                                 <el-row
                                     style="text-align: left; margin-left: 30px; margin-top: 3px; margin-bottom: 30px;">
-                                    <p><span style="color: #527722;margin-left: 0">内容简介  · · · · · ·</span></p>
+                                    <p><span style="color: #527722; margin-left: 0">内容简介  · · · · · ·</span></p>
                                     <p><span style="margin-left: 20px">{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookDescription}}</span>
                                     </p>
                                 </el-row>
@@ -52,59 +52,48 @@
                         </el-tab-pane>
                         <el-tab-pane name="second">
                             <span slot="label">商品评价</span>
-<!--                            <div class="remarks-container">-->
-<!--                                <div class="remarks-analyse-box">-->
-<!--                                    <div class="remarks-analyse-goods">-->
-<!--                                        <el-progress :width="110" :stroke-width="15" stroke-linecap="butt"  type="circle" :percentage="this.bookRemarkSum.goodRating" :color="progressColors">-->
-<!--                                            <span class="remarks-analyse-num">{{this.bookRemarkSum.goodRating}}%</span>-->
-<!--                                            <p class="remarks-analyse-title">好评率</p>-->
-<!--                                        </el-progress>-->
-<!--                                    </div>-->
-<!--                                    <div class="remarks-analyse-tags">-->
-<!--                                        <el-tag checkable :color="tagsColor[index % 4]" v-for="(item, index) in remarksTags" :key="index">{{item}}</el-tag>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="remarks-bar">-->
-<!--                                    <span>好评({{this.bookRemarkSum.remarksNumList[0]}})</span>-->
-<!--                                    <span>中评({{this.bookRemarkSum.remarksNumList[1]}})</span>-->
-<!--                                    <span>差评({{this.bookRemarkSum.remarksNumList[2]}})</span>-->
-<!--                                </div>-->
-<!--                                <div class="remarks-box" v-for="(bookCommentItem, bookCommentIndex) in bookCommentList" :key="bookCommentIndex">-->
-<!--                                    <div class="remarks-user">-->
-<!--                                        <el-avatar icon="el-icon-user-solid" />-->
-<!--                                        <span class="remarks-user-name">{{bookCommentItem.userId}}</span>-->
-<!--                                    </div>-->
-<!--                                    <div class="remarks-content-box">-->
-<!--                                        <p>-->
-<!--                                            <el-rate disabled :value="bookCommentItem.rating" class="remarks-star" show-score text-color="#ff9900" score-template="{{bookCommentItem.values}}"/>-->
-<!--                                        </p>-->
-<!--                                        <p class="remarks-content">{{bookCommentItem.content}}</p>-->
-<!--                                        <p class="remarks-time">{{bookCommentItem.create_time}}</p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="remarks-page">-->
-<!--                                    <el-pagination-->
-<!--                                        :current-page="currentPage"-->
-<!--                                        :total="itemTotal"-->
-<!--                                        @current-change="handleCurrentChange"-->
-<!--                                        background-->
-<!--                                        layout="total, prev, pager, next"/>-->
-<!--                                </div>-->
-<!--                                <div class="my-remarks">-->
-<!--                                    <div class="remarks-content-box">-->
-<!--                                        <p>请评分: <el-rate :colors="ratingColors" class="remarks-star" v-model="rating" show-text/></p>-->
-<!--                                        <el-input-->
-<!--                                            type="textarea"-->
-<!--                                            :rows="5"-->
-<!--                                            placeholder="请输入内容"-->
-<!--                                            v-model="comment">-->
-<!--                                        </el-input>-->
-<!--                                    </div>-->
-<!--                                    <div class="remarks-button">-->
-<!--                                        <el-button type="primary" @click="sendMyComment">发送评论</el-button>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="remarks-container">
+                                <div class="remarks-analyse-box">
+                                    <div class="remarks-analyse-goods">
+                                        <el-progress :width="110" :stroke-width="15" stroke-linecap="butt"  type="circle" :percentage="this.bookRemarkSum.goodRating | judgeNumberIfZero" :color="progressColors"/>
+                                    </div>
+                                    <div class="remarks-analyse-tags">
+                                        <el-tag checkable :color="tagsColor[index % 4]" v-for="(item, index) in remarksTags" :key="index">{{item}}</el-tag>
+                                    </div>
+                                </div>
+                                <div class="remarks-bar">
+                                    <span>好评({{this.bookRemarkSum.goodNumber}})</span>
+                                    <span>中评({{this.bookRemarkSum.notGoodNumber}})</span>
+                                    <span>差评({{this.bookRemarkSum.badNumber}})</span>
+                                </div>
+                                <div class="remarks-box" v-if="bookCommentList !== undefined" v-for="(bookCommentItem, bookCommentIndex) in bookCommentList" :key="'bc-' + bookCommentIndex">
+                                    <div class="remarks-user">
+                                        <el-avatar icon="el-icon-user-solid" />
+                                        <span class="remarks-user-name">{{bookCommentItem.userId}}</span>
+                                    </div>
+                                    <div class="remarks-content-box">
+                                        <p>
+                                            <el-rate disabled :value="bookCommentItem.rating" class="remarks-star" show-score text-color="#ff9900"/>
+                                        </p>
+                                        <p class="remarks-content">{{bookCommentItem.content}}</p>
+                                        <p class="remarks-time">{{bookCommentItem.create_time}}</p>
+                                    </div>
+                                </div>
+                                <div class="my-remarks">
+                                    <div class="remarks-content-box">
+                                        <el-input
+                                            type="textarea"
+                                            :rows="5"
+                                            placeholder="请输入内容"
+                                            v-model="comment">
+                                        </el-input>
+                                    </div>
+                                    <div class="remarks-rating-button">
+                                        <p>请评分:<el-rate :colors="ratingColors" class="remarks-star" v-model="rating" show-text/></p>
+                                        <el-button type="primary" @click="sendMyComment">发 表 评 论</el-button>
+                                    </div>
+                                </div>
+                            </div>
                         </el-tab-pane>
                     </el-tabs>
                 </div>
@@ -112,13 +101,14 @@
             <el-row>
                 <div class="book_recommend_block">
                     <el-tabs @tab-click="handleRecommendTabClick" type="border-card">
-                        <el-tab-pane :key="tabIndex" v-for="(tabItem, tabIndex) in tabList" :name="numToString(tabIndex)">
+                        <el-tab-pane :key="'neo4j-tab-' + tabIndex" v-for="(tabItem, tabIndex) in tabList" :name="numToString(tabIndex)">
                             <span slot="label">{{tabItem.labelName}}</span>
                             <el-row>
-                                <el-col :key="index"
+                                <el-col :key="'neo4j-recommend-' + index"
                                         :span="4"
+                                        v-if="neo4jBookList !== undefined"
                                         v-for="(bookItem, index) in neo4jBookList">
-                                    <div class="book_card">
+                                    <div class="book_card" @click="toDetailNR(index)">
                                         <div class="book_img">
                                             <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
                                         </div>
@@ -158,8 +148,6 @@
                 tagsColor: [ '#409EFF', '#67C23A', '#F56C6C', '#FFD700' ],
                 remarksTags: [ '实惠优选', '质量没话说', '比定做还合适', '完美品质', '正品行货', '包装有档次', '书籍很好看' ],
                 bookRemarkSum: {},
-                currentPage: 1,
-                itemTotal: 0,
                 bookCommentList: [],
                 rating: null,
                 ratingColors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -188,6 +176,15 @@
                     return value;
                 }
             },
+
+            // 判断显示评价数量显示
+            judgeNumberIfZero(value) {
+                if (value === undefined){
+                    return 0;
+                } else {
+                    return value;
+                }
+            },
         },
         methods: {
             numToString(val){
@@ -211,9 +208,7 @@
                     'businessId': this.$store.state.resultInfo.bookDetailInfo.businessInfo.businessId
                 };
                 ws_axios.fetchPost1("/recommend/getRecommendBusinessHot", params).then((back) => {
-                    if (back.data.resultCode === "1") {
-                        this.businessBookList = back.data.recommendBookListBH;
-                    }
+                    this.businessBookList = back.data;
                 });
             },
 
@@ -228,7 +223,7 @@
                 let params = {
                     'name': this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookIsbn,
                     'pageNum': 0,
-                    'pageSize': 6
+                    'pageSize': 12
                 };
                 ws_axios.fetchPost2(urlList[val], params).then((back) => {
                     if (back.data.resultCode === "1") {
@@ -270,12 +265,21 @@
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
                 });
 
-                this.$router.push("/book_detail");
+                this.$router.push("/to_detail");
             },
 
-            // 改变页码选择
-            handleCurrentChange(val) {
-                this.currentPage = val;
+            // 跳转至书籍信息详情页面
+            toDetailNR(index) {
+                let params = {
+                    'bookId': this.neo4jBookList[index].img.substring(this.neo4jBookList[index].img.lastIndexOf('/')+1, this.neo4jBookList[index].img.lastIndexOf('.') ),
+                    'businessId': this.neo4jBookList[index].business_id,
+                };
+
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                    this.$router.push("/to_detail");
+                });
             },
 
             // 发送评论
@@ -283,10 +287,11 @@
                 let params = {
                     'userId': this.$store.state.currUserInfo.userId,
                     'bookId': this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookId,
-                    'comment': this.comment,
-                    'rating': this.rating
+                    'content': this.comment,
+                    'rating': this.rating,
                 };
                 ws_axios.fetchPost1('/bookComment/insertBookComment', params).then((back) => {
+                    location.reload();
                 });
             },
         },
@@ -436,7 +441,7 @@
 
     .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-user {
         margin-left: 20px;
-        width: 170px;
+        width: 160px;
         text-align: left;
         display: flex;
     }
@@ -445,6 +450,7 @@
         width: 45px;
         height: 45px;
         margin-top: 10px;
+        border: 2px solid #f56c6c;
     }
 
     .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-user .remarks-user-name {
@@ -477,12 +483,6 @@
         color: #232323;
     }
 
-    .book_show .book_detail .book_detail_block .remarks-container .remarks-page {
-        margin: 15px;
-        display: flex;
-        justify-content:flex-end;
-    }
-
     .book_show .book_detail .book_detail_block .remarks-container .my-remarks {
         padding: 15px;
         display: flex;
@@ -491,15 +491,26 @@
     }
 
     .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-content-box {
-        width: calc(100% - 180px);
+        width: 800px;
         text-align: left;
         background-color: #FFFFFF;
         margin-left: 20px;
     }
 
-    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-button {
-        margin-left: 10px;
+    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-rating-button {
+        margin-top: 10px;
+        margin-left: 20px;
+        text-align: left;
     }
+
+    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-rating-button .el-rate {
+        margin-top: 5px;
+    }
+
+    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-rating-button .el-button {
+        margin-top: 20px;
+    }
+
 
     .book_show .book_detail .book_recommend_block {
         margin: 50px auto;
@@ -522,7 +533,6 @@
         margin: 0 auto;
         padding: 0;
         width: 100%;
-        border-left: 1px solid #e9e9eb;
     }
 
     .book_show .book_detail .book_recommend_block .el-row .el-col .book_card:hover {

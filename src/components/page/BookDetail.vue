@@ -40,6 +40,9 @@
         created() {
             document.documentElement.scrollTop=192;
         },
+        mounted() {
+            document.documentElement.scrollTop=192;
+        },
     }
 </script>
 

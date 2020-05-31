@@ -28,8 +28,8 @@
                 </div>
             </div>
             <div class="header-link">
-                <el-link :underline="false" href="/" icon="el-icon-s-home" type="info">主页</el-link>&nbsp;
-                <el-link v-if="ifUserTar" :underline="false" @click="goToCurrUserBackHome" icon="el-icon-s-home" type="info">我的店铺</el-link>&nbsp;
+                <el-link style="margin-right: 10px;" :underline="false" href="/" type="info">主页</el-link>&nbsp;
+                <el-link style="margin-left: 10px;" v-if="ifUserTar" :underline="false" @click="goToCurrUserBackHome" type="info">我的店铺</el-link>&nbsp;
             </div>
         </div>
     </div>

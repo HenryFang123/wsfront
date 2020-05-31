@@ -5,23 +5,22 @@
                 <span style="font-size: 18px;" slot="label">{{typeItem.bookTypeName}}</span>
                 <div class="type_list_block">
                     <el-row>
-                        <el-col :key="index"
+                        <el-col :key="'business-tags-' + index"
                                 :span="4"
                                 v-for="(bookItem, index) in currBusinessTypeBookList">
-                            <div class="book_card">
+                            <div class="book_card" @click="toDetail(index)">
                                 <div class="book_img">
                                     <el-image style="width: 130px; height: 189px;" v-bind:src="bookItem.bookImagePath"/>
                                 </div>
                                 <div class="book_title_author">
-                                    <a>{{bookItem.bookName}}</a>
-                                    <el-divider direction="vertical"/>
-                                    <a>{{bookItem.bookAuthor}}</a>
+                                    <a>{{bookItem.bookName | ellipsisName}}</a>/
+                                    <a>{{bookItem.bookAuthor | ellipsisAuthor}}</a>
                                 </div>
                                 <div class="book_price">
                                     <a>￥{{bookItem.bookPrice}}</a>
                                 </div>
                                 <div class="book_comment_rating">
-                                    <a>已有{{bookItem.bookComment}}评价</a>
+                                    <a>已有{{bookItem.bookComment | ellipsisComment}}评价</a>
                                     <el-divider direction="vertical"/>
                                     <a>{{bookItem.bookRating}}评分</a>
                                 </div>
@@ -59,6 +58,34 @@
                 currBusinessTypeList: [],
                 currBusinessTypeBookList: [],
             };
+        },
+        filters: {
+            // 设置书名超长显示内容
+            ellipsisName(value) {
+                if (value.length > 5){
+                    return value.slice(0,5) + '...';
+                } else {
+                    return value;
+                }
+            },
+
+            // 设置作者名超长显示内容
+            ellipsisAuthor(value) {
+                if (value.length > 5){
+                    return value.slice(0,5) + '...';
+                } else {
+                    return value;
+                }
+            },
+
+            // 过滤评论数为 undefined
+            ellipsisComment(value) {
+                if (value === undefined){
+                    return 0;
+                } else {
+                    return value;
+                }
+            },
         },
         methods: {
             numToString(val){
@@ -117,6 +144,20 @@
                 };
                 ws_axios.fetchPost1('/book/getBookInfoListByBusinessIdAndTypeId', params).then((back) => {
                     this.currBusinessTypeBookList = back.data;
+                });
+            },
+
+            // 跳转至书籍信息详情页面
+            toDetail(index) {
+                let params = {
+                    'bookId': this.currBusinessTypeBookList[index].bookId,
+                    'businessId': this.currBusinessTypeBookList[index].businessId,
+                };
+
+                ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
+                    this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
+                    this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
+                    this.$router.push("/book_detail");
                 });
             },
         },

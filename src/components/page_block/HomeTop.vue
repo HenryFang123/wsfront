@@ -53,10 +53,10 @@
                                     <div :key="index" class="rating_sort_card"
                                          v-for="(ratingSortItem,index) in this.$store.state.resultInfo.homeInfo.topInfo.bookList">
                                         <el-row>
-                                            <el-col :span="19">
+                                            <el-col :span="18">
                                                 <span>{{ratingSortItem.bookName | ellipsisName}}</span>
                                             </el-col>
-                                            <el-col :span="5">
+                                            <el-col :span="6">
                                                 <span>评分:{{ratingSortItem.bookRating}}</span>
                                             </el-col>
                                         </el-row>
@@ -558,7 +558,7 @@
     }
 
     .home-main-middle-top .home-main-middle-top-main .el-row .el-col {
-        margin: 5px auto;
+        margin: 10px auto;
         padding: 0;
         height: 100%;
     }
@@ -592,7 +592,6 @@
     .home-main-middle-top .home-main-middle-top-main .home-main-middle-top-main-menu_side li {
         padding: 8px;
         font-size: 14px;
-        line-height: 18px;
     }
 
     .home-main-middle-top .home-main-middle-top-main .home-main-middle-top-main-menu_side li:hover {
@@ -715,7 +714,7 @@
 
     .home-main-middle-top .home-main-middle-top-main .home-main-middle-top-main-select_content-suggest .home-main-middle-top-main-select_content-suggest-book .el-row .el-col .rating_sort_card {
         margin: 5px auto;
-        padding: 0;
+        padding: 2px;
         font-size: 14px;
         border-left: 1px solid #b2dfdb;
         border-bottom: 1px solid #e9e9eb;

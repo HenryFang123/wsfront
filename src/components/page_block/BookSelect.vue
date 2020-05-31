@@ -16,7 +16,7 @@
             </div>
             <div class="book_select_middle">
                 <div class="book_select_title">
-                    <p><span class="book_select_tag">网书配送</span>{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookName}}</p>
+                    <p><span class="book_select_tag" style="margin-right: 15px;">网书配送</span>{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookName}}</p>
                 </div>
                 <div class="book_select_info">
                     <div class="book_select_price">
@@ -40,20 +40,15 @@
                 <div class="book_select_add_car">
                     <div class="book_add_car_row">
                         <el-row>
-                            <el-col :span="8">
-                                <el-input :min="1" v-model="bookCount"/>
+                            <el-col :span="5">
+                                <el-input-number style="width: 150px; margin: 0 auto;" :step="0.5" :min="1" :max="10" v-model="bookCount"/>
                             </el-col>
-                            <el-col :span="2">
-                            </el-col>
+                            <el-col :span="2"> </el-col>
                             <el-col :span="5">
                                 <el-button :disabled="isDisable" @click="addShoppingCartBtn()" type="danger">加入购物车
                                 </el-button>
                             </el-col>
-                            <el-col :span="1">
-                            </el-col>
-                            <el-col :span="8">
-                                <el-button @click="payForBookBtn()" plain type="danger">立即购买</el-button>
-                            </el-col>
+                            <el-col :span="12"> </el-col>
                         </el-row>
                     </div>
                 </div>
@@ -126,10 +121,7 @@
                 }
             },
 
-            // 直接购买书籍
-            payForBookBtn () {
-            },
-
+            // 进入店铺页面
             gotoBusinessPage () {
                 this.$store.dispatch("saveBusinessInfo", this.$store.state.resultInfo.bookDetailInfo.businessInfo);
                 this.$router.push("/business_page")
