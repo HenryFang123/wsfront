@@ -263,9 +263,18 @@
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
-                });
 
-                this.$router.push("/to_detail");
+                    // 详情页面点击图片进入详情页权重值为 10
+                    let params_after = {
+                        userId: this.$store.state.currUserInfo.userId,
+                        bookTypeId: this.businessBookList[index].bookTypeId,
+                        number: 10,
+                    };
+
+                    ws_axios.fetchPost1('/userTypeNumber/operateUserTypeNumber', params_after).then((back) => {
+                        this.$router.push("/to_detail");
+                    });
+                });
             },
 
             // 跳转至书籍信息详情页面
@@ -291,7 +300,10 @@
                     'rating': this.rating,
                 };
                 ws_axios.fetchPost1('/bookComment/insertBookComment', params).then((back) => {
-                    location.reload();
+                    this.rating = null;
+                    this.comment = "";
+                    this.getBookCommentList();
+                    // location.reload();
                 });
             },
         },
@@ -491,7 +503,7 @@
     }
 
     .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-content-box {
-        width: 800px;
+        width: 640px;
         text-align: left;
         background-color: #FFFFFF;
         margin-left: 20px;

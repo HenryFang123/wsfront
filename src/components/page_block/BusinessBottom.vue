@@ -101,6 +101,7 @@
             handleTabClick(tab, event) {
                 this.currentPage = 1;
                 this.typeIndex = this.stringToNum(tab.name);
+                document.documentElement.scrollTop=192;
                 this.getCurrentBusinessTypeBookList(tab.name);
             },
 
@@ -144,6 +145,7 @@
                 };
                 ws_axios.fetchPost1('/book/getBookInfoListByBusinessIdAndTypeId', params).then((back) => {
                     this.currBusinessTypeBookList = back.data;
+                    document.documentElement.scrollTop=192;
                 });
             },
 
@@ -157,7 +159,17 @@
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
-                    this.$router.push("/book_detail");
+
+                    // 店铺页面点击图片进入详情页权重值为 15
+                    let params_after = {
+                        userId: this.$store.state.currUserInfo.userId,
+                        bookTypeId: this.currBusinessTypeBookList[index].bookTypeId,
+                        number: 15,
+                    };
+
+                    ws_axios.fetchPost1('/userTypeNumber/operateUserTypeNumber', params_after).then((back) => {
+                        this.$router.push("/book_detail");
+                    });
                 });
             },
         },

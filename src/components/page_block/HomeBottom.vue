@@ -125,7 +125,17 @@
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
-                    this.$router.push("/book_detail");
+
+                    // 首页点击图片进入详情页权重值为 5
+                    let params_after = {
+                        userId: this.$store.state.currUserInfo.userId,
+                        bookTypeId: this.$store.state.resultInfo.homeInfo.bottomInfo.bookListM[index1].bookRecommend[index2].bookTypeId,
+                        number: 5,
+                    };
+
+                    ws_axios.fetchPost1('/userTypeNumber/operateUserTypeNumber', params_after).then((back) => {
+                        this.$router.push("/book_detail");
+                    });
                 });
             },
             // 跳转至书籍信息详情页面
@@ -138,7 +148,17 @@
                 ws_axios.fetchPost1('/utils/getInfoById', params).then((back) => {
                     this.$store.dispatch("saveBookDetailInfoBookInfo", back.data.bookInfo);
                     this.$store.dispatch("saveBookDetailInfoBusinessInfo", back.data.businessInfo);
-                    this.$router.push("/book_detail");
+
+                    // 首页点击图片进入详情页权重值为 5
+                    let params_after = {
+                        userId: this.$store.state.currUserInfo.userId,
+                        bookTypeId: this.$store.state.resultInfo.homeInfo.bottomInfo.bookListS[index].bookTypeId,
+                        number: 5,
+                    };
+
+                    ws_axios.fetchPost1('/userTypeNumber/operateUserTypeNumber', params_after).then((back) => {
+                        this.$router.push("/book_detail");
+                    });
                 });
             },
         },

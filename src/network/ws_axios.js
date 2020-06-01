@@ -70,7 +70,7 @@ export function fetchGet1(url, param){
 
 export function fetchPost2(url, params){
     const instance = axios.create({
-        baseURL : 'http://localhost:8081/',
+        baseURL : 'http://121.36.70.19:8080/netbook/',
         headers : {'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'}
     });
     return new Promise((resolve, reject) => {
@@ -88,7 +88,7 @@ export function fetchPost2(url, params){
 
 export function fetchGet2(url, param){
     const instance = axios.create({
-        baseURL : 'http://localhost:8081/',
+        baseURL : 'http://121.36.70.19:8080/netbook/',
         headers : {'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'}
     });
     return new Promise((resolve, reject) => {

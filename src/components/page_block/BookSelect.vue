@@ -113,7 +113,17 @@
                         ws_axios.fetchPost1('/shopCar/insertShopCarInfo', params).then((back) => {
                             this.isDisable = true;
                             this.$store.state.resultInfo.shopCarInfo.number++;
-                            this.$router.push("/book_list");
+
+                            // 加购权重值为 30
+                            let params_after = {
+                                userId: this.$store.state.currUserInfo.userId,
+                                bookTypeId: this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookTypeId,
+                                number: 30,
+                            };
+
+                            ws_axios.fetchPost1('/userTypeNumber/operateUserTypeNumber', params_after).then((back) => {
+                                this.$router.push("/book_list");
+                            });
                         })
                     }
                 } else {
