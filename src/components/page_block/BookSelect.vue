@@ -41,7 +41,7 @@
                     <div class="book_add_car_row">
                         <el-row>
                             <el-col :span="5">
-                                <el-input-number style="width: 150px; margin: 0 auto;" :step="0.5" :min="1" :max="10" v-model="bookCount"/>
+                                <el-input-number style="width: 150px; margin: 0 auto;" :step="1" :min="1" :max="10" v-model="bookCount"/>
                             </el-col>
                             <el-col :span="2"> </el-col>
                             <el-col :span="5">

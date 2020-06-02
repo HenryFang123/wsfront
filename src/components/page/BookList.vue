@@ -341,10 +341,10 @@
                     'userStarTag': 0
                 };
                 ws_axios.fetchPost1('/userStar/insertUserStar', params).then((back) => {
-                });
-                this.$message({
-                    message: '收藏成功',
-                    type: 'success'
+                    this.$message({
+                        message: '收藏成功',
+                        type: 'success'
+                    });
                 });
             },
 
@@ -375,7 +375,12 @@
         },
         created() {
             this.getSystemHotBookInfoList();
-            this.getSolrBookInfoList();
+
+            if (this.$store.state.searchInfo.searchWord !== ""){
+                this.getSolrBookInfoList();
+            } else {
+                this.ifHaveResult = true;
+            }
         },
     }
 </script>

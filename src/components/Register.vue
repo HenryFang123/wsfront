@@ -137,6 +137,10 @@
                 const str = val.replace(/(^\s*)|(\s*$)/g, '');  //去除空格;
                 return str === '' || str === undefined || str === null;
             },
+            numToString(val){
+                val = val.toString();
+                return val;
+            },
             // 获取当前时间并格式化生成用户 userId
             getCurrentTimeToBeUserId: function () {
                 const date = new Date();
@@ -184,7 +188,7 @@
                 if (this.isnull(this.register.user_phone) || this.isnull(this.register.inputCode)) {
                     this.$message.error('错误，输入框不能为空');
                 } else {
-                    if (this.register.inputCode !== this.phoneCode) {
+                    if (this.register.inputCode !== this.numToString(this.phoneCode)) {
                         this.$message.error('验证错误，请输入正确的手机验证码');
                     } else {
                         if (this.registerActive++ > 2) {
@@ -264,7 +268,7 @@
                                 if (back.data.resultCode === "0") {
                                     this.$message.error('注册错误，注册过程中发生未知错误');
                                 } else {
-                                    this.$store.dispatch('saveUserInfo', back.data.userInfoObject);
+                                    this.$store.dispatch('saveCurrUserInfo', back.data.userInfoObject);
                                     this.registerActive++;
                                     this.clearCookie();
                                 }
@@ -274,6 +278,16 @@
                         }
                     });
                 }
+            },
+            // 设置cookie
+            setCookie: function (ws_user_id, ws_user_self, ws_pass_word, ws_save_days) {
+                const current_date = new Date(); // 获取时间
+                current_date.setTime(current_date.getTime() + 24 * 60 * 60 * 1000 * ws_save_days); // 保存的天数
+
+                // 字符串拼接cookie
+                window.document.cookie = "WSUserId" + "=" + ws_user_id + ";path=/;expires=" + current_date.toUTCString();
+                window.document.cookie = "WSUserSelf" + "=" + ws_user_self + ";path=/;expires=" + current_date.toUTCString();
+                window.document.cookie = "WSPassWord" + "=" + ws_pass_word + ";path=/;expires=" + current_date.toUTCString();
             },
             // 清除cookie
             clearCookie: function () {

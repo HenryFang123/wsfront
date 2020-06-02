@@ -89,7 +89,7 @@
                                             trigger="hover"
                                             content="将此物品移入您的收藏单中">
                                             <el-button type="warning" icon="el-icon-star-off" circle size="mini"
-                                                       slot="reference" @click=""/>
+                                                       slot="reference" @click="addCollect(index)"/>
                                         </el-popover>
                                         <el-popconfirm
                                             confirmButtonText='删除'
@@ -238,6 +238,21 @@
             }
         },
         methods: {
+            // 收藏书籍
+            addCollect(index) {
+                let params = {
+                    'userId': this.$store.state.currUserInfo.userId,
+                    'userStarId': this.curPageList[index].book_id,
+                    'userStarTag': 0
+                };
+                ws_axios.fetchPost1('/userStar/insertUserStar', params).then((back) => {
+                    this.$message({
+                        message: '收藏成功',
+                        type: 'success'
+                    });
+                });
+            },
+
             //存在传入的index形参，不能用计算属性来完成
             getBookPrice(index) {
                 return this.curPageList[index].book_price * this.curPageList[index].book_number
