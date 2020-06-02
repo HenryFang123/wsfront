@@ -178,11 +178,6 @@ const routes = [
                 component: () => import('components/backpage/BackBookList'),
                 meta: {title: '图书列表'}
             },
-            {
-                path: '/BackClassification',
-                component: () => import( 'components/backpage/BackClassification'),
-                meta: {title: '图书分类'}
-            }
         ]
     },
 ];

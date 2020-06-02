@@ -8,6 +8,8 @@
         <div class="logo">后台管理系统</div>
         <div class="header-right">
             <div class="header-user-con">
+                <el-link style="margin-right: 40px; color: #FFFFFF" :underline="false" href="/" type="info" icon="el-icon-s-home">主页</el-link>&nbsp;
+
                 <!-- 用户头像 -->
                 <div class="user-avator">
                     <el-image v-bind:src="this.$store.state.businessInfo.businessImagePath"/>

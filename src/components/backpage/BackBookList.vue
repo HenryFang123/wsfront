@@ -69,7 +69,7 @@
                         <el-input disabled="true" v-model="form.bookName"/>
                     </el-form-item>
                     <el-form-item label="图片">
-                        <el-input v-model="form.bookImagePath"/>
+                        <el-input :disabled="true" v-model="form.bookImagePath"/>
                     </el-form-item>
                     <el-form-item label="价格(元)">
                         <el-input v-model="form.bookPrice"/>

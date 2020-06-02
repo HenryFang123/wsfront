@@ -31,7 +31,7 @@
                         <div class="book_comment_row">
                             <p>累计评价</p>
                             <p>
-                                <span class="book_comment_num">{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookComment}} 条</span>
+                                <span class="book_comment_num">{{this.$store.state.resultInfo.bookDetailInfo.bookInfo.bookComment | ellipsisComment}} 条</span>
                             </p>
                         </div>
                     </div>
@@ -81,6 +81,16 @@
                 bookCount: 1,
                 isDisable: false,
             }
+        },
+        filters: {
+            // 过滤评论数为 undefined
+            ellipsisComment(value) {
+                if (value === undefined){
+                    return 0;
+                } else {
+                    return value;
+                }
+            },
         },
         methods: {
             // 加书籍进购物车或更新购物车中的书籍
