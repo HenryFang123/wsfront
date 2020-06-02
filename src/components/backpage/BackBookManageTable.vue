@@ -32,8 +32,8 @@
                 <el-table-column property="bookAuthor" label="作者"/>
                 <el-table-column property="bookPub" label="出版社"/>
                 <el-table-column property="bookYear" label="出版年"/>
-                <el-table-column  prop="bookIsbn" label="ISBN"/>
-                <el-table-column  prop="bookPrice" label="价格(元)"/>
+                <el-table-column prop="bookIsbn" label="ISBN"/>
+                <el-table-column prop="bookPrice" label="价格(元)"/>
                 <el-table-column label="简介" prop="briefDescription">
                     <template slot-scope="scope">
                         <el-popover
@@ -99,16 +99,33 @@
                     </el-table-column>
                 </el-table>
             </el-dialog>
-            <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+            <el-dialog title="编辑" :visible.sync="editVisible" width="45%">
                 <el-form ref="form" :model="form" label-width="70px">
-                    <el-form-item label="图书ID">
-                        <el-input v-model="form.bookId"/>
+                    <el-form-item label="图书类型">
+                        <label>
+                            <select style="height: 30px; width: 150px; border: 1px solid #ccc;" v-model="form.bookTypeId">
+                                <option :key="typeIndex" v-for="(typeItem, typeIndex) in currBusinessTypeList" :value="typeItem.bookTypeId">{{typeItem.bookTypeName}}</option>
+                            </select>
+                        </label>
                     </el-form-item>
                     <el-form-item label="书名">
                         <el-input v-model="form.bookName"/>
                     </el-form-item>
                     <el-form-item label="图片">
-                        <el-input v-model="form.bookImagePath"/>
+                        <el-upload
+                            class="upload-demo"
+                            action="http://localhost:8080/utils/uploadBookImage"
+                            :on-exceed="handleExceed"
+                            :before-upload="beforeUpload"
+                            :before-remove="beforeRemove"
+                            :on-success="getMessage"
+                            multiple
+                            :limit="1"
+                            :file-list="fileList"
+                            name="file">
+                            <el-button size="small" type="primary" :disabled="isDisable">点击 上传文件</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传 jpg/png 文件，且不超过2Mb</div>
+                        </el-upload>
                     </el-form-item>
                     <el-form-item label="作者">
                         <el-input v-model="form.bookAuthor"/>
@@ -145,6 +162,11 @@
         name: 'BackBookManageTable.vue',
         data() {
             return {
+                currBusinessTypeList: [],
+                fileList: [],
+                bookId: "",
+                bookImagePath: "",
+                isDisable: false,
                 loading: true,
                 count: 0,
                 pageSize:5,//每页的数据条数
@@ -162,14 +184,45 @@
             };
         },
         created() {
+            this.getTypeListByBusinessId();
             this.getCount();
             this.getData();
         },
         methods: {
+            // 上传图片
+            handleExceed(files, fileList) {
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            beforeUpload(file, fileList){
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            },
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
+            },
+            getMessage(response, file, fileList){
+                if (response.resultCode === "1") {
+                    this.bookImagePath = response.bookImagePath;
+                    this.isDisable = true;
+                } else {
+                    this.$notify.error({
+                        title: '上传失败',
+                        message: '上传图片失败，请重新选择！'
+                    });
+                }
+            },
+
             current_change:function(currentPage){
                 this.currentPage = currentPage;
                 this.getData();
-                console.log(currentPage)
             },
             getCount(){
                 let params = {
@@ -191,7 +244,6 @@
                         this.List[i].briefDescription = this.List[i].bookDescription.substring(0,10);
                     }
                     this.loading = false;
-                    this.reload()
                 })
             },
             deleteRow(index, rows) {
@@ -246,22 +298,33 @@
                 this.editVisible=true
             },
             uploadBook(){
+                if (this.bookImagePath !== ""){
+                    let params = {
+                        'businessId': this.$store.state.businessInfo.businessId,
+                        'bookTypeId': this.form.bookTypeId,
+                        'bookName' : this.form.bookName,
+                        'bookImagePath': this.bookImagePath,
+                        'bookAuthor': this.form.bookAuthor,
+                        'bookPub': this.form.bookPub,
+                        'bookYear': this.form.bookYear,
+                        'bookIsbn': this.form.bookIsbn,
+                        'bookPrice': this.form.bookPrice,
+                        'bookDescription': this.form.bookDescription
+                    };
+                    ws_axios.fetchPost1('/book/insertBookInfo',params).then((back)=>{
+                        location.reload()
+                    })
+                }
+            },
+            // 获取后端查找店铺下分类信息
+            getTypeListByBusinessId() {
                 let params = {
-                    'businessId':this.$store.state.businessInfo.businessId,
-                    'bookId':this.form.bookId,
-                    'bookName' :this.form.bookName,
-                    'bookImagePath':this.form.bookImagePath,
-                    'bookAuthor':this.form.bookAuthor,
-                    'bookPub':this.form.bookPub,
-                    'bookYear':this.form.bookYear,
-                    'bookIsbn':this.form.bookIsbn,
-                    'bookPrice':this.form.bookPrice,
-                    'bookDescription':this.form.bookDescription
+                    businessId: this.$store.state.businessInfo.businessId,
                 };
-                ws_axios.fetchPost1('/book/insertBookInfo',params).then((back)=>{
-                    location.reload()
-                })
-            }
+                ws_axios.fetchPost1('/book/getBookInfoTypeListByBusinessId', params).then((back) => {
+                    this.currBusinessTypeList = back.data;
+                });
+            },
         },
     };
 </script>

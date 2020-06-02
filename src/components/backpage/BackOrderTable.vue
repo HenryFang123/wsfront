@@ -255,7 +255,6 @@
                     this.getCount(status);
                     ws_axios.fetchPost1('/order/getOrderInfoListByBusinessId', params).then((back) => {
                         this.List = back.data;
-                        console.log(this.List)
                         for (let i in this.List) {
                             this.List[i].briefAddress = this.List[i].userAddress.substring(0, 15);
                         }
@@ -267,7 +266,6 @@
                     this.getCount(status);
                     ws_axios.fetchPost1('/order/getPayOrderInfoListByBusinessId', params).then((back) => {
                         this.List = back.data;
-                        console.log(this.List)
                         for (let i in this.List) {
                             this.List[i].briefAddress = this.List[i].userAddress.substring(0, 15);
                         }
@@ -279,7 +277,6 @@
                     this.getCount(status);
                     ws_axios.fetchPost1('/order/getSendOrderInfoListByBusinessId', params).then((back) => {
                         this.List = back.data;
-                        console.log(this.List)
                         for (let i in this.List) {
                             this.List[i].briefAddress = this.List[i].userAddress.substring(0, 15);
                         }
@@ -295,7 +292,6 @@
                 };
                 ws_axios.fetchPost1('/order/getOrderInfoCountByBusinessId', params).then((back) => {
                     this.allCount = back.data;
-                    console.log(this.allCount)
                 });
             },
             getPayCount(){

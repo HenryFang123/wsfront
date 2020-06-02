@@ -124,8 +124,6 @@
                     for (var i = 3; i < this.form.userAddress.split(" ").length; i++) {
                         this.form.address += " " + this.form.userAddress.split(" ")[i]
                     }
-                    console.log(this.form.address)
-
                 })
             },
             printOrder() {

@@ -162,9 +162,9 @@
                 });
             },
         },
-        created() {
+        mounted() {
             this.getRecommendBookInfoOfCurrentUser();
-        }
+        },
     }
 </script>
 
@@ -190,7 +190,6 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row {
         margin: 0 auto;
         padding: 0;
-        /*text-align: left;*/
         width: 100%;
         display: flex;
         flex-wrap: wrap;

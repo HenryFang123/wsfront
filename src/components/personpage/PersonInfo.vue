@@ -201,4 +201,34 @@
         height: 178px;
         display: block;
     }
+
+    .el-upload--text {
+        background-color: #fff;
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        box-sizing: border-box;
+        width: 220px;
+        height: 220px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .el-upload--text .el-icon-upload {
+        font-size: 67px;
+        color: #97a8be;
+        margin: 40px 0 16px;
+        line-height: 50px;
+    }
+
+    .el-upload--text {
+        color: #97a8be;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .el-upload--text em {
+        font-style: normal;
+    }
 </style>
