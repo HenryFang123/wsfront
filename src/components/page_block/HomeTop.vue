@@ -11,7 +11,7 @@
                     </div>
                     <div class="home-main-middle-top-main-menu_side" ref="menuSide">
                         <ul>
-                            <li :key="liIndex" v-for="(liItem, liIndex) in tsflList" @mouseenter="showDetail(liIndex)" @mouseleave="hideDetail()">
+                            <li style="white-space:nowrap; overflow:hidden;text-overflow:ellipsis;" :key="liIndex" v-for="(liItem, liIndex) in tsflList" @mouseenter="showDetail(liIndex)" @mouseleave="hideDetail()">
                                 <span class="menu_side-item" :key="headTagsIndex" v-for="(headTagsItem, headTagsIndex) in liItem.headTags">{{headTagsItem.headTagsName}} / </span>
                             </li>
                         </ul>
@@ -53,11 +53,11 @@
                                     <div :key="index" class="rating_sort_card"
                                          v-for="(ratingSortItem,index) in this.$store.state.resultInfo.homeInfo.topInfo.bookList">
                                         <el-row>
-                                            <el-col :span="18">
-                                                <span>{{ratingSortItem.bookName | ellipsisName}}</span>
+                                            <el-col :span="20">
+                                                <span style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">{{ratingSortItem.bookName}}</span>
                                             </el-col>
-                                            <el-col :span="6">
-                                                <span>评分:{{ratingSortItem.bookRating}}</span>
+                                            <el-col :span="4">
+                                                <span style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">评分:{{ratingSortItem.bookRating}}</span>
                                             </el-col>
                                         </el-row>
                                     </div>
@@ -516,16 +516,6 @@
         },
         created() {
             this.getSystemSortRecommend();
-        },
-        filters: {
-            // 设置书名超长显示内容
-            ellipsisName(value) {
-                if (value.length > 11){
-                    return value.slice(0,11) + '...';
-                } else {
-                    return value;
-                }
-            },
         },
     }
 </script>

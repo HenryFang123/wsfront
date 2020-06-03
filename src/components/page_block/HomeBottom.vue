@@ -20,10 +20,10 @@
                                                   v-bind:src="bookItem.bookImagePath"/>
                                     </div>
                                     <div class="book_title">
-                                        <a>{{bookItem.bookName | ellipsisName}}</a>
+                                        <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">{{bookItem.bookName}}</a>
                                     </div>
                                     <div class="book_author">
-                                        <a>{{bookItem.bookAuthor | ellipsisAuthor}}</a>
+                                        <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">{{bookItem.bookAuthor}}</a>
                                     </div>
                                     <div class="book_price">
                                         <a>￥{{bookItem.bookPrice}}</a>
@@ -48,10 +48,10 @@
                                 <el-image style="width: 100px; height: 130px;" v-bind:src="bookItem.bookImagePath"/>
                             </div>
                             <div class="book_title">
-                                <a>{{bookItem.bookName | ellipsisName}}</a>
+                                <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">{{bookItem.bookName}}</a>
                             </div>
                             <div class="book_author">
-                                <a>{{bookItem.bookAuthor | ellipsisAuthor}}</a>
+                                <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">{{bookItem.bookAuthor}}</a>
                             </div>
                             <div class="book_price">
                                 <a>￥{{bookItem.bookPrice}}</a>
@@ -73,25 +73,6 @@
             return {
                 ifShowTags: false,
             }
-        },
-        filters: {
-            // 设置书名超长显示内容
-            ellipsisName(value) {
-                if (value.length > 9) {
-                    return value.slice(0, 9) + '...';
-                } else {
-                    return value;
-                }
-            },
-
-            // 设置作者名超长显示内容
-            ellipsisAuthor(value) {
-                if (value.length > 11) {
-                    return value.slice(0, 11) + '...';
-                } else {
-                    return value;
-                }
-            },
         },
         methods: {
             getItemCfRecommendBookInfoOfCurrentUser() {
@@ -169,7 +150,9 @@
             },
         },
         mounted() {
-            this.getItemCfRecommendBookInfoOfCurrentUser();
+            if (this.$store.state.currUserInfo.userId !== undefined){
+                this.getItemCfRecommendBookInfoOfCurrentUser();
+            }
             this.getSystemRecommendBookInfoOfCurrentUser();
         },
     }
@@ -228,7 +211,7 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card .book_title {
         margin-top: 5px;
         margin-left: 50px;
-        margin-right: 20px;
+        margin-right: 30px;
         font-size: 13px;
         padding: 0;
         text-align: left;
@@ -237,7 +220,7 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .list_block .el-row .el-col .book_card .book_author {
         margin-top: 5px;
         margin-left: 50px;
-        margin-right: 20px;
+        margin-right: 30px;
         font-size: 12px;
         color: #999999;
         padding: 0;
@@ -257,6 +240,8 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 {
         margin: 50px auto;
         width: 100%;
+        border-left: 1px solid #e9e9eb;
+        border-right: 1px solid #e9e9eb;
     }
 
     .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row {
@@ -295,7 +280,7 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card .book_title {
         margin-top: 5px;
         margin-left: 50px;
-        margin-right: 20px;
+        margin-right: 30px;
         font-size: 13px;
         padding: 0;
         text-align: left;
@@ -304,7 +289,7 @@
     .home-main-middle-bottom .home-main-middle-bottom-book .list_block_2 .el-row .el-col .book_card .book_author {
         margin-top: 5px;
         margin-left: 50px;
-        margin-right: 20px;
+        margin-right: 30px;
         font-size: 12px;
         color: #999999;
         padding: 0;

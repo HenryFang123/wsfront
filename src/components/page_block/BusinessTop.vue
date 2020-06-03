@@ -11,15 +11,15 @@
             <el-row>
                 <el-col :span="5">
                     <el-row>
-                        <el-image style="width: 180px; height: 72px" v-bind:src="this.$store.state.businessInfo.businessImagePath"/>
+                        <el-image style="width: 200px; height: 80px" v-bind:src="this.$store.state.businessInfo.businessImagePath"/>
                     </el-row>
                 </el-col>
                 <el-col :span="9">
                     <el-row style="text-align: left;">
-                        <span style="font-size: 30px; font-weight: bold">{{this.$store.state.businessInfo.businessName}}</span>
+                        <span style="font-size: 33px; font-weight: bold">{{this.$store.state.businessInfo.businessName}}</span>
                     </el-row>
                     <el-row style="text-align: left; margin-top: 15px;">
-                        <span style="font-size: 12px;">店铺描述：{{this.$store.state.businessInfo.businessDescription}}</span>
+                        <span style="font-size: 17px;">店铺描述：{{this.$store.state.businessInfo.businessDescription}}</span>
                     </el-row>
                 </el-col>
                 <el-col :span="10">
@@ -58,7 +58,7 @@
     }
 
     .business_page_top .business_page_top_bottom {
-        margin: 10px auto;
+        margin: 20px auto;
         padding: 0;
         width: 100%;
     }

@@ -10,7 +10,7 @@
                      v-if="businessBookList !== undefined"
                      v-for="(bookItem, index) in this.businessBookList">
                     <div class="business_recommend_image">
-                        <el-image style="height: 150px; width: 130px;cursor: pointer;"
+                        <el-image style="height: 150px; width: 130px;"
                                   v-bind:src="bookItem.bookImagePath" @click="toDetailBH(index)"/>
                     </div>
                     <div class="business_recommend_info">
@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="remarks-content-box">
                                         <p>
-                                            <el-rate disabled :value="bookCommentItem.rating" class="remarks-star" show-score text-color="#ff9900"/>
+                                            <el-rate disabled :value="bookCommentItem.rating" show-score text-color="#ff9900"/>
                                         </p>
                                         <p class="remarks-content">{{bookCommentItem.content}}</p>
                                         <p class="remarks-time">{{bookCommentItem.create_time}}</p>
@@ -113,7 +113,7 @@
                                             <el-image style="width: 90px; height: 110px;" v-bind:src="bookItem.img"/>
                                         </div>
                                         <div class="book_title">
-                                            <a>{{bookItem.title | ellipsisName}}</a>
+                                            <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">{{bookItem.title}}</a>
                                         </div>
                                         <div class="book_price">
                                             <a>￥{{bookItem.price}}</a>
@@ -353,13 +353,8 @@
     }
 
     .book_show .business_recommend .business_recommend_book .business_recommend_list .business_recommend_image {
-        width: 80%;
         margin: 0 auto;
         cursor: pointer;
-    }
-
-    .book_show .business_recommend .business_recommend_book .business_recommend_list .business_recommend_image .el-image {
-        width: 100%;
     }
 
     .book_show .business_recommend .business_recommend_book .business_recommend_list .business_recommend_info {
@@ -478,10 +473,6 @@
         padding-left: 10px;
     }
 
-    .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-content-box .remarks-star {
-
-    }
-
     .book_show .book_detail .book_detail_block .remarks-container .remarks-box .remarks-content-box .remarks-content {
         font-size: 16px;
         color: #232323;
@@ -503,7 +494,7 @@
     }
 
     .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-content-box {
-        width: 640px;
+        width: 600px;
         text-align: left;
         background-color: #FFFFFF;
         margin-left: 20px;
@@ -515,14 +506,13 @@
         text-align: left;
     }
 
-    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-rating-button .el-rate {
-        margin-top: 5px;
+    .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-rating-button .remarks-star {
+        margin: 5px auto;
     }
 
     .book_show .book_detail .book_detail_block .remarks-container .my-remarks .remarks-rating-button .el-button {
-        margin-top: 20px;
+        margin-top: 15px;
     }
-
 
     .book_show .book_detail .book_recommend_block {
         margin: 50px auto;
@@ -554,7 +544,6 @@
     .book_show .book_detail .book_recommend_block .el-row .el-col .book_card .book_img {
         margin: 20px auto;
         padding: 0;
-        width: 100%;
         text-align: center;
     }
 

@@ -2,7 +2,7 @@
     <div class="business_page_bottom">
         <el-tabs :tab-position="tabPosition" @tab-click="handleTabClick">
             <el-tab-pane :key="typeIndex" v-for="(typeItem, typeIndex) in currBusinessTypeList" :name="numToString(typeIndex)" >
-                <span style="font-size: 18px;" slot="label">{{typeItem.bookTypeName}}</span>
+                <span style="font-size: 22px;" slot="label">{{typeItem.bookTypeName}}</span>
                 <div class="type_list_block">
                     <el-row>
                         <el-col :key="'business-tags-' + index"
@@ -13,16 +13,14 @@
                                     <el-image style="width: 130px; height: 189px;" v-bind:src="bookItem.bookImagePath"/>
                                 </div>
                                 <div class="book_title_author">
-                                    <a>{{bookItem.bookName | ellipsisName}}</a>/
-                                    <a>{{bookItem.bookAuthor | ellipsisAuthor}}</a>
+                                    <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis; font-weight: bold;">{{bookItem.bookName}}</a>
+                                    <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">{{bookItem.bookAuthor}}</a>
                                 </div>
                                 <div class="book_price">
                                     <a>￥{{bookItem.bookPrice}}</a>
                                 </div>
                                 <div class="book_comment_rating">
-                                    <a>已有{{bookItem.bookComment | ellipsisComment}}评价</a>
-                                    <el-divider direction="vertical"/>
-                                    <a>{{bookItem.bookRating}}评分</a>
+                                    <a style="display:block; white-space:nowrap; overflow:hidden;text-overflow:ellipsis;">已有{{bookItem.bookComment | ellipsisComment}}评价|{{bookItem.bookRating}}评分</a>
                                 </div>
                             </div>
                         </el-col>
@@ -60,24 +58,6 @@
             };
         },
         filters: {
-            // 设置书名超长显示内容
-            ellipsisName(value) {
-                if (value.length > 5){
-                    return value.slice(0,5) + '...';
-                } else {
-                    return value;
-                }
-            },
-
-            // 设置作者名超长显示内容
-            ellipsisAuthor(value) {
-                if (value.length > 5){
-                    return value.slice(0,5) + '...';
-                } else {
-                    return value;
-                }
-            },
-
             // 过滤评论数为 undefined
             ellipsisComment(value) {
                 if (value === undefined){
@@ -181,7 +161,7 @@
 
 <style scoped>
     .business_page_bottom {
-        margin: 50px auto;
+        margin: 40px auto;
         padding: 0;
         width: 100%;
     }
@@ -197,7 +177,7 @@
         width: 100%;
     }
 
-    .business_page_bottom .type_list_block .el-col {
+    .business_page_bottom .type_list_block .el-row .el-col {
         margin: 0 auto;
         padding: 0;
         height: 100%;
@@ -223,6 +203,7 @@
     .business_page_bottom .type_list_block .el-row .el-col .book_card .book_title_author {
         margin-top: 5px;
         margin-left: 30px;
+        margin-right: 20px;
         font-size: 13px;
         padding: 0;
         text-align: left;
