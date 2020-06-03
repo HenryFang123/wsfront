@@ -3,7 +3,9 @@
         <div class="register-header">
             <div class="register-header-block">
                 <div class="register-header-block-img">
-                    <el-image style="height: 80px; width: 80px" v-bind:src="this.$store.state.webImg.wsLogo"/>
+                    <a href="/">
+                        <el-image style="height: 80px; width: 80px" v-bind:src="this.$store.state.webImg.wsLogo"/>
+                    </a>
                 </div>
                 <div class="register-header-block-span">
                     <span>欢迎注册</span>
@@ -33,7 +35,7 @@
                             </el-input>
                             <el-input class="register-main-form-step_phone-get_code" clearable placeholder="请输入验证码"
                                       v-model="register.inputCode">
-                                <el-button @click="registerGetCode"
+                                <el-button :disabled="isDisable" @click="registerGetCode"
                                            class="register-main-form-step_phone-get_code-button" slot="append">
                                     <span v-if="!sendMsgDisabled && !reGet">获取验证码</span>
                                     <span v-if="!sendMsgDisabled && reGet">重新获取</span>
@@ -42,7 +44,7 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button @click="registerNext" class="el-button" plain type="info">下一步</el-button>
+                            <el-button :disabled="isDisable" @click="registerNext" class="el-button" plain type="info">下一步</el-button>
                         </el-form-item>
                     </div>
                     <div class="register-main-form-step_info" v-if="registerActive===1">
@@ -112,6 +114,7 @@
         name: "Register.vue",
         data() {
             return {
+                isDisable: false,   // 是否禁用按钮
                 registerActive: 0,  // 注册页面轮转参数
                 reGet: false, // 重新获取
                 codeTime: 60, // 发送验证码倒计时
@@ -204,6 +207,9 @@
                     ws_axios.fetchPost1('/utils/checkPhone', params).then((back) => {
                         if (back.data.resultCode === "0") {
                             this.$message.error('注册手机号已被占用，请更换');
+                            this.isDisable = true;
+                        } else {
+                            this.isDisable = false;
                         }
                     });
                 }

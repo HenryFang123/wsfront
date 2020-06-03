@@ -94,7 +94,7 @@
             },
         },
         methods: {
-            getRecommendBookInfoOfCurrentUser() {
+            getItemCfRecommendBookInfoOfCurrentUser() {
                 let params = {
                     'userId': this.$store.state.currUserInfo.userId,
                 };
@@ -107,6 +107,12 @@
                         this.ifShowTags = false;
                     }
                 });
+            },
+
+            getSystemRecommendBookInfoOfCurrentUser() {
+                let params = {
+                    'userId': this.$store.state.currUserInfo.userId,
+                };
 
                 ws_axios.fetchPost1('/recommend/getRecommendSystem', {}).then((back) => {
                     if (back.data.resultCode === "1") {
@@ -163,7 +169,8 @@
             },
         },
         mounted() {
-            this.getRecommendBookInfoOfCurrentUser();
+            this.getItemCfRecommendBookInfoOfCurrentUser();
+            this.getSystemRecommendBookInfoOfCurrentUser();
         },
     }
 </script>

@@ -302,8 +302,8 @@
                 ws_axios.fetchPost1('/bookComment/insertBookComment', params).then((back) => {
                     this.rating = null;
                     this.comment = "";
+                    this.getBookCommentAnalyse();
                     this.getBookCommentList();
-                    // location.reload();
                 });
             },
         },

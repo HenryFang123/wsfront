@@ -60,6 +60,7 @@
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if (command === 'loginout') {
+                    this.clearCookie();
                     this.$router.push('/login');
                 }
             },
@@ -70,14 +71,27 @@
                 };
                 ws_axios.fetchPost1('/business/getBusinessInfoByUserId', params).then((back) => {
                     this.$store.dispatch("saveBusinessInfo", back.data);
+                    this.$router.push({path: '/BackHome'});
                 });
-
-                this.$router.push({path: '/BackHome'});
             },
             // 侧边栏折叠
             collapseChage() {
                 this.collapse = !this.collapse;
                 bus.$emit('collapse', this.collapse);
+            },
+            // 设置cookie
+            setCookie: function (ws_user_id, ws_user_self, ws_pass_word, ws_save_days) {
+                const current_date = new Date(); // 获取时间
+                current_date.setTime(current_date.getTime() + 24 * 60 * 60 * 1000 * ws_save_days); // 保存的天数
+
+                // 字符串拼接cookie
+                window.document.cookie = "WSUserId" + "=" + ws_user_id + ";path=/;expires=" + current_date.toUTCString();
+                window.document.cookie = "WSUserSelf" + "=" + ws_user_self + ";path=/;expires=" + current_date.toUTCString();
+                window.document.cookie = "WSPassWord" + "=" + ws_pass_word + ";path=/;expires=" + current_date.toUTCString();
+            },
+            // 清除cookie
+            clearCookie: function () {
+                this.setCookie("", "", 0); // 修改2值都为空，天数为负1天就好了
             },
         },
         mounted() {

@@ -42,6 +42,7 @@
         margin: 20px auto;
         padding: 0;
         width: 100%;
+        border-bottom: 2px solid #999999;
     }
 
     .business_page_top .business_page_top_top {

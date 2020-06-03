@@ -4,7 +4,9 @@
         <div class="login-header">
             <div class="login-header-block">
                 <div class="login-header-block-img">
-                    <el-image v-bind:src="this.$store.state.webImg.wsLogo" style="height: 80px; width: 80px"/>
+                    <a href="/">
+                        <el-image v-bind:src="this.$store.state.webImg.wsLogo" style="height: 80px; width: 80px"/>
+                    </a>
                 </div>
                 <div class="login-header-block-span">
                     <span>欢迎登录</span>
@@ -190,7 +192,7 @@
 
             // 清除cookie
             clearCookie: function () {
-                this.setCookie("", "", -1); // 修改2值都为空，天数为负1天就好了
+                this.setCookie("", "", 0); // 修改2值都为空，天数为负1天就好了
             },
 
             gotoRegister() {
