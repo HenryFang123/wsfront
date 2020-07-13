@@ -104,10 +104,11 @@
         },
         methods: {
             gotoCheck(orderId){
-                ws_axios.fetchPost1('/order/checkOrderInfoByOrderId',{'orderId':orderId});
-                this.$message.success("已确认签收!");
-                ws_axios.fetchPost1('/order/getNotSignOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
-                    this.notSignList = back.data;
+                ws_axios.fetchPost1('/order/checkOrderInfoByOrderId',{'orderId':orderId}).then((back) => {
+                    ws_axios.fetchPost1('/order/getNotSignOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
+                        this.notSignList = back.data;
+                        this.$message.success("已确认签收!");
+                    });
                 });
             },
             gotoCancel(orderId){
@@ -122,15 +123,16 @@
                             'orderId':this.curOrderId,
                             'orderInfo':this.dialogForm.radio
                         };
-                        ws_axios.fetchPost1('/order/cancelOrderInfoByOrderId', parm);
-                        this.$refs[formName].resetFields();
-                        this.$message.success("已提交退货单!");
+                        ws_axios.fetchPost1('/order/cancelOrderInfoByOrderId', parm).then((back) => {
+                            this.$refs[formName].resetFields();
+                            this.$message.success("已提交退货单!");
+                            ws_axios.fetchPost1('/order/getNotSignOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
+                                this.notSignList = back.data;
+                            });
+                        });
                     } else {
                         return false;
                     }
-                });
-                ws_axios.fetchPost1('/order/getNotSignOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
-                    this.notSignList = back.data;
                 });
             }
         }

@@ -34,7 +34,7 @@ axios.interceptors.response.use((res) => {
 
 export function fetchPost1(url, params){
     const instance = axios.create({
-        baseURL : 'http://localhost:8080/',
+        baseURL : 'http://101.37.19.82:8080/wsback',
         headers : {'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'}
     });
     return new Promise((resolve, reject) => {
@@ -52,7 +52,7 @@ export function fetchPost1(url, params){
 
 export function fetchGet1(url, param){
     const instance = axios.create({
-        baseURL : 'http://localhost:8080/',
+        baseURL : 'http://101.37.19.82:8080/wsback',
         headers : {'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'}
     });
     return new Promise((resolve, reject) => {

@@ -99,7 +99,7 @@
                 let params = {
                     'userPhone': this.$store.state.currUserInfo.userPhone,
                     'id' : this.address[index].id,
-            };
+                };
                 this.$confirm(
                     "确认设为默认地址吗？",
                     {

@@ -12,7 +12,7 @@ import 'element-ui/lib/index.js'
 import 'assets/css/icon.css';
 import VDistpicker from 'v-distpicker' // 引入省市选择器
 import Print from 'vue-print-nb'
-Vue.use(Print) // 注册
+Vue.use(Print); // 注册
 Vue.component('v-distpicker', VDistpicker);
 Vue.use(Vuex);
 Vue.use(ElementUI);

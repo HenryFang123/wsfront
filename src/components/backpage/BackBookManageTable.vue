@@ -114,7 +114,7 @@
                     <el-form-item label="图片">
                         <el-upload
                             class="upload-demo"
-                            action="http://localhost:8080/utils/uploadBookImage"
+                            action="http://101.37.19.82:8080/wsback/utils/uploadBookImage"
                             :on-exceed="handleExceed"
                             :before-upload="beforeUpload"
                             :before-remove="beforeRemove"

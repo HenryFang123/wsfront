@@ -44,9 +44,6 @@
                 form: {},
             }
         },
-        created() {
-
-        },
         methods: {
             onSelected(data) {
                 this.form.province = data.province.value;
@@ -73,7 +70,7 @@
                 ).then((back) => {
                     ws_axios.fetchPost1('/shippingAddress/insertAddress', params).then((back) => {
                         this.$message.success('添加成功');
-                        location.reload();
+                        location.reload()
                     })
                 })
 

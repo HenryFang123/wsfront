@@ -96,29 +96,30 @@
             });
         },
         methods:{
-        gotoCancel(orderId){
-            this.dialogFormVisible=true;
-            this.curOrderId=orderId;
-        },
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    this.dialogFormVisible = false;
-                    let parm = {
-                        'orderId':this.curOrderId,
-                        'orderInfo':this.dialogForm.radio
-                    };
-                    ws_axios.fetchPost1('/order/cancelOrderInfoByOrderId', parm);
-                    this.$refs[formName].resetFields();
-                    this.$message.success("已提交退货单!");
-                } else {
-                    return false;
-                }
-            });
-            ws_axios.fetchPost1('/order/getNotDeliverOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
-                this.notDeliverList = back.data;
-            });
-        }
+            gotoCancel(orderId){
+                this.dialogFormVisible=true;
+                this.curOrderId=orderId;
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.dialogFormVisible = false;
+                        let parm = {
+                            'orderId':this.curOrderId,
+                            'orderInfo':this.dialogForm.radio
+                        };
+                        ws_axios.fetchPost1('/order/cancelOrderInfoByOrderId', parm).then((back) => {
+                            this.$refs[formName].resetFields();
+                            this.$message.success("已提交退货单!");
+                            ws_axios.fetchPost1('/order/getNotDeliverOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
+                                this.notDeliverList = back.data;
+                            });
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            }
         }
     }
 </script>

@@ -288,16 +288,11 @@
 </script>
 
 <style scoped>
-
-    /*.el-input__inner .el-input.is-active .el-input .el-input__inner:focus{*/
-    /*    border: none;*/
-    /*    outline: none;*/
-    /*}*/
     .input-to-search{
-    margin: 0 auto;
-    width: 100%;
-    /*border: 2px solid #f56c6c;*/
+        margin: 0 auto;
+        width: 100%;
     }
+
     .div-header .div-header-main .div-header-main-search-input .div-header-main-search-form .input-to-search {
         margin: 0 auto;
         width: 100%;

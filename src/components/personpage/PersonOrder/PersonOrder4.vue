@@ -55,7 +55,6 @@
         created() {
             ws_axios.fetchPost1('/order/getCancelOrderInfoByUserId', {'userId': this.$store.state.currUserInfo.userId}).then((back) => {
                 this.cancelledList = back.data;
-                console.log(back.data)
             });
         },
         methods:{
